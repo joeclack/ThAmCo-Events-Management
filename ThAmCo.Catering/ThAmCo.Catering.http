@@ -1,0 +1,6 @@
+@ThAmCo.Catering_HostAddress = http://localhost:5266
+
+GET {{ThAmCo.Catering_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
