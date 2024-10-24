@@ -5,9 +5,9 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThAmCo.Venues", "ThAmCo.Venues\ThAmCo.Venues.csproj", "{B6B5C277-4FE8-4050-8579-33DF8CA3CB80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThAmCo.Catering", "ThAmCo.Catering\ThAmCo.Catering.csproj", "{4B0FEF56-9031-488B-912F-4641EDF45DB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThAmCo.Catering", "ThAmCo.Catering\ThAmCo.Catering.csproj", "{4B0FEF56-9031-488B-912F-4641EDF45DB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThAmCo.Events", "ThAmCo.Events\ThAmCo.Events.csproj", "{1BC34C67-9DAC-4DF6-9824-9A0B78EF5F10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThAmCo.Events", "ThAmCo.Events\ThAmCo.Events.csproj", "{1BC34C67-9DAC-4DF6-9824-9A0B78EF5F10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
