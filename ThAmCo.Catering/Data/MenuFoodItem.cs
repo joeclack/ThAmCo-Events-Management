@@ -5,9 +5,9 @@ namespace ThAmCo.Catering.Data
     public class MenuFoodItem
     {
         [Key]
-        public Menu MenuId { get; set; }
-        [Key]
-        public FoodItem FoodItemId { get; set; }
+        public int MenuFoodItemId { get; set; }
+        public int MenuId { get; set; }
+        public int FoodItemId { get; set; }
 
     }
 }

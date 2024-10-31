@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ThAmCo.Catering.Data
 {
@@ -8,5 +9,7 @@ namespace ThAmCo.Catering.Data
         public int MenuId { get; set; }
         [MaxLength(50)]
         public string MenuName { get; set; }
+        public Collection<MenuFoodItem> MenuFoodItems { get; set; }
+        public Collection<FoodBooking> FoodBookings { get; set; }
     }
 }
