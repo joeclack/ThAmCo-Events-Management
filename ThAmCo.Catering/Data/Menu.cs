@@ -9,7 +9,7 @@ namespace ThAmCo.Catering.Data
         public int MenuId { get; set; }
         [MaxLength(50)]
         public string MenuName { get; set; }
-        public Collection<MenuFoodItem> MenuFoodItems { get; set; }
-        public Collection<FoodBooking> FoodBookings { get; set; }
+        public ICollection<MenuFoodItem> MenuFoodItems { get; set; }
+        public ICollection<FoodBooking> FoodBookings { get; set; }
     }
 }
