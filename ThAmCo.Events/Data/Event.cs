@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using ThAmCo.Venues.Data;
 
 namespace ThAmCo.Events.Data
@@ -8,16 +9,22 @@ namespace ThAmCo.Events.Data
     {
         [Key]
         public int EventId { get; set; }
-        [ForeignKey("EventTypeId")]
-        public int EventTypeId { get; set; }
-        [ForeignKey("FoodBookingId")]
-        public int FoodBookingId { get; set; }
-        [ForeignKey("ReservationId")]
-        public int ReservationId { get; set; }
-        public string Title { get; set; }
+
+        public string Name { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
+
+        public string Location { get; set; }
+
         public ICollection<GuestBooking> GuestBookings { get; set; }
-        public ICollection<Staffing> Staffing { get; set; }
+
+        public ICollection<Staffing> Staffings { get; set; }
+
+        public string EventTypeId { get; set; }
+
+        public string ReservationId { get; set; }
+
+        public int FoodBookingId { get; set; }
     }
 }

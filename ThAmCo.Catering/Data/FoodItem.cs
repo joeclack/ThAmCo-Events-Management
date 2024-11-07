@@ -7,9 +7,14 @@ namespace ThAmCo.Catering.Data
     {
         [Key]
         public int FoodItemId { get; set; }
+
         [MaxLength(50)]
         public string Description { get; set; }
+
         public float UnitPrice { get; set; }
+
         public ICollection<MenuFoodItem> MenuFoodItems { get; set; }
+
     }
+
 }
