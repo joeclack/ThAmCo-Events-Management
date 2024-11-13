@@ -1,0 +1,55 @@
+﻿@page
+@model ThAmCo.Events.Pages.Events.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Create New Event</h1>
+        <p class="lead">Fill in the details to create a new event.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Event Information</h4>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Event.Name" class="control-label">Event Name</label>
+                    <input asp-for="Event.Name" class="form-control" />
+                    <span asp-validation-for="Event.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Event.Date" class="control-label">Event Date</label>
+                    <input asp-for="Event.Date" class="form-control" />
+                    <span asp-validation-for="Event.Date" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Event.Location" class="control-label">Event Location</label>
+                    <input asp-for="Event.Location" class="form-control" />
+                    <span asp-validation-for="Event.Location" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle"></i> Create Event
+                    </button>
+                    <a class="btn btn-secondary btn-lg" asp-page="Index">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

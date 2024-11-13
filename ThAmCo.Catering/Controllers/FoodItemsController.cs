@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ThAmCo.Catering.Data;
+using ThAmCo.Catering.DTOs;
+using ThAmCo.Catering.Models;
 
 namespace ThAmCo.Catering.Controllers
 {
@@ -22,14 +23,17 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/FoodItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FoodItem>>> GetFoodItems()
+        public async Task<ActionResult<IEnumerable<FoodItemDTO>>> GetFoodItems()
         {
-            return await _context.FoodItems.ToListAsync();
+            var items = await _context.FoodItems.ToListAsync();
+            var dto = items.Select(fi => new FoodItemDTO().CreateDTO(fi)).ToList();
+
+            return dto;
         }
 
         // GET: api/FoodItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FoodItem>> GetFoodItem(int id)
+        public async Task<ActionResult<FoodItemDTO>> GetFoodItem(int id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);
 
@@ -38,18 +42,26 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            return foodItem;
+            return new FoodItemDTO().CreateDTO(foodItem);
         }
 
         // PUT: api/FoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFoodItem(int id, FoodItem foodItem)
+        public async Task<IActionResult> EditFoodItem(int id, FoodItemDTO foodItem)
         {
             if (id != foodItem.FoodItemId)
             {
                 return BadRequest();
             }
+
+            var foodItemToEdit = await _context.FoodItems.FindAsync(id);
+
+            foodItemToEdit.FoodItemId = foodItem.FoodItemId;
+            foodItemToEdit.MenuFoodItems = foodItem.MenuFoodItems;
+            foodItemToEdit.UnitPrice = foodItem.UnitPrice;
+            foodItemToEdit.Name = foodItem.Name;
+            foodItemToEdit.Description = foodItem.Description;
 
             _context.Entry(foodItem).State = EntityState.Modified;
 
@@ -65,7 +77,7 @@ namespace ThAmCo.Catering.Controllers
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
 
@@ -75,12 +87,30 @@ namespace ThAmCo.Catering.Controllers
         // POST: api/FoodItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FoodItem>> PostFoodItem(FoodItem foodItem)
+        public async Task<ActionResult<FoodItemDTO>> CreateFoodItem(FoodItemDTO foodItem)
         {
-            _context.FoodItems.Add(foodItem);
-            await _context.SaveChangesAsync();
+            var newItem = new FoodItem()
+            {
+                FoodItemId = foodItem.FoodItemId,
+                Name = foodItem.Name,
+                Description = foodItem.Description,
+                UnitPrice = foodItem.UnitPrice,
+                MenuFoodItems = foodItem.MenuFoodItems
+            };
 
-            return CreatedAtAction("GetFoodItem", new { id = foodItem.FoodItemId }, foodItem);
+            try
+            {
+                _context.FoodItems.Add(newItem);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            var dto = new FoodItemDTO().CreateDTO(newItem);
+
+            return new ObjectResult(dto.FoodItemId) { StatusCode = StatusCodes.Status201Created };
         }
 
         // DELETE: api/FoodItems/5
@@ -93,8 +123,14 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            _context.FoodItems.Remove(foodItem);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.FoodItems.Remove(foodItem);
+                await _context.SaveChangesAsync();
+            } catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
 
             return NoContent();
         }

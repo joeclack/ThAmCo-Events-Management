@@ -1,0 +1,70 @@
+﻿@page
+@model ThAmCo.Events.Pages.Guests.IndexModel
+
+@{
+    ViewData["Title"] = "Guests List";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Guest Management</h1>
+        <p class="lead">Add, view, and manage your guest list for upcoming events.</p>
+    </div>
+
+    <div class="text-right mb-4">
+        <a asp-page="Create" class="btn btn-primary bg-gradient">
+            <i class="bi bi-person-plus"></i> Create New Guest
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-light shadow-sm rounded">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Guests[0].FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Guests[0].LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Guests[0].Email)</th>
+                    <th class="w-100">@Html.DisplayNameFor(model => model.Guests[0].GuestBookings)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Guests)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>
+                            <ul class="list-group-horizontal">
+                                @foreach(var booking in item.GuestBookings){
+                                    <li class="list-group-item">@booking.Event.Name</li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@item.GuestId">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a asp-page="./Details" class="btn btn-info text-white" asp-route-id="@item.GuestId">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                                <a asp-page="./Delete" class="btn btn-danger" asp-route-id="@item.GuestId">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Guests.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No guests found. Click "Create New Guest" to add your first guest.
+        </div>
+    }
+</div>

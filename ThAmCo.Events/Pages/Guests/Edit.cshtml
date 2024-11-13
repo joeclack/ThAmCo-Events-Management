@@ -1,0 +1,52 @@
+﻿@page
+@model ThAmCo.Events.Pages.Guests.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Edit Guest</h1>
+        <p class="lead">Modify the details of this guest.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Guest Details</h4>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Guest.GuestId" />
+                <div class="form-group">
+                    <label asp-for="Guest.FirstName" class="control-label"></label>
+                    <input asp-for="Guest.FirstName" class="form-control" />
+                    <span asp-validation-for="Guest.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Guest.LastName" class="control-label"></label>
+                    <input asp-for="Guest.LastName" class="form-control" />
+                    <span asp-validation-for="Guest.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Guest.Email" class="control-label"></label>
+                    <input asp-for="Guest.Email" class="form-control" />
+                    <span asp-validation-for="Guest.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Save
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

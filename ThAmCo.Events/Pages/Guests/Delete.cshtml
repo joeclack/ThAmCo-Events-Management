@@ -1,0 +1,49 @@
+﻿@page
+@model ThAmCo.Events.Pages.Guests.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Delete Guest</h1>
+        <p class="lead">Are you sure you want to delete this guest? This action cannot be undone.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <strong>Warning!</strong> This will permanently delete the guest.
+            </div>
+
+            <h4 class="card-title mb-3">Guest Details</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">First Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.FirstName)</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Last Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.LastName)</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Email</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.Email)</dd>
+            </dl>
+
+            <form method="post">
+                <input type="hidden" asp-for="Guest.GuestId" />
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <i class="bi bi-trash"></i> Delete Guest
+                </button>
+                <a asp-page="./Index" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

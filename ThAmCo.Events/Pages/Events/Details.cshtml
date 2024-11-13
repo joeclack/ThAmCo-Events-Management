@@ -1,0 +1,50 @@
+﻿@page
+@model ThAmCo.Events.Pages.Events.DetailsModel
+
+@{
+    ViewData["Title"] = "Events Details";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Event Details</h1>
+        <p class="lead">View the details for this event.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Event Information</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Name)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Name)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Date)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Date)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Location)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Location)</dd>
+@*                 <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.EventTypeId)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.EventTypeId)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.ReservationId)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.ReservationId)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.FoodBookingId)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.FoodBookingId)</dd> *@
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.GuestBookings)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.GuestBookings.Count)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Staffings)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Staffings.Count)</dd>   
+            </dl>
+            @if (Model.IsUnderStaffed)
+            {
+                <div class="alert alert-danger"><i class="bi bi-exclamation-lg"></i>@Model.UnderStaffAlertText</div>
+            }
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.Event.EventId">
+            <i class="bi bi-pencil-square"></i> Edit Event
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary btn">
+            <i class="bi bi-arrow-left-circle"></i> Back to List
+        </a>
+    </div>
+</div>

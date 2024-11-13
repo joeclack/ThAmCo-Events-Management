@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ThAmCo.Catering.Data;
+using NHibernate.Driver;
+using ThAmCo.Catering.DTOs;
+using ThAmCo.Catering.Models;
 
 namespace ThAmCo.Catering.Controllers
 {
@@ -22,14 +24,22 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/Menus
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Menu>>> GetMenus()
+        public async Task<ActionResult<IEnumerable<MenuDTO>>> GetMenus()
         {
-            return await _context.Menus.ToListAsync();
+            var menus = await _context.Menus.ToListAsync();
+
+            if(menus == null)
+            {
+                return NotFound();
+            }
+
+            var dto = menus.Select(m => new MenuDTO().CreateDTO(m)).ToList();
+            return dto;
         }
 
         // GET: api/Menus/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Menu>> GetMenu(int id)
+        public async Task<ActionResult<MenuDTO>> GetMenu(int id)
         {
             var menu = await _context.Menus.FindAsync(id);
 
@@ -38,18 +48,25 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            return menu;
+            return new MenuDTO().CreateDTO(menu);
         }
 
         // PUT: api/Menus/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMenu(int id, Menu menu)
+        public async Task<IActionResult> EditMenu(int id, MenuDTO menu)
         {
             if (id != menu.MenuId)
             {
                 return BadRequest();
             }
+
+            var menuToEdit = await _context.Menus.FindAsync(id);
+
+            menuToEdit.MenuId = menu.MenuId;
+            menuToEdit.MenuFoodItems = menu.MenuFoodItems;
+            menuToEdit.MenuName = menu.MenuName;
+            menuToEdit.FoodBookings = menu.FoodBookings;
 
             _context.Entry(menu).State = EntityState.Modified;
 
@@ -65,7 +82,7 @@ namespace ThAmCo.Catering.Controllers
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
 
@@ -75,10 +92,25 @@ namespace ThAmCo.Catering.Controllers
         // POST: api/Menus
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Menu>> PostMenu(Menu menu)
+        public async Task<ActionResult<MenuDTO>> CreateMenu(MenuDTO menu)
         {
-            _context.Menus.Add(menu);
-            await _context.SaveChangesAsync();
+            var newMenu = new Menu()
+            {
+                MenuId = menu.MenuId,
+                MenuName = menu.MenuName,
+                MenuFoodItems = menu.MenuFoodItems,
+                FoodBookings = menu.FoodBookings
+            };
+
+            try
+            {
+                _context.Menus.Add(newMenu);
+                await _context.SaveChangesAsync();
+            } catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
 
             return CreatedAtAction("GetMenu", new { id = menu.MenuId }, menu);
         }
@@ -93,8 +125,14 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            _context.Menus.Remove(menu);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Menus.Remove(menu);
+                await _context.SaveChangesAsync();
+            } catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
 
             return NoContent();
         }

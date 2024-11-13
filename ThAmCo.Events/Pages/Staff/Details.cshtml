@@ -1,0 +1,36 @@
+﻿@page
+@model ThAmCo.Events.Pages.Staff.DetailsModel
+
+@{
+    ViewData["Title"] = "StaffMembers Details";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Staff Details</h1>
+        <p class="lead">View the details for this staff member.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Staff Information</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">First Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Staff.FirstName)</dd>
+                <dt class="col-sm-3 font-weight-bold">Last Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Staff.LastName)</dd>
+                <dt class="col-sm-3 font-weight-bold">Role</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Staff.Role)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-page="./Edit" class="btn btn-primary btn-lg" asp-route-id="@Model.Staff.StaffId">
+            <i class="bi bi-pencil-square"></i> Edit Staff
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary btn-lg">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>

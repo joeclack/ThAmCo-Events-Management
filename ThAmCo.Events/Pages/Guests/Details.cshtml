@@ -1,0 +1,55 @@
+﻿@page
+@model ThAmCo.Events.Pages.Guests.DetailsModel
+
+@{
+    ViewData["Title"] = "Guests Details";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Guest Details</h1>
+        <p class="lead">View the details for this guest.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Guest Information</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Guest.FirstName)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.FirstName)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Guest.LastName)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.LastName)</dd>
+                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Guest.Email)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.Email)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Upcoming events</h4>
+    @foreach (var booking in Model.Bookings)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div>
+
+                    <div class="row">
+                        <p>@booking.Event.Name</p>
+                        <p>@booking.Event.Date.ToShortDateString()</p>
+                    </div>
+                    <button class="btn btn-primary">View Event</button>
+
+                </div>
+            </div>
+        </div>
+    }
+           
+
+    <div class="mt-4">
+        <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.Guest.GuestId">
+            <i class="bi bi-pencil-square"></i> Edit Guest
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>

@@ -1,10 +1,14 @@
 using ThAmCo.Events.Data;
+using ThAmCo.Events.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<EventsDbContext>();
+builder.Services.AddTransient<StaffService>();
+builder.Services.AddTransient<EventService>();
+builder.Services.AddTransient<GuestService>();
 
 var app = builder.Build();
 

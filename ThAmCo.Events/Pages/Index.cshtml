@@ -4,4 +4,54 @@
     ViewData["Title"] = "Home page";
 }
 
-<h3>Home</h3>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Welcome to ThreeAmigos Corp Event Management</h1>
+        <p class="lead">Manage events, staff, guests, and catering efficiently.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Event Details</h5>
+                    <p class="card-text">View, create, and edit event information, schedules, and venues.</p>
+                    <a asp-page="/Events/Index" class="btn btn-primary">Go to Events</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Attach Guests to Events</h5>
+                    <p class="card-text">Register and manage guest lists for all upcoming events.</p>
+                    <a asp-page="/Guests/Index" class="btn btn-primary">Manage Guests</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Assign Staff to Events</h5>
+                    <p class="card-text">Select and assign staff members to specific events based on roles and availability.</p>
+                    <a asp-page="/Staff/Index" class="btn btn-primary">Manage Staff</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Assign Food Orders to Events</h5>
+                    <p class="card-text">Organize catering options and assign specific food orders to events.</p>
+                    <button class="btn btn-secondary" disabled>Coming Soon</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

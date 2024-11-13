@@ -1,0 +1,69 @@
+﻿@page
+@model ThAmCo.Events.Pages.Staff.IndexModel
+
+@{
+    ViewData["Title"] = "StaffMembers List";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Staff Management</h1>
+        <p class="lead">Add, view, and manage your event staff.</p>
+    </div>
+
+    <div class="text-right mb-4">
+        <a class="btn btn-primary bg-gradient" asp-page="Create">
+            <i class="bi bi-person-plus"></i> Create New Staff
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-light shadow-sm rounded">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.StaffMembers[0].FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.StaffMembers[0].LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.StaffMembers[0].Role)</th>
+                    <th class="w-100">@Html.DisplayNameFor(model => model.StaffMembers[0].Staffings)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.StaffMembers)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Role)</td>
+                        <td>
+                            @foreach (var staffing in item.Staffings)
+                            {
+                                <div class="list-group-item">@staffing.Event.Name</div>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@item.StaffId">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a asp-page="./Details" class="btn btn-info text-white" asp-route-id="@item.StaffId">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                                <a asp-page="./Delete" class="btn btn-danger" asp-route-id="@item.StaffId">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.StaffMembers.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No staff members found. Click "Create New Staff" to add a team member.
+        </div>
+    }
+</div>

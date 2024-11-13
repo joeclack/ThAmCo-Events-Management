@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -18,6 +19,7 @@ namespace ThAmCo.Catering.Data.Migrations
                 {
                     FoodItemId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     UnitPrice = table.Column<float>(type: "REAL", nullable: false)
                 },
@@ -45,9 +47,10 @@ namespace ThAmCo.Catering.Data.Migrations
                 {
                     FoodBookingId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ClientReferenceId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ClientReferenceId = table.Column<int>(type: "INTEGER", nullable: true),
                     NumberOfGuests = table.Column<int>(type: "INTEGER", nullable: false),
-                    MenuId = table.Column<int>(type: "INTEGER", nullable: false)
+                    MenuId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FoodBookingDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,40 +78,40 @@ namespace ThAmCo.Catering.Data.Migrations
                         column: x => x.FoodItemId,
                         principalTable: "FoodItems",
                         principalColumn: "FoodItemId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_MenuFoodItems_Menus_MenuId",
                         column: x => x.MenuId,
                         principalTable: "Menus",
                         principalColumn: "MenuId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
                 table: "FoodItems",
-                columns: new[] { "FoodItemId", "Description", "UnitPrice" },
+                columns: new[] { "FoodItemId", "Description", "Name", "UnitPrice" },
                 values: new object[,]
                 {
-                    { 1, "Chicken Sandwich", 5.99f },
-                    { 2, "Veggie Wrap", 4.49f },
-                    { 3, "Caesar Salad", 3.99f },
-                    { 4, "Steak", 12.99f },
-                    { 5, "Turkey Club", 6.49f },
-                    { 6, "Ham and Cheese", 5.19f },
-                    { 7, "Grilled Cheese", 4.99f },
-                    { 8, "BLT Sandwich", 5.79f },
-                    { 9, "Fish Tacos", 7.99f },
-                    { 10, "Spaghetti Bolognese", 8.99f },
-                    { 11, "Penne Arrabbiata", 7.49f },
-                    { 12, "Mushroom Risotto", 9.49f },
-                    { 13, "Chicken Alfredo", 10.99f },
-                    { 14, "Beef Burritos", 6.99f },
-                    { 15, "Vegetarian Tacos", 5.49f },
-                    { 16, "BBQ Chicken Pizza", 12.99f },
-                    { 17, "Pepperoni Pizza", 11.49f },
-                    { 18, "Margherita Pizza", 9.99f },
-                    { 19, "Cheeseburger", 6.49f },
-                    { 20, "Veggie Burger", 5.99f }
+                    { 1, "Grilled chicken breast with lettuce, tomato, and mayo on a toasted bun", "Classic Chicken Sandwich", 5.99f },
+                    { 2, "Whole-wheat wrap with hummus, fresh veggies, and a hint of vinaigrette", "Fresh Veggie Wrap", 4.49f },
+                    { 3, "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese", "Caesar Salad", 3.99f },
+                    { 4, "Juicy grilled steak seasoned to perfection", "Grilled Steak", 12.99f },
+                    { 5, "Turkey, bacon, lettuce, and tomato stacked on toasted bread", "Turkey Club Sandwich", 6.49f },
+                    { 6, "Classic ham and cheese sandwich with fresh lettuce and tomato", "Ham and Cheese Sandwich", 5.19f },
+                    { 7, "Melted cheddar cheese between crispy, toasted bread", "Grilled Cheese Sandwich", 4.99f },
+                    { 8, "Bacon, lettuce, and tomato on toasted whole-grain bread", "BLT Sandwich", 5.79f },
+                    { 9, "Two tacos with grilled fish, slaw, and a spicy mayo drizzle", "Fish Tacos", 7.99f },
+                    { 10, "Classic Italian pasta with rich meat sauce", "Spaghetti Bolognese", 8.99f },
+                    { 11, "Penne pasta in a spicy tomato sauce with garlic and chili", "Penne Arrabbiata", 7.49f },
+                    { 12, "Creamy risotto with wild mushrooms and Parmesan", "Mushroom Risotto", 9.49f },
+                    { 13, "Fettuccine pasta with creamy Alfredo sauce and grilled chicken", "Chicken Alfredo", 10.99f },
+                    { 14, "Two burritos filled with beef, rice, beans, and cheese", "Beef Burritos", 6.99f },
+                    { 15, "Two tacos filled with seasoned veggies, beans, and avocado", "Vegetarian Tacos", 5.49f },
+                    { 16, "Pizza topped with BBQ chicken, red onions, and mozzarella", "BBQ Chicken Pizza", 12.99f },
+                    { 17, "Classic pepperoni pizza with marinara sauce and mozzarella", "Pepperoni Pizza", 11.49f },
+                    { 18, "Pizza with fresh tomatoes, mozzarella, and basil", "Margherita Pizza", 9.99f },
+                    { 19, "Beef burger with melted cheddar, lettuce, and tomato on a brioche bun", "Cheeseburger", 6.49f },
+                    { 20, "Grilled veggie patty with lettuce, tomato, and avocado on a whole-wheat bun", "Veggie Burger", 5.99f }
                 });
 
             migrationBuilder.InsertData(
@@ -118,21 +121,17 @@ namespace ThAmCo.Catering.Data.Migrations
                 {
                     { 1, "Basic Lunch" },
                     { 2, "Vegetarian Feast" },
-                    { 3, "Deluxe Dinner" },
-                    { 4, "Italian Specialties" },
-                    { 5, "Mexican Fiesta" }
+                    { 3, "Deluxe Dinner" }
                 });
 
             migrationBuilder.InsertData(
                 table: "FoodBookings",
-                columns: new[] { "FoodBookingId", "ClientReferenceId", "MenuId", "NumberOfGuests" },
+                columns: new[] { "FoodBookingId", "ClientReferenceId", "FoodBookingDate", "MenuId", "NumberOfGuests" },
                 values: new object[,]
                 {
-                    { 1, 101, 1, 50 },
-                    { 2, 102, 2, 30 },
-                    { 3, 103, 3, 75 },
-                    { 4, 104, 4, 100 },
-                    { 5, 105, 5, 60 }
+                    { 1, 1, new DateTime(2024, 11, 11, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1568), 1, 1 },
+                    { 2, 2, new DateTime(2024, 11, 21, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1629), 2, 5 },
+                    { 3, 3, new DateTime(2024, 12, 11, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1634), 3, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -151,15 +150,7 @@ namespace ThAmCo.Catering.Data.Migrations
                     { 4, 3 },
                     { 10, 3 },
                     { 13, 3 },
-                    { 14, 3 },
-                    { 12, 4 },
-                    { 16, 4 },
-                    { 17, 4 },
-                    { 18, 4 },
-                    { 9, 5 },
-                    { 15, 5 },
-                    { 19, 5 },
-                    { 20, 5 }
+                    { 14, 3 }
                 });
 
             migrationBuilder.CreateIndex(

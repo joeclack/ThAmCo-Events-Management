@@ -1,0 +1,49 @@
+﻿@page
+@model ThAmCo.Events.Pages.Staff.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Delete Staff</h1>
+        <p class="lead">Are you sure you want to delete this staff member? This action cannot be undone.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <strong>Warning!</strong> This will permanently delete the staff member.
+            </div>
+
+            <h4 class="card-title mb-3">Staff Details</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">First Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Staff.FirstName)</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Last Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Staff.LastName)</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Role</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Staff.Role)</dd>
+            </dl>
+
+            <form method="post">
+                <input type="hidden" asp-for="Staff.StaffId" />
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <i class="bi bi-trash"></i> Delete Staff
+                </button>
+                <a asp-page="./Index" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
