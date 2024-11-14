@@ -24,7 +24,30 @@ namespace ThAmCo.Events.Services
             .ToListAsync();
 
             return events;
-        }  
+        }
+
+        public async Task<List<Event>> GetAvailableEventsForGuest(Guest guest)
+        {
+            List<Event> AvailableEvents = [];
+
+            var events = await _context.Events
+            .Include(e => e.Staffings)
+                .ThenInclude(s => s.Staff)
+            .Include(e => e.GuestBookings)
+                    .ThenInclude(g => g.Guest)
+            .ToListAsync();
+
+            var guestBookings = guest.GuestBookings;
+            foreach(var _event in events)
+            {
+                if (!guestBookings.Where(x=>x.EventId = _event.EventId)) // TODO Fix this 
+                {
+                    AvailableEvents.Add(_event);
+                }
+            }
+
+            return AvailableEvents;
+        }
 
         public async Task<Event> GetEvent(int? eventId)
         {
@@ -41,7 +64,10 @@ namespace ThAmCo.Events.Services
         public async Task AddStaffToEventStaffing(Staff staff, Event _event)
         {
             var staffing = new Staffing() { Staff = staff, Event = _event };
-            
+            if(staffing.Staff == null)
+            {
+                return;
+            }
             try
             {
                 staff.Staffings.Add(staffing);
@@ -107,6 +133,10 @@ namespace ThAmCo.Events.Services
         public async Task AddGuestToEventGuests(Guest? guest, Event? _event)
         {
             var guestBooking = new GuestBooking() { Guest = guest, Event = _event };
+            if (guestBooking.Guest == null)
+            {
+                return;
+            }
             try
             {
                 guest.GuestBookings.Add(guestBooking);

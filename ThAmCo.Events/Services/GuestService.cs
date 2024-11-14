@@ -14,6 +14,7 @@ namespace ThAmCo.Events.Services
             _context = context;
         }
 
+
         public async Task<List<Guest>> GetAllGuests()
         {
             var guests = await _context.Guests
@@ -36,7 +37,7 @@ namespace ThAmCo.Events.Services
 
         internal async Task<List<GuestBooking>> GetBookings(Guest guest)
         {
-            List<GuestBooking> bookings = guest.GuestBookings.ToList();
+            List<GuestBooking> bookings = guest.GuestBookings.OrderBy(x=>x.Event.Date).ToList();
             return bookings;
         }
 
@@ -60,6 +61,21 @@ namespace ThAmCo.Events.Services
                 }
             }
             return AvailableGuests;
+        }
+
+        public async Task DeleteGuest(Guest? guest)
+        {
+            try
+            {
+                _context.Guests.Remove(guest);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                Console.WriteLine("Guest not deleted");
+            }
+
+            Console.WriteLine("Guest deleted");
         }
     }
 }

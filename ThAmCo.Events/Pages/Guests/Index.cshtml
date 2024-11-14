@@ -5,8 +5,8 @@
     ViewData["Title"] = "Guests List";
 }
 
-<div class="container mt-5">
-    <div class="text-center mb-5">
+<div class="mx-5 mt-5">
+    <div class="mb-5">
         <h1 class="display-4">Guest Management</h1>
         <p class="lead">Add, view, and manage your guest list for upcoming events.</p>
     </div>
@@ -18,9 +18,9 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle bg-light shadow-sm rounded">
-            <thead class="bg-primary text-white">
-                <tr>
+        <table class="table table-hover table-striped align-middle shadow-sm rounded">
+            <thead class="bg-dark text-light">
+                <tr class="align-middle">
                     <th>@Html.DisplayNameFor(model => model.Guests[0].FirstName)</th>
                     <th>@Html.DisplayNameFor(model => model.Guests[0].LastName)</th>
                     <th>@Html.DisplayNameFor(model => model.Guests[0].Email)</th>
@@ -36,11 +36,14 @@
                         <td>@Html.DisplayFor(modelItem => item.LastName)</td>
                         <td>@Html.DisplayFor(modelItem => item.Email)</td>
                         <td>
-                            <ul class="list-group-horizontal">
-                                @foreach(var booking in item.GuestBookings){
-                                    <li class="list-group-item">@booking.Event.Name</li>
+                            <div class="d-flex flex-row">
+                                @foreach (var booking in item.GuestBookings)
+                                {
+                                    <div class="p-2 bg-dark mx-1 bg-gradient text-white rounded">
+                                        @booking.Event.Name
+                                    </div>
                                 }
-                            </ul>
+                            </div>
                         </td>
                         <td>
                             <div class="btn-group" role="group">
@@ -50,7 +53,7 @@
                                 <a asp-page="./Details" class="btn btn-info text-white" asp-route-id="@item.GuestId">
                                     <i class="bi bi-info-circle"></i> Details
                                 </a>
-                                <a asp-page="./Delete" class="btn btn-danger" asp-route-id="@item.GuestId">
+                                <a data-toggle="modal" id="openModalButton" data-id="@item.GuestId" data-target="#deleteConfirmationModal" class="btn btn-danger" asp-route-id="@item.GuestId">
                                     <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>
@@ -61,6 +64,32 @@
         </table>
     </div>
 
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationModalTitle">Are you sure you want to delete this guest?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Guest ID: <span id="modalGuestId"></span></p>
+                    <p>This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                    <!-- Form for delete confirmation -->
+                    <form asp-page-handler="DeleteGuest" method="post">
+                        <input type="hidden" name="guestId" id="deleteGuestId" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if (!Model.Guests.Any())
     {
         <div class="alert alert-warning text-center" role="alert">
@@ -68,3 +97,17 @@
         </div>
     }
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var guestId = button.data('id');
+
+            $('#modalGuestId').text(guestId);
+            $('#deleteGuestId').val(guestId);
+        });
+    });
+</script>
+
+

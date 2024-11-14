@@ -48,5 +48,14 @@ namespace ThAmCo.Events.Pages.Guests
             }
             return Page();
         }
+
+        public async Task<IActionResult> OnPostViewEvent(int id)
+        {
+            if(_eventService.GetEvent(id) == null)
+            {
+                return NotFound();
+            }
+            return RedirectToPage("/Events/Details", new { id = id });
+        }
     }
 }

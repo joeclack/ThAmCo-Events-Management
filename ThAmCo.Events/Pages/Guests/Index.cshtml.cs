@@ -31,5 +31,12 @@ namespace ThAmCo.Events.Pages.Guests
         {
             Guests = await _guestService.GetAllGuests();
         }
+
+        public async Task<IActionResult> OnPostDeleteGuest(int guestId)
+        {
+            var guest = await _context.Guests.FirstOrDefaultAsync(m => m.GuestId == guestId);
+            await _guestService.DeleteGuest(guest);
+            return Redirect($"../Guests");
+        }
     }
 }

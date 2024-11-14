@@ -4,14 +4,13 @@
 @{
     ViewData["Title"] = "StaffMembers Details";
 }
-
-<div class="container mt-5">
-    <div class="text-center mb-4">
+<div class="mx-5 mt-5">
+    <div class="mb-5">
         <h1 class="display-4">Staff Details</h1>
         <p class="lead">View the details for this staff member.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-3 w-25">
         <div class="card-body">
             <h4 class="card-title mb-3">Staff Information</h4>
             <dl class="row">
@@ -25,11 +24,34 @@
         </div>
     </div>
 
-    <div class="text-center mt-4">
-        <a asp-page="./Edit" class="btn btn-primary btn-lg" asp-route-id="@Model.Staff.StaffId">
+    <div class="vstack gap-2 col-md-5 mb-2">
+        <h4 class="mb-1">Upcoming events</h4>
+    </div>
+
+    <div class="hstack gap-2">
+        @foreach (var e in Model.Events)
+        {
+            <div class="card w-25">
+                <div class="card-body">
+                    <h5 class="card-title">@e.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">@e.Location</h6>
+                    <p class="card-text">Date: @e.Date.ToShortDateString()</p>
+                    <form asp-page-handler="ViewEvent">
+                        <input type="hidden" name="id" value="@e.EventId" />
+                        <button type="submit" id="@e.EventId" class="btn btn-primary">
+                            View
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="mt-4">
+        <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.Staff.StaffId">
             <i class="bi bi-pencil-square"></i> Edit Staff
         </a>
-        <a asp-page="./Index" class="btn btn-secondary btn-lg">
+        <a asp-page="./Index" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Back to List
         </a>
     </div>

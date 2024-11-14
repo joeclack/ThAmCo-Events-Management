@@ -32,6 +32,10 @@ namespace ThAmCo.Events.Pages.Events
         {
             int staffAmount = Event.Staffings.Count;
             int guestBookingAmount = Event.GuestBookings.Count;
+            if (guestBookingAmount == 0)
+            {
+                return false;
+            }
             int rem = (guestBookingAmount/10) % 10;
             StaffRequiredForEvent = rem + 1;
             if(staffAmount <= StaffRequiredForEvent) 
@@ -50,6 +54,10 @@ namespace ThAmCo.Events.Pages.Events
             return false;
         }
 
+        public async Task<IActionResult> OnPostGoBackToGuest()
+        {
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)

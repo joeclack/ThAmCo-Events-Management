@@ -54,6 +54,29 @@ namespace ThAmCo.Events.Services
             return AvailableStaff;
         }
 
+        public async Task DeleteStaffMember(Staff? staffMember)
+        {
+            try
+            {
+                _context.Staff.Remove(staffMember);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                Console.WriteLine("Staff not deleted");
+            }
+
+            Console.WriteLine("Staff deleted");
+        }
+
+        internal async Task<List<Event>> GetEvents(Staff staff)
+        {
+            List<Event> events = await _context.Events
+                .Where(e => e.Staffings
+                .Any(s => s.StaffId == staff.StaffId)).ToListAsync();
+            return events;
+        }
+
         //public async Task GetAssignedEvents(int staffId)
         //{
         //    var events = _context.

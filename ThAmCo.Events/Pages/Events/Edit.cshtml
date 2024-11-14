@@ -5,8 +5,8 @@
     ViewData["Title"] = "Edit Events";
 }
 
-<div class="container mt-5">
-    <div class="text-center mb-4">
+<div class="mx-5 mt-5">
+    <div class="mb-5">
         <h1 class="display-4">Edit Event</h1>
         <p class="lead">Modify the details of this event.</p>
     </div>
@@ -46,109 +46,118 @@
                     </a>
                 </div>
             </form>
+        </div>
+    </div>
 
-            <div class="mt-4">
-                <h5>Manage Staff</h5>
-                <ul class="list-group">
-                    @foreach (var staff in Model.Event.Staffings)
-                    {
-                        <form asp-page-handler="RemoveStaff" method="post">
-                            <!-- Hidden inputs for EventId and StaffId -->
-                            <input type="hidden" name="eventId" value="@Model.Event.EventId" />
-                            <input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
+    <div class="d-flex justify-content-between">
+        <!-- Staff Section -->
+        <div class="w-100 mx-2">
+            <h5>Manage Staff</h5>
+            @if (!Model.AvailableStaff.Any())
+            {
+                <div class="alert alert-info mt-2">All staff are either assigned to this event or unavailable</div>
+            }
+            else
+            {
+                <form asp-page-handler="AddStaff" method="post">
+                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
 
-                        <li class="list-group-item d-flex justify-content-between">
-                                @staff.Staff.FirstName @staff.Staff.LastName
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="bi bi-x-circle"></i> Remove
-                            </button>
-                        </li>
-                        </form>
-                    }
-                </ul>
-
-                @if (!Model.AvailableStaff.Any())
-                {
-                    <div class="alert alert-info mt-2">All staff are either assigned to this event or unavailable</div>
-                }
-                else
-                {
-                    <form asp-page-handler="AddStaff" method="post">
-                        <!-- Hidden input for EventId with name matching the parameter -->
-                        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
-
-                        <div class="form-group mt-2">
-                            <label for="staffList">Add Staff</label>
-                            <select id="staffList" class="form-control" name="staffId">
+                    <div class="form-group mt-2">
+                        <label for="staffList">Add Staff</label>
+                        <div class="d-flex">
+                            <!-- Select Dropdown -->
+                            <select id="staffList" class="form-control me-2" name="staffId">
                                 <option value="">Select Staff</option>
                                 @foreach (var staff in Model.AvailableStaff)
                                 {
                                     <option value="@staff.StaffId">@staff.FirstName @staff.LastName</option>
                                 }
                             </select>
-                            <button type="submit" class="btn btn-success mt-2">
+
+                            <!-- Submit Button with same height as Select -->
+                            <button type="submit" class="btn btn-success">
                                 <i class="bi bi-person-plus"></i> Assign To Event
                             </button>
                         </div>
+                    </div>
+                </form>
+
+
+            }
+
+            <ul class="list-group mt-4">
+                @foreach (var staff in Model.Event.Staffings)
+                {
+                    <form asp-page-handler="RemoveStaff" method="post">
+                        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                        <input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
+
+                    <li class="list-group-item d-flex justify-content-between">
+                            @staff.Staff.FirstName @staff.Staff.LastName
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="bi bi-x-circle"></i> Remove
+                        </button>
+                    </li>
                     </form>
                 }
-            </div>
+            </ul>
+        </div>
+    
+        <!-- Guest Section -->
+        <div class="w-100 mx-2">
+            <h5>Manage Guests</h5>
 
+            @if (!Model.AvailableGuests.Any())
+            {
+                <div class="alert alert-info mt-2">All guests are either assigned to this event or unavailable</div>
+            }
+            else
+            {
+                <form asp-page-handler="AddGuest" method="post">
+                    <!-- Hidden input for EventId with name matching the parameter -->
+                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
 
-
-            <!-- Guest Section in Separate Form -->
-            <div class="mt-4">
-                <h5>Manage Guests</h5>
-                <ul class="list-group">
-                    @foreach (var guestBooking in Model.Event.GuestBookings)
-                    {
-                        <form asp-page-handler="CancelGuestBooking" method="post">
-                            <!-- Hidden inputs for EventId and GuestId -->
-                            <input type="hidden" name="eventId" value="@Model.Event.EventId" />
-                            <input type="hidden" name="guestId" value="@guestBooking.GuestId" />
-
-                        <li class="list-group-item d-flex justify-content-between">
-                                @guestBooking.Guest.FirstName @guestBooking.Guest.LastName
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="bi bi-x-circle"></i> Cancel booking
-                            </button>
-                        </li>
-                        </form>
-                    }
-                </ul>
-
-
-                @if (!Model.AvailableGuests.Any())
-                {
-                    <div class="alert alert-info mt-2">All guests are either assigned to this event or unavailable</div>
-                }
-                else
-                {
-                    <form asp-page-handler="AddGuest" method="post">
-                        <!-- Hidden input for EventId with name matching the parameter -->
-                        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
-
-                        <div class="form-group mt-2">
-                            <label for="guestList">Add Guest</label>
-                            <select id="guestList" class="form-control" name="guestId">
+                    <div class="form-group mt-2">
+                        <label for="guestList">Add Guest</label>
+                        <div class="d-flex">
+                            <!-- Select Dropdown -->
+                            <select id="guestList" class="form-control me-2" name="guestId">
                                 <option value="">Select Guests</option>
                                 @foreach (var guest in Model.AvailableGuests)
                                 {
                                     <option value="@guest.GuestId">@guest.FirstName @guest.LastName</option>
                                 }
                             </select>
-                            <button type="submit" class="btn btn-success mt-2">
+
+                            <!-- Submit Button with same height as Select -->
+                            <button type="submit" class="btn btn-success h-100">
                                 <i class="bi bi-person-plus"></i> Assign To Event
                             </button>
                         </div>
+                    </div>
+                </form>
+
+            }
+            <ul class="list-group mt-4">
+                @foreach (var guestBooking in Model.Event.GuestBookings)
+                {
+                    <form asp-page-handler="CancelGuestBooking" method="post">
+                        <!-- Hidden inputs for EventId and GuestId -->
+                        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                        <input type="hidden" name="guestId" value="@guestBooking.GuestId" />
+
+                    <li class="list-group-item d-flex justify-content-between">
+                            @guestBooking.Guest.FirstName @guestBooking.Guest.LastName
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="bi bi-x-circle"></i> Cancel booking
+                        </button>
+                    </li>
                     </form>
                 }
-            </div>
-
+            </ul>
         </div>
     </div>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

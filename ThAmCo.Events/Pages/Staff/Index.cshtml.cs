@@ -31,5 +31,12 @@ namespace ThAmCo.Events.Pages.Staff
         {
             StaffMembers = await _staffService.GetAllStaff();
         }
+
+        public async Task<IActionResult> OnPostDeleteStaff(int staffId)
+        {
+            var staffMember = await _context.Staff.FirstOrDefaultAsync(m => m.StaffId == staffId);
+            await _staffService.DeleteStaffMember(staffMember);
+            return Redirect($"../Staff");
+        }
     }
 }

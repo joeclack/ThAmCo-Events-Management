@@ -23,6 +23,8 @@ namespace ThAmCo.Events.Pages.Guests
         [BindProperty]
         public Guest Guest { get; set; } = default!;
 
+        public List<Event> AvailableEvents { get; set; } = [];
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
