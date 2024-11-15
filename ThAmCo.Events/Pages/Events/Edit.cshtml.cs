@@ -35,31 +35,24 @@ namespace ThAmCo.Events.Pages.Events
             _staffService = serviceProvider.GetRequiredService<StaffService>();
             _guestService = serviceProvider.GetRequiredService<GuestService>();
         }
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var _event = await _context.Events
-                .Include(e => e.Staffings)
-                    .ThenInclude(s => s.Staff)
-                .Include(e => e.GuestBookings)
-                    .ThenInclude(g => g.Guest)
-                .FirstOrDefaultAsync(m => m.EventId == id);
-
-
+            var _event = await _eventService.GetEvent(id);
             if (_event == null)
             {
                 return NotFound();
             }
 
-            EventId = _event.EventId;
             Event = _event;
+            EventId = _event.EventId;
 
-            AvailableStaff = await _staffService.GetAvailableStaff(Event.EventId);
-            AvailableGuests = await _guestService.GetAvailableGuests(Event.EventId);
+            AvailableStaff = await _staffService.GetAvailableStaff(EventId);
+            AvailableGuests = await _guestService.GetAvailableGuests(EventId);
             return Page();
         }
 
@@ -95,54 +88,27 @@ namespace ThAmCo.Events.Pages.Events
             return RedirectToPage("./Index");
         }
 
-        public async Task<IActionResult> OnPostAddStaff(int staffId, int eventId)
+        public async Task<IActionResult> OnPostCreateStaffing(int staffId, int eventId)
         {
-            var staff = _context.Staff.FirstOrDefault(s => s.StaffId == staffId);
-            var _event = await _eventService.GetEvent(eventId);
-            await _eventService.AddStaffToEventStaffing(staff, _event);
+            await _staffService.CreateStaffing(staffId, await _eventService.GetEvent(eventId));
             return Redirect($"../Events/Edit?id={eventId}");
         }
 
-        public async Task<IActionResult> OnPostRemoveStaff(int staffId, int eventId)
+        public async Task<IActionResult> OnPostRemoveStaffing(int staffId, int eventId)
         {
-            var staff = _context.Staff.FirstOrDefault(s => s.StaffId == staffId);
-            var _event = await _context.Events
-                .Include(e => e.Staffings)
-                    .ThenInclude(s => s.Staff)
-                .Include(e => e.GuestBookings)
-                    .ThenInclude(g => g.Guest)
-                .FirstOrDefaultAsync(m => m.EventId == eventId);
-            await _eventService.RemoveStaffFromEventStaffing(staff, _event);
+            await _staffService.CancelStaffing(staffId, eventId);
             return Redirect($"../Events/Edit?id={eventId}");
         }
 
         public async Task<IActionResult> OnPostCancelGuestBooking(int guestId, int eventId)
         {
-            var guest = _context.Guests.FirstOrDefault(g => g.GuestId == guestId);
-            var _event = await _context.Events
-                .Include(e => e.Staffings)
-                    .ThenInclude(s => s.Staff)
-                .Include(e => e.GuestBookings)
-                    .ThenInclude(g => g.Guest)
-                .FirstOrDefaultAsync(m => m.EventId == eventId);
-            await _eventService.CancelGuestBooking(guest, _event);
+            await _guestService.CancelGuestBooking(guestId, eventId);
             return Redirect($"../Events/Edit?id={eventId}");
         }
 
-        public async Task<IActionResult> OnPostAddGuest(int guestId, int eventId)
+        public async Task<IActionResult> OnPostCreateGuestBooking(int guestId, int eventId)
         {
-            var guest = await _context.Guests
-                .Include(g => g.GuestBookings) 
-                .FirstOrDefaultAsync(x => x.GuestId == guestId);
-
-
-            var _event = await _context.Events
-                .Include(e => e.Staffings)
-                    .ThenInclude(s => s.Staff)
-                .Include(e => e.GuestBookings)
-                    .ThenInclude(g => g.Guest)
-                .FirstOrDefaultAsync(m => m.EventId == eventId);
-            await _eventService.AddGuestToEventGuests(guest, _event);
+            await _guestService.CreateBooking(guestId, await _eventService.GetEvent(eventId));
             return Redirect($"../Events/Edit?id={eventId}");
         }
 

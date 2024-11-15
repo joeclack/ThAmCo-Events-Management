@@ -43,6 +43,57 @@
             </form>
         </div>
     </div>
+
+    <div class="w-100 mx-2">
+        <h5>Manage Events</h5>
+
+        @if (!Model.AvailableEvents.Any())
+        {
+            <div class="alert alert-info mt-2">No more events available to assign staff member to.</div>
+        }
+        else
+        {
+            <form asp-page-handler="CreateStaffing" method="post">
+                <input type="hidden" name="staffId" value="@Model.Staff.StaffId" />
+
+                <div class="form-group mt-2">
+                    <label for="eventList">Assign to Event</label>
+                    <div class="d-flex">
+                        <!-- Select Dropdown -->
+                        <select id="eventList" class="form-control me-2" name="eventId">
+                            <option value="">Select Event</option>
+                            @foreach (var _event in Model.AvailableEvents)
+                            {
+                                <option value="@_event.EventId">@_event.Name</option>
+                            }
+                        </select>
+                        
+                        <button type="submit" class="btn btn-success h-100">
+                            <i class="bi bi-person-plus"></i> Assign To Event
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        }
+        <ul class="list-group mt-4">
+            @foreach (var staffing in Model.Staff.Staffings)
+            {
+                <form asp-page-handler="CancelStaffing" method="post">
+                    <input type="hidden" name="eventId" value="@staffing.EventId" />
+                    <input type="hidden" name="staffId" value="@staffing.StaffId" />
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        @staffing.Event.Name - @staffing.Event.Date.ToShortDateString()
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="bi bi-x-circle"></i> Cancel staffing
+                        </button>
+                    </li>
+                </form>
+            }
+        </ul>
+    </div>
+    
 </div>
 
 @section Scripts {

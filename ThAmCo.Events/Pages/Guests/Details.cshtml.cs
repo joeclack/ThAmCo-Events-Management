@@ -29,9 +29,9 @@ namespace ThAmCo.Events.Pages.Guests
 
         public Guest Guest { get; set; } = default!;
         public List<GuestBooking> Bookings { get; set; } = [];
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
@@ -44,7 +44,7 @@ namespace ThAmCo.Events.Pages.Guests
             else
             {
                 Guest = guest;
-                Bookings = await _guestService.GetBookings(guest);
+                Bookings = await _guestService.GetBookings(id);
             }
             return Page();
         }

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 
@@ -53,11 +47,7 @@ namespace ThAmCo.Events.Pages.Events
             
             return false;
         }
-
-        public async Task<IActionResult> OnPostGoBackToGuest()
-        {
-            return Redirect(Request.Headers["Referer"].ToString());
-        }
+        
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)

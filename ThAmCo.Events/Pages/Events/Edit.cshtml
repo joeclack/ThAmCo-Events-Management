@@ -59,7 +59,7 @@
             }
             else
             {
-                <form asp-page-handler="AddStaff" method="post">
+                <form asp-page-handler="CreateStaffing" method="post">
                     <input type="hidden" name="eventId" value="@Model.Event.EventId" />
 
                     <div class="form-group mt-2">
@@ -88,7 +88,7 @@
             <ul class="list-group mt-4">
                 @foreach (var staff in Model.Event.Staffings)
                 {
-                    <form asp-page-handler="RemoveStaff" method="post">
+                    <form asp-page-handler="RemoveStaffing" method="post">
                         <input type="hidden" name="eventId" value="@Model.Event.EventId" />
                         <input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
 
@@ -113,7 +113,7 @@
             }
             else
             {
-                <form asp-page-handler="AddGuest" method="post">
+                <form asp-page-handler="CreateGuestBooking" method="post">
                     <!-- Hidden input for EventId with name matching the parameter -->
                     <input type="hidden" name="eventId" value="@Model.Event.EventId" />
 

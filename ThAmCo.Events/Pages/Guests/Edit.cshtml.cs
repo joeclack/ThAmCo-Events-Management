@@ -16,11 +16,13 @@ namespace ThAmCo.Events.Pages.Guests
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
         private readonly EventService _eventService;
+        private GuestService _guestService;
 
         public EditModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
             _eventService = serviceProvider.GetRequiredService<EventService>();
+            _guestService = serviceProvider.GetRequiredService<GuestService>();
         }
 
         [BindProperty]
@@ -28,20 +30,20 @@ namespace ThAmCo.Events.Pages.Guests
 
         public List<Event> AvailableEvents { get; set; } = [];
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var guest =  await _context.Guests.FirstOrDefaultAsync(m => m.GuestId == id);
+            var guest =  await _guestService.GetGuest(id);
             if (guest == null)
             {
                 return NotFound();
             }
-            AvailableEvents = await _eventService.GetAvailableEventsForGuest(guest);
             Guest = guest;
+            AvailableEvents = await _eventService.GetAvailableEventsForGuest(guest);
             return Page();
         }
 
@@ -75,11 +77,15 @@ namespace ThAmCo.Events.Pages.Guests
             return RedirectToPage("./Index");
         }
 
-        public async Task<IActionResult> OnPostAssignGuestToEvent(int guestId, int eventId )
+        public async Task<IActionResult> OnPostCreateGuestBooking(int guestId, int eventId)
         {
-            var guest = _context.Guests.FirstOrDefault(s => s.GuestId == guestId);
-            var _event = await _eventService.GetEvent(eventId);
-            await _eventService.AddGuestToEventGuests(guest, _event);
+            await _guestService.CreateBooking(guestId, await _eventService.GetEvent(eventId));
+            return Redirect($"../Guests/Edit?id={guestId}");
+        }
+
+        public async Task<IActionResult> OnPostCancelGuestBooking(int guestId, int eventId)
+        {
+            await _guestService.CancelGuestBooking(guestId, eventId);
             return Redirect($"../Guests/Edit?id={guestId}");
         }
 

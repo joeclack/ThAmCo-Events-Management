@@ -11,10 +11,11 @@
         <p class="lead">Add, view, and manage your guest list for upcoming events.</p>
     </div>
 
-    <div class="text-right mb-4">
-        <a asp-page="Create" class="btn btn-primary bg-gradient">
-            <i class="bi bi-person-plus"></i> Create New Guest
+    <div class="align-items-center d-flex flex-row mb-2 pt-2">
+        <a class="btn btn-primary bg-gradient" asp-page="Create">
+            <i class="bi bi-person-plus"></i> Create New Staff
         </a>
+        <h5 class="mx-2">@Model.Guests.Count() guests</h5>
     </div>
 
     <div class="table-responsive">
@@ -74,7 +75,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Guest ID: <span id="modalGuestId"></span></p>
                     <p>This action cannot be undone.</p>
                 </div>
                 <div class="modal-footer">

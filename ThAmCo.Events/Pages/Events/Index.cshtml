@@ -65,14 +65,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Event ID: <span id="modalEventId"></span></p>
                     <p>This action cannot be undone.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 
                     <!-- Form for delete confirmation -->
-                    <form asp-page-handler="DeleteEvent" method="post">
+                    <form asp-page-handler="CancelEvent" method="post">
                         <input type="hidden" name="eventId" id="deleteEventId" />
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>

@@ -35,8 +35,9 @@ namespace ThAmCo.Events.Services
             return guest;
         }
 
-        internal async Task<List<GuestBooking>> GetBookings(Guest guest)
+        internal async Task<List<GuestBooking>> GetBookings(int guestId)
         {
+            var guest = await GetGuest(guestId);
             List<GuestBooking> bookings = guest.GuestBookings.OrderBy(x=>x.Event.Date).ToList();
             return bookings;
         }
@@ -63,10 +64,11 @@ namespace ThAmCo.Events.Services
             return AvailableGuests;
         }
 
-        public async Task DeleteGuest(Guest? guest)
+        public async Task DeleteGuest(int guestId)
         {
             try
             {
+                var guest = await GetGuest(guestId);
                 _context.Guests.Remove(guest);
                 _context.SaveChanges();
             }
@@ -76,6 +78,57 @@ namespace ThAmCo.Events.Services
             }
 
             Console.WriteLine("Guest deleted");
+        }
+        
+        public async Task CancelGuestBooking(int guestId, int eventId)
+        {
+            var guest  = await GetGuest(guestId);
+            var guestBooking = await GetBooking(guestId, eventId);
+            try
+            {
+                guest.GuestBookings.Remove(guestBooking);
+                _context.SaveChanges();
+            }
+            catch
+            {
+            }
+        }
+
+        private async Task<GuestBooking> GetBooking(int guestId, int eventId)
+        {
+            var bookings = await GetBookings(guestId);
+            return bookings.Where(x => x.EventId == eventId).FirstOrDefault();
+        }
+
+        public async Task CreateBooking(int guestId, Event @event)
+        {
+            if (guestId == 0)
+            {
+                return;
+            }
+            var guest = await _context.Guests.FindAsync(guestId);
+            var guestBooking = new GuestBooking() { Guest = guest, Event = @event };
+            if (guestBooking.Guest == null)
+            {
+                return;
+            }
+            try
+            {
+                guest.GuestBookings.Add(guestBooking);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                Console.WriteLine("Guest booking not added");
+            }
+
+            Console.WriteLine("Guest booking added");
+        }
+
+        public async Task CreateGuest(Guest guest)
+        {
+            await _context.Guests.AddAsync(guest);
+            await _context.SaveChangesAsync();
         }
     }
 }

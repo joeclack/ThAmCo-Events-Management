@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
+using ThAmCo.Events.Services;
 
 namespace ThAmCo.Events.Pages.Guests
 {
     public class CreateModel : PageModel
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
+        private GuestService _guestService;
 
-        public CreateModel(ThAmCo.Events.Data.EventsDbContext context)
+        public CreateModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
+            _guestService = serviceProvider.GetRequiredService<GuestService>();
         }
 
         public IActionResult OnGet()
@@ -34,9 +37,7 @@ namespace ThAmCo.Events.Pages.Guests
             {
                 return Page();
             }
-
-            _context.Guests.Add(Guest);
-            await _context.SaveChangesAsync();
+            await _guestService.CreateGuest(Guest);
 
             return RedirectToPage("./Index");
         }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 
@@ -34,10 +28,9 @@ namespace ThAmCo.Events.Pages.Events
             Events = await _eventService.GetAllEvents();
         }
 
-        public async Task<IActionResult> OnPostDeleteEvent(int eventId)
+        public async Task<IActionResult> OnPostCancelEvent(int eventId)
         {
-            var _event = await _context.Events.FirstOrDefaultAsync(m => m.EventId == eventId);
-            await _eventService.CancelEvent(_event);
+            await _eventService.CancelEvent(eventId);
             return Redirect($"../Events");
         }
     }

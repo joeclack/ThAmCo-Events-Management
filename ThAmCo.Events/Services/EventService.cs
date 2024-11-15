@@ -25,26 +25,7 @@ namespace ThAmCo.Events.Services
 
             return events;
         }
-
-        public async Task<List<Event>> GetAvailableEventsForGuest(Guest guest)
-        {
-            List<Event> availableEvents = new List<Event>();
-            
-            var events = await _context.Events
-                .Include(e => e.Staffings)
-                .ThenInclude(s => s.Staff)
-                .Include(e => e.GuestBookings)
-                .ThenInclude(g => g.Guest)
-                .ToListAsync();
-
-            // Filter out events that already have a booking for the guest
-            availableEvents = events
-                .Where(e => !e.GuestBookings.Any(gb => gb.GuestId == guest.GuestId))
-                .ToList();
-
-            return availableEvents;
-        }
-
+        
         public async Task<Event> GetEvent(int? eventId)
         {
             var _event = await _context.Events
@@ -56,65 +37,29 @@ namespace ThAmCo.Events.Services
 
             return _event;
         }
-
-        public async Task AddStaffToEventStaffing(Staff staff, Event _event)
+        
+        public async Task RemoveStaffFromEventStaffing(Staff staffMember, int eventId)
         {
-            var staffing = new Staffing() { Staff = staff, Event = _event };
-            if(staffing.Staff == null)
-            {
-                return;
-            }
+            var _event = await GetEvent(eventId);
+            var staffing = _event.Staffings.FirstOrDefault(s => s.StaffId == staffMember.StaffId);
             try
             {
-                staff.Staffings.Add(staffing);
-                //_event.Staffings.Add(staffing);
-                _context.SaveChanges();
-            } catch
-            {
-                Console.WriteLine("StaffMembers not added to event staffing");
-            }
-
-            Console.WriteLine("StaffMembers added to event staffing");
-        }
-
-        public async Task RemoveStaffFromEventStaffing(Staff staff, Event _event)
-        {
-            var staffing = _event.Staffings.FirstOrDefault(s => s.StaffId == staff.StaffId);
-            try
-            {
-                staff.Staffings.Remove(staffing);
-                //_event.Staffings.Remove(staffing);
+                staffMember.Staffings.Remove(staffing);
                 _context.SaveChanges();
             }
             catch
             {
-                Console.WriteLine("StaffMembers not removed from event staffing");
+                Console.WriteLine("StaffMember not removed from event staffing");
             }
 
-            Console.WriteLine("StaffMembers removed from event staffing");
+            Console.WriteLine("StaffMember removed from event staffing");
         }
 
-        public async Task CancelGuestBooking(Guest guest, Event _event)
-        {
-            var guestBooking = _event.GuestBookings.FirstOrDefault(g => g.GuestId == guest.GuestId);
-            try
-            {
-                guest.GuestBookings.Remove(guestBooking);
-                //_event.GuestBookings.Remove(guestBooking);
-                _context.SaveChanges();
-            }
-            catch
-            {
-                Console.WriteLine("StaffMembers not removed from event staffing");
-            }
-
-            Console.WriteLine("StaffMembers removed from event staffing");
-        }
-
-        public async Task CancelEvent(Event _event)
+        public async Task CancelEvent(int eventId)
         {
             try
             {
+                var _event = await GetEvent(eventId);
                 _context.Events.Remove(_event);
                 _context.SaveChanges();
             }
@@ -125,26 +70,35 @@ namespace ThAmCo.Events.Services
 
             Console.WriteLine("Event cancelled");
         }
-
-        public async Task AddGuestToEventGuests(Guest? guest, Event? _event)
+        
+        public async Task<List<Event>> GetAvailableEventsForGuest(Guest guest)
         {
-            var guestBooking = new GuestBooking() { Guest = guest, Event = _event };
-            if (guestBooking.Guest == null)
-            {
-                return;
-            }
-            try
-            {
-                guest.GuestBookings.Add(guestBooking);
-                //_event.GuestBookings.Add(guestBooking);
-                _context.SaveChanges();
-            }
-            catch
-            {
-                Console.WriteLine("StaffMembers not added to event staffing");
-            }
+            List<Event> availableEvents = new List<Event>();
 
-            Console.WriteLine("StaffMembers added to event staffing");
+            var events = await GetAllEvents();
+            availableEvents = events
+                .Where(e => !e.GuestBookings.Any(gb => gb.GuestId == guest.GuestId))
+                .ToList();
+
+            return availableEvents;
+        }
+
+        public async Task CreateEvent(Event @event)
+        {
+            _context.Events.Add(@event);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Event>> GetAvailableEventsForStaffMember(Staff staff)
+        {
+            List<Event> availableEvents = new List<Event>();
+
+            var events = await GetAllEvents();
+            availableEvents = events
+                .Where(e => !e.Staffings.Any(s =>s.StaffId == staff.StaffId))
+                .ToList();
+
+            return availableEvents;
         }
     }
 }

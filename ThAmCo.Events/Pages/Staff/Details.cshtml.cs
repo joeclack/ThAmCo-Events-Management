@@ -16,24 +16,26 @@ namespace ThAmCo.Events.Pages.Staff
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
         private readonly StaffService _staffService;
+        private EventService _eventsService;
 
         public DetailsModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
             _staffService = serviceProvider.GetRequiredService<StaffService>();
+            _eventsService = serviceProvider.GetRequiredService<EventService>();
         }
 
         public ThAmCo.Events.Models.Staff Staff { get; set; } = default!;
         public List<Event> Events { get; set; } = [];
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var staff = await _context.Staff.FirstOrDefaultAsync(m => m.StaffId == id);
+            var staff = await _staffService.GetStaffMember(id);
             if (staff == null)
             {
                 return NotFound();
@@ -41,7 +43,7 @@ namespace ThAmCo.Events.Pages.Staff
             else
             {
                 Staff = staff;
-                Events = await _staffService.GetEvents(staff);
+                Events = await _staffService.GetStaffMemberEvents(id);
             }
             return Page();
         }

@@ -16,18 +16,19 @@ namespace ThAmCo.Events.Services
         {
             var staffMembers = await _context.Staff
                 .Include(s => s.Staffings)
-                    .ThenInclude(s => s.Event)
-
-            .ToListAsync();
+                .ThenInclude(s => s.Event)
+                .ToListAsync();
 
             return staffMembers;
         }
 
-        public async Task<Staff> GetStaff(int? staffId)
+        public async Task<Staff> GetStaffMember(int? staffId)
         {
             var staffMember = await _context.Staff
                 .Include(e => e.Staffings)
+                .ThenInclude(s => s.Event)
                 .FirstOrDefaultAsync(s => s.StaffId == staffId);
+            
 
             return staffMember;
         }
@@ -35,7 +36,7 @@ namespace ThAmCo.Events.Services
         public async Task<List<Staff>> GetAvailableStaff(int eventId)
         {
             List<Staff> AvailableStaff = [];
-            var staff = await _context.Staff.ToListAsync();
+            var staff = await GetAllStaff();
             foreach(var s in staff)
             {
                 var staffing = s.Staffings;
@@ -54,10 +55,11 @@ namespace ThAmCo.Events.Services
             return AvailableStaff;
         }
 
-        public async Task DeleteStaffMember(Staff? staffMember)
+        public async Task DeleteStaffMember(int staffId)
         {
             try
             {
+                var staffMember = await GetStaffMember(staffId);
                 _context.Staff.Remove(staffMember);
                 _context.SaveChanges();
             }
@@ -69,17 +71,68 @@ namespace ThAmCo.Events.Services
             Console.WriteLine("Staff deleted");
         }
 
-        internal async Task<List<Event>> GetEvents(Staff staff)
+        internal async Task<List<Event>> GetStaffMemberEvents(int staffId)
         {
-            List<Event> events = await _context.Events
-                .Where(e => e.Staffings
-                .Any(s => s.StaffId == staff.StaffId)).ToListAsync();
+            var staffMember = await GetStaffMember(staffId);
+            List<Event> events = staffMember.Staffings.Select(x=>x.Event).ToList();
             return events;
         }
 
-        //public async Task GetAssignedEvents(int staffId)
-        //{
-        //    var events = _context.
-        //}
+        public async Task CreateStaffing(int staffId, Event @event)
+        {
+            if (staffId == 0)
+            {
+                return;
+            }
+            var staff = await GetStaffMember(staffId);
+
+            if(staff == null)
+            {
+                return;
+            }
+            try
+            {
+                staff.Staffings.Add(new Staffing() { Staff = staff, Event = @event });
+                _context.SaveChanges();
+            } catch
+            {
+                Console.WriteLine("StaffMember not added to event staffing");
+            }
+
+            Console.WriteLine("StaffMember added to event staffing");
+        }
+        
+        public async Task CancelStaffing(int staffId, int eventId)
+        {
+            var staffMember  = await GetStaffMember(staffId);
+            var staffing = await GetStaffing(staffId, eventId);
+            try
+            {
+                staffMember.Staffings.Remove(staffing);
+                _context.SaveChanges();
+            }
+            catch
+            {
+            }
+        }
+
+        private async Task<Staffing> GetStaffing(int staffId, int eventId)
+        {
+            var staffings = await GetStaffings(staffId, eventId);
+            return staffings.Where(x => x.EventId == eventId).FirstOrDefault();
+        }
+
+        private async Task<List<Staffing>> GetStaffings(int staffId, int eventId)
+        {
+            var staffMember = await GetStaffMember(staffId);
+            List<Staffing> staffing = staffMember.Staffings.OrderBy(x=>x.Event.Date).ToList();
+            return staffing;
+        }
+
+        public async Task CreateStaff(Staff staff)
+        {
+            _context.Staff.Add(staff);
+            await _context.SaveChangesAsync();
+        }
     }
 }

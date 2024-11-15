@@ -43,10 +43,9 @@
             </form>
         </div>
     </div>
-
-    <!-- Guest Section -->
+    
     <div class="w-100 mx-2">
-        <h5>Manage Guests</h5>
+        <h5>Manage Events</h5>
 
         @if (!Model.AvailableEvents.Any())
         {
@@ -54,8 +53,8 @@
         }
         else
         {
-            <form asp-page-handler="AssignGuestToEvent" method="post">
-                <input type="hidden" name="eventId" value="@Model.Guest.GuestId" />
+            <form asp-page-handler="CreateGuestBooking" method="post">
+                <input type="hidden" name="guestId" value="@Model.Guest.GuestId" />
 
                 <div class="form-group mt-2">
                     <label for="eventList">Assign to Event</label>
