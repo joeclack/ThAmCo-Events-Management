@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
+using ThAmCo.Events.Services;
 
 namespace ThAmCo.Events.Pages.Guests
 {
     public class EditModel : PageModel
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
+        private readonly EventService _eventService;
 
-        public EditModel(ThAmCo.Events.Data.EventsDbContext context)
+        public EditModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
+            _eventService = serviceProvider.GetRequiredService<EventService>();
         }
 
         [BindProperty]
@@ -37,6 +40,7 @@ namespace ThAmCo.Events.Pages.Guests
             {
                 return NotFound();
             }
+            AvailableEvents = await _eventService.GetAvailableEventsForGuest(guest);
             Guest = guest;
             return Page();
         }
@@ -69,6 +73,14 @@ namespace ThAmCo.Events.Pages.Guests
             }
 
             return RedirectToPage("./Index");
+        }
+
+        public async Task<IActionResult> OnPostAssignGuestToEvent(int guestId, int eventId )
+        {
+            var guest = _context.Guests.FirstOrDefault(s => s.GuestId == guestId);
+            var _event = await _eventService.GetEvent(eventId);
+            await _eventService.AddGuestToEventGuests(guest, _event);
+            return Redirect($"../Guests/Edit?id={guestId}");
         }
 
         private bool GuestExists(int id)

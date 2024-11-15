@@ -98,12 +98,7 @@ namespace ThAmCo.Events.Pages.Events
         public async Task<IActionResult> OnPostAddStaff(int staffId, int eventId)
         {
             var staff = _context.Staff.FirstOrDefault(s => s.StaffId == staffId);
-            var _event = await _context.Events
-                .Include(e => e.Staffings)
-                    .ThenInclude(s => s.Staff)
-                .Include(e => e.GuestBookings)
-                    .ThenInclude(g => g.Guest)
-                .FirstOrDefaultAsync(m => m.EventId == eventId);
+            var _event = await _eventService.GetEvent(eventId);
             await _eventService.AddStaffToEventStaffing(staff, _event);
             return Redirect($"../Events/Edit?id={eventId}");
         }

@@ -50,23 +50,22 @@
 
         @if (!Model.AvailableEvents.Any())
         {
-            <div class="alert alert-info mt-2">All guests are either assigned to this event or unavailable</div>
+            <div class="alert alert-info mt-2">No more events available to assign guest to.</div>
         }
         else
         {
-            <form asp-page-handler="AddGuest" method="post">
-                <!-- Hidden input for EventId with name matching the parameter -->
-                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+            <form asp-page-handler="AssignGuestToEvent" method="post">
+                <input type="hidden" name="eventId" value="@Model.Guest.GuestId" />
 
                 <div class="form-group mt-2">
-                    <label for="guestList">Add Guest</label>
+                    <label for="eventList">Assign to Event</label>
                     <div class="d-flex">
                         <!-- Select Dropdown -->
-                        <select id="guestList" class="form-control me-2" name="guestId">
-                            <option value="">Select Guests</option>
-                            @foreach (var guest in Model.AvailableGuests)
+                        <select id="eventList" class="form-control me-2" name="eventId">
+                            <option value="">Select Event</option>
+                            @foreach (var _event in Model.AvailableEvents)
                             {
-                                <option value="@guest.GuestId">@guest.FirstName @guest.LastName</option>
+                                <option value="@_event.EventId">@_event.Name</option>
                             }
                         </select>
 
@@ -80,15 +79,15 @@
 
         }
         <ul class="list-group mt-4">
-            @foreach (var guestBooking in Model.Event.GuestBookings)
+            @foreach (var guestBooking in Model.Guest.GuestBookings)
             {
                 <form asp-page-handler="CancelGuestBooking" method="post">
                     <!-- Hidden inputs for EventId and GuestId -->
-                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                    <input type="hidden" name="eventId" value="@guestBooking.EventId" />
                     <input type="hidden" name="guestId" value="@guestBooking.GuestId" />
 
                 <li class="list-group-item d-flex justify-content-between">
-                        @guestBooking.Guest.FirstName @guestBooking.Guest.LastName
+                        @guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()
                     <button type="submit" class="btn btn-danger btn-sm">
                         <i class="bi bi-x-circle"></i> Cancel booking
                     </button>

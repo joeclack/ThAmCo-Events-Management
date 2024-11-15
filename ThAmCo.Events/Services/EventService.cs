@@ -28,25 +28,21 @@ namespace ThAmCo.Events.Services
 
         public async Task<List<Event>> GetAvailableEventsForGuest(Guest guest)
         {
-            List<Event> AvailableEvents = [];
-
+            List<Event> availableEvents = new List<Event>();
+            
             var events = await _context.Events
-            .Include(e => e.Staffings)
+                .Include(e => e.Staffings)
                 .ThenInclude(s => s.Staff)
-            .Include(e => e.GuestBookings)
-                    .ThenInclude(g => g.Guest)
-            .ToListAsync();
+                .Include(e => e.GuestBookings)
+                .ThenInclude(g => g.Guest)
+                .ToListAsync();
 
-            var guestBookings = guest.GuestBookings;
-            foreach(var _event in events)
-            {
-                if (!guestBookings.Where(x=>x.EventId = _event.EventId)) // TODO Fix this 
-                {
-                    AvailableEvents.Add(_event);
-                }
-            }
+            // Filter out events that already have a booking for the guest
+            availableEvents = events
+                .Where(e => !e.GuestBookings.Any(gb => gb.GuestId == guest.GuestId))
+                .ToList();
 
-            return AvailableEvents;
+            return availableEvents;
         }
 
         public async Task<Event> GetEvent(int? eventId)
