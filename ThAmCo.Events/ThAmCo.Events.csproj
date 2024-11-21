@@ -21,4 +21,8 @@
 	  <ProjectReference Include="..\ThAmCo.Venues\ThAmCo.Venues.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Catering\" />
+  </ItemGroup>
+
 </Project>

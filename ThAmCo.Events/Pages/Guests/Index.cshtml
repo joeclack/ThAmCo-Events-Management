@@ -5,13 +5,12 @@
     ViewData["Title"] = "Guests List";
 }
 
-<div class="mx-5 mt-5">
-    <div class="mb-5">
+<div class="mx-5 my-2">
+    <div class="mb-3">
         <h1 class="display-4">Guest Management</h1>
-        <p class="lead">Add, view, and manage your guest list for upcoming events.</p>
     </div>
 
-    <div class="align-items-center d-flex flex-row mb-2 pt-2">
+    <div class="align-items-center d-flex flex-row mb-4">
         <a class="btn btn-primary bg-gradient" asp-page="Create">
             <i class="bi bi-person-plus"></i> Create New Staff
         </a>
@@ -19,13 +18,11 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover table-striped align-middle shadow-sm rounded">
-            <thead class="bg-dark text-light">
-                <tr class="align-middle">
-                    <th>@Html.DisplayNameFor(model => model.Guests[0].FirstName)</th>
-                    <th>@Html.DisplayNameFor(model => model.Guests[0].LastName)</th>
-                    <th>@Html.DisplayNameFor(model => model.Guests[0].Email)</th>
-                    <th class="w-100">@Html.DisplayNameFor(model => model.Guests[0].GuestBookings)</th>
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light">
+                <tr>
+                    <th>Name</th>
+                    <th class="w-100">Bookings</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -33,28 +30,32 @@
                 @foreach (var item in Model.Guests)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
                         <td>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="fw-bold mb-1">@item.FirstName @item.LastName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="w-100">
+                            <div class="d-flex flex-wrap">
                                 @foreach (var booking in item.GuestBookings)
                                 {
-                                    <div class="p-2 bg-dark mx-1 bg-gradient text-white rounded">
+                                    <span class="badge bg-info text-light me-1 p-2">
                                         @booking.Event.Name
-                                    </div>
+                                    </span>
                                 }
                             </div>
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@item.GuestId">
+                            <div class="hstack gap-1" role="group">
+                                <a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.GuestId">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
-                                <a asp-page="./Details" class="btn btn-info text-white" asp-route-id="@item.GuestId">
+                                <a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.GuestId">
                                     <i class="bi bi-info-circle"></i> Details
                                 </a>
-                                <a data-toggle="modal" id="openModalButton" data-id="@item.GuestId" data-target="#deleteConfirmationModal" class="btn btn-danger" asp-route-id="@item.GuestId">
+                                <a data-toggle="modal" data-id="@item.GuestId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm" asp-route-id="@item.GuestId">
                                     <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>
@@ -64,6 +65,7 @@
             </tbody>
         </table>
     </div>
+
 
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

@@ -5,25 +5,24 @@
     ViewData["Title"] = "StaffMembers List";
 }
 
-<div class="mx-5 mt-5">
-    <div class="mb-5">
+<div class="mx-5 my-2">
+    <div class="mb-3">
         <h1 class="display-4">Staff Management</h1>
-        <p class="lead">Add, view, and manage your event staff.</p>
     </div>
     
-    <div class="align-items-center d-flex flex-row mb-2 pt-2">
+    <div class="align-items-center d-flex flex-row mb-4">
         <a class="btn btn-primary bg-gradient" asp-page="Create">
             <i class="bi bi-person-plus"></i> Create New Staff
         </a>
-        <h5 class="mx-2">@Model.StaffMembers.Count() staff members</h5>
+        <h5 class="mx-2">@Model.StaffMembers.Count() staff</h5>
     </div>
 
+    
     <div class="table-responsive">
-        <table class="table table-hover table-striped align-middle shadow-sm rounded">
-            <thead class="bg-dark text-light">
-                <tr class="align-middle">
-                    <th>@Html.DisplayNameFor(model => model.StaffMembers[0].FirstName)</th>
-                    <th>@Html.DisplayNameFor(model => model.StaffMembers[0].LastName)</th>
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light">
+                <tr>
+                    <th>Name</th>
                     <th>@Html.DisplayNameFor(model => model.StaffMembers[0].Role)</th>
                     <th class="w-100">@Html.DisplayNameFor(model => model.StaffMembers[0].Staffings)</th>
                     <th>Actions</th>
@@ -33,28 +32,39 @@
                 @foreach (var item in Model.StaffMembers)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Role)</td>
                         <td>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="fw-bold mb-1">@item.FirstName @item.LastName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="fw-bold mb-1">@item.Role</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-wrap">
                                 @foreach (var staffing in item.Staffings)
                                 {
-                                    <div class="p-2 bg-dark mx-1 bg-gradient text-white rounded">
+                                    <span class="badge bg-info text-light me-1 p-2">
                                         @staffing.Event.Name
-                                    </div>
+                                    </span>
                                 }
                             </div>
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@item.StaffId">
+                            <div class="hstack gap-1" role="group">
+                                <a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.StaffId">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
-                                <a asp-page="./Details" class="btn btn-info text-white" asp-route-id="@item.StaffId">
+                                <a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.StaffId">
                                     <i class="bi bi-info-circle"></i> Details
                                 </a>
-                                <a data-toggle="modal" id="openModalButton" data-id="@item.StaffId" data-target="#deleteConfirmationModal" class="btn btn-danger" asp-route-id="@item.StaffId">
+                                <a data-toggle="modal" data-id="@item.StaffId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm" asp-route-id="@item.StaffId">
                                     <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>
@@ -64,6 +74,8 @@
             </tbody>
         </table>
     </div>
+
+
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
