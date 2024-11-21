@@ -32,6 +32,11 @@
                     <input asp-for="Staff.Role" class="form-control" />
                     <span asp-validation-for="Staff.Role" class="text-danger"></span>
                 </div>
+                <div class="form-group mt-2 ms-1">
+                    <label asp-for="Staff.IsFirstAider" class="control-label"></label>
+                    <input asp-for="Staff.IsFirstAider" />
+                    <span asp-validation-for="Staff.IsFirstAider" class="text-danger"></span>
+                </div>
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Save

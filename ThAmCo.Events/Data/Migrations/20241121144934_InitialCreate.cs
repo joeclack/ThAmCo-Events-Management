@@ -47,14 +47,15 @@ namespace ThAmCo.Events.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StaffMembers",
+                name: "Staff",
                 columns: table => new
                 {
                     StaffId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                    Role = table.Column<string>(type: "TEXT", nullable: false),
+                    IsFirstAider = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,7 +105,7 @@ namespace ThAmCo.Events.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Staffing_Staff_StaffId",
                         column: x => x.StaffId,
-                        principalTable: "StaffMembers",
+                        principalTable: "Staff",
                         principalColumn: "StaffId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -127,20 +128,20 @@ namespace ThAmCo.Events.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "StaffMembers",
-                columns: new[] { "StaffId", "FirstName", "LastName", "Role" },
+                table: "Staff",
+                columns: new[] { "StaffId", "FirstName", "IsFirstAider", "LastName", "Role" },
                 values: new object[,]
                 {
-                    { 1, "John", "Doe", "Chef" },
-                    { 2, "Jane", "Smith", "Server" },
-                    { 3, "Emily", "Johnson", "Manager" },
-                    { 4, "Michael", "Williams", "Chef" },
-                    { 5, "Sarah", "Brown", "Server" },
-                    { 6, "David", "Jones", "Bartender" },
-                    { 7, "Laura", "Garcia", "Host" },
-                    { 8, "Daniel", "Martinez", "Sous Chef" },
-                    { 9, "Sophia", "Anderson", "Server" },
-                    { 10, "James", "Taylor", "Manager" }
+                    { 1, "John", false, "Doe", "Chef" },
+                    { 2, "Jane", false, "Smith", "Server" },
+                    { 3, "Emily", true, "Johnson", "Manager" },
+                    { 4, "Michael", true, "Williams", "Chef" },
+                    { 5, "Sarah", true, "Brown", "Server" },
+                    { 6, "David", false, "Jones", "Bartender" },
+                    { 7, "Laura", false, "Garcia", "Host" },
+                    { 8, "Daniel", true, "Martinez", "Sous Chef" },
+                    { 9, "Sophia", true, "Anderson", "Server" },
+                    { 10, "James", true, "Taylor", "Manager" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -170,7 +171,7 @@ namespace ThAmCo.Events.Data.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "StaffMembers");
+                name: "Staff");
         }
     }
 }

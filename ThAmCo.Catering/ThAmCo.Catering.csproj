@@ -18,8 +18,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.9.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ThAmCo.Events\ThAmCo.Events.csproj" />
-  </ItemGroup>
-
 </Project>

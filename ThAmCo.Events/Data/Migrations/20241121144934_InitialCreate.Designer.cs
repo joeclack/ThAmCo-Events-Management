@@ -11,7 +11,7 @@ using ThAmCo.Events.Data;
 namespace ThAmCo.Events.Data.Migrations
 {
     [DbContext(typeof(EventsDbContext))]
-    [Migration("20241111153056_InitialCreate")]
+    [Migration("20241121144934_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace ThAmCo.Events.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("ThAmCo.Events.Models.Events", b =>
+            modelBuilder.Entity("ThAmCo.Events.Models.Event", b =>
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace ThAmCo.Events.Data.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Models.Guests", b =>
+            modelBuilder.Entity("ThAmCo.Events.Models.Guest", b =>
                 {
                     b.Property<int>("GuestId")
                         .ValueGeneratedOnAdd()
@@ -163,7 +163,7 @@ namespace ThAmCo.Events.Data.Migrations
                     b.ToTable("GuestBookings");
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Models.StaffMembers", b =>
+            modelBuilder.Entity("ThAmCo.Events.Models.Staff", b =>
                 {
                     b.Property<int>("StaffId")
                         .ValueGeneratedOnAdd()
@@ -172,6 +172,9 @@ namespace ThAmCo.Events.Data.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsFirstAider")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -183,13 +186,14 @@ namespace ThAmCo.Events.Data.Migrations
 
                     b.HasKey("StaffId");
 
-                    b.ToTable("StaffMembers");
+                    b.ToTable("Staff");
 
                     b.HasData(
                         new
                         {
                             StaffId = 1,
                             FirstName = "John",
+                            IsFirstAider = false,
                             LastName = "Doe",
                             Role = "Chef"
                         },
@@ -197,6 +201,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 2,
                             FirstName = "Jane",
+                            IsFirstAider = false,
                             LastName = "Smith",
                             Role = "Server"
                         },
@@ -204,6 +209,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 3,
                             FirstName = "Emily",
+                            IsFirstAider = true,
                             LastName = "Johnson",
                             Role = "Manager"
                         },
@@ -211,6 +217,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 4,
                             FirstName = "Michael",
+                            IsFirstAider = true,
                             LastName = "Williams",
                             Role = "Chef"
                         },
@@ -218,6 +225,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 5,
                             FirstName = "Sarah",
+                            IsFirstAider = true,
                             LastName = "Brown",
                             Role = "Server"
                         },
@@ -225,6 +233,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 6,
                             FirstName = "David",
+                            IsFirstAider = false,
                             LastName = "Jones",
                             Role = "Bartender"
                         },
@@ -232,6 +241,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 7,
                             FirstName = "Laura",
+                            IsFirstAider = false,
                             LastName = "Garcia",
                             Role = "Host"
                         },
@@ -239,6 +249,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 8,
                             FirstName = "Daniel",
+                            IsFirstAider = true,
                             LastName = "Martinez",
                             Role = "Sous Chef"
                         },
@@ -246,6 +257,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 9,
                             FirstName = "Sophia",
+                            IsFirstAider = true,
                             LastName = "Anderson",
                             Role = "Server"
                         },
@@ -253,6 +265,7 @@ namespace ThAmCo.Events.Data.Migrations
                         {
                             StaffId = 10,
                             FirstName = "James",
+                            IsFirstAider = true,
                             LastName = "Taylor",
                             Role = "Manager"
                         });
@@ -275,55 +288,55 @@ namespace ThAmCo.Events.Data.Migrations
 
             modelBuilder.Entity("ThAmCo.Events.Models.GuestBooking", b =>
                 {
-                    b.HasOne("ThAmCo.Events.Models.Events", "Events")
+                    b.HasOne("ThAmCo.Events.Models.Event", "Event")
                         .WithMany("GuestBookings")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ThAmCo.Events.Models.Guests", "Guests")
+                    b.HasOne("ThAmCo.Events.Models.Guest", "Guest")
                         .WithMany("GuestBookings")
                         .HasForeignKey("GuestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Events");
+                    b.Navigation("Event");
 
-                    b.Navigation("Guests");
+                    b.Navigation("Guest");
                 });
 
             modelBuilder.Entity("ThAmCo.Events.Models.Staffing", b =>
                 {
-                    b.HasOne("ThAmCo.Events.Models.Events", "Events")
+                    b.HasOne("ThAmCo.Events.Models.Event", "Event")
                         .WithMany("Staffings")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ThAmCo.Events.Models.StaffMembers", "StaffMembers")
+                    b.HasOne("ThAmCo.Events.Models.Staff", "Staff")
                         .WithMany("Staffings")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Events");
+                    b.Navigation("Event");
 
-                    b.Navigation("StaffMembers");
+                    b.Navigation("Staff");
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Models.Events", b =>
+            modelBuilder.Entity("ThAmCo.Events.Models.Event", b =>
                 {
                     b.Navigation("GuestBookings");
 
                     b.Navigation("Staffings");
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Models.Guests", b =>
+            modelBuilder.Entity("ThAmCo.Events.Models.Guest", b =>
                 {
                     b.Navigation("GuestBookings");
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Models.StaffMembers", b =>
+            modelBuilder.Entity("ThAmCo.Events.Models.Staff", b =>
                 {
                     b.Navigation("Staffings");
                 });

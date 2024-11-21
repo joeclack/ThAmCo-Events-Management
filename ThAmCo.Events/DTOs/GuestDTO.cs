@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ThAmCo.Events.Models;
+﻿using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.DTOs
 {

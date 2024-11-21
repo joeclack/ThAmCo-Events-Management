@@ -8,6 +8,7 @@ namespace ThAmCo.Events.DTOs
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public bool IsFirstAider { get; set; }
 
         public StaffDTO CreateDTO(Staff staff)
         {
@@ -16,7 +17,8 @@ namespace ThAmCo.Events.DTOs
                 StaffId = staff.StaffId,
                 FirstName = staff.FirstName,
                 LastName = staff.LastName,
-                Role = staff.Role
+                Role = staff.Role,
+                IsFirstAider = staff.IsFirstAider
             };
         }
     }

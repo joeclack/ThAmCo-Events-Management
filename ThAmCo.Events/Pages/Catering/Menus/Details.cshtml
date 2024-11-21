@@ -1,0 +1,43 @@
+﻿@page
+@model ThAmCo.Events.Pages.Catering.Menus.DetailsModel
+@{
+}
+<div class="mx-5 mt-5">
+    <div class="mb-5">
+        <h1 class="display-4">Menu Details</h1>
+        <p class="lead">View the details for this menu.</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Event Information</h4>
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">Menu Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Menu.MenuName)</dd>
+            </dl>
+        </div>
+    </div>
+
+    @if (Model.Menu.MenuFoodItems.Any())
+    {
+        <h4 class="card-title mb-3">Staffing</h4>
+        <ul class="list-group">
+            @foreach (var menu in Model.Menu.MenuFoodItems)
+            {
+                <li class="list-group-item d-flex justify-content-between">
+                    @menu.FoodItem.Name @menu.FoodItem.Description
+                    <a asp-page="/FoodItems/Details" asp-route-id="@menu.FoodItemId" class="btn btn-primary text-light">Details</a>
+                </li>
+            }
+        </ul>
+    }
+
+    <div class=" mt-4">
+        <a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.Menu.MenuId">
+            <i class="bi bi-pencil-square"></i> Edit Meun
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary btn">
+            <i class="bi bi-arrow-left-circle"></i> Back to List
+        </a>
+    </div>
+</div>

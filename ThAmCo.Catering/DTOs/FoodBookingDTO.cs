@@ -10,7 +10,7 @@ namespace ThAmCo.Catering.DTOs
         public int MenuId { get; set; }
         public DateTime FoodBookingDate { get; set; }
 
-        public FoodBookingDTO CreateDTO(FoodBooking foodBooking)
+        public FoodBookingDTO CreateDTO(Catering.Models.FoodBooking foodBooking)
         {
             return new FoodBookingDTO
             {

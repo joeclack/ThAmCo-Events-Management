@@ -33,10 +33,14 @@
                 {
                     <tr>
                         <td>
-                            <div class="d-flex align-items-center">
+                            <div class="hstack gap-2 align-items-center">
                                 <div>
                                     <p class="fw-bold mb-1">@item.FirstName @item.LastName</p>
                                 </div>
+                                @if (item.IsFirstAider)
+                                {
+                                    <i class="bi bi-bandaid"></i>
+                                }
                             </div>
                         </td>
                         <td>

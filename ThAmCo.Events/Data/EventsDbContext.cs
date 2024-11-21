@@ -86,16 +86,16 @@ namespace ThAmCo.Events.Data
             );
 
             modelBuilder.Entity<Staff>().HasData(
-                new Staff { StaffId = 1, FirstName = "John", LastName = "Doe", Role = "Chef" },
-                new Staff { StaffId = 2, FirstName = "Jane", LastName = "Smith", Role = "Server" },
-                new Staff { StaffId = 3, FirstName = "Emily", LastName = "Johnson", Role = "Manager" },
-                new Staff { StaffId = 4, FirstName = "Michael", LastName = "Williams", Role = "Chef" },
-                new Staff { StaffId = 5, FirstName = "Sarah", LastName = "Brown", Role = "Server" },
-                new Staff { StaffId = 6, FirstName = "David", LastName = "Jones", Role = "Bartender" },
-                new Staff { StaffId = 7, FirstName = "Laura", LastName = "Garcia", Role = "Host" },
-                new Staff { StaffId = 8, FirstName = "Daniel", LastName = "Martinez", Role = "Sous Chef" },
-                new Staff { StaffId = 9, FirstName = "Sophia", LastName = "Anderson", Role = "Server" },
-                new Staff { StaffId = 10, FirstName = "James", LastName = "Taylor", Role = "Manager" }
+                new Staff { StaffId = 1, FirstName = "John", LastName = "Doe", Role = "Chef", IsFirstAider = false },
+                new Staff { StaffId = 2, FirstName = "Jane", LastName = "Smith", Role = "Server", IsFirstAider = false },
+                new Staff { StaffId = 3, FirstName = "Emily", LastName = "Johnson", Role = "Manager", IsFirstAider = true },
+                new Staff { StaffId = 4, FirstName = "Michael", LastName = "Williams", Role = "Chef", IsFirstAider = true },
+                new Staff { StaffId = 5, FirstName = "Sarah", LastName = "Brown", Role = "Server" , IsFirstAider = true },
+                new Staff { StaffId = 6, FirstName = "David", LastName = "Jones", Role = "Bartender" , IsFirstAider = false },
+                new Staff { StaffId = 7, FirstName = "Laura", LastName = "Garcia", Role = "Host" , IsFirstAider = false },
+                new Staff { StaffId = 8, FirstName = "Daniel", LastName = "Martinez", Role = "Sous Chef" , IsFirstAider = true },
+                new Staff { StaffId = 9, FirstName = "Sophia", LastName = "Anderson", Role = "Server" , IsFirstAider = true },
+                new Staff { StaffId = 10, FirstName = "James", LastName = "Taylor", Role = "Manager" , IsFirstAider = true }
             );
         }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NHibernate.Hql.Ast.ANTLR.Tree;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 
@@ -18,6 +19,7 @@ namespace ThAmCo.Events.Pages.Events
 
         public Event Event { get; set; } = default!;
 
+        public bool FirstAiderPresent { get; set; }
         public bool IsUnderStaffed { get; set; }
         public int StaffRequiredForEvent { get; set; }
         public string UnderStaffAlertText { get; set; } = string.Empty;
@@ -48,6 +50,11 @@ namespace ThAmCo.Events.Pages.Events
             return false;
         }
         
+        public bool IsFirstAiderPresent()
+        {
+            return Event.Staffings.Any(x=>x.Staff.IsFirstAider);
+        }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -64,6 +71,7 @@ namespace ThAmCo.Events.Pages.Events
             {
                 Event = _event;
                 IsUnderStaffed = IsEventUnderStaffed();
+                FirstAiderPresent = IsFirstAiderPresent();
             }
             return Page();
         }

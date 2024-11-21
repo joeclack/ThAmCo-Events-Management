@@ -40,8 +40,6 @@ public class CateringDbContext : DbContext
         modelBuilder.Entity<MenuFoodItem>()
             .HasKey(mfi => new { mfi.MenuId, mfi.FoodItemId });
 
-        // Don't need to explicitly define primary keys as EF core infers them from properties with "Id" in the name
-
         modelBuilder.Entity<MenuFoodItem>()
             .HasOne(mfi => mfi.Menu)
             .WithMany(m => m.MenuFoodItems)

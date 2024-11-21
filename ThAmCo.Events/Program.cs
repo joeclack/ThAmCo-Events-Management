@@ -9,6 +9,7 @@ builder.Services.AddDbContext<EventsDbContext>();
 builder.Services.AddTransient<StaffService>();
 builder.Services.AddTransient<EventService>();
 builder.Services.AddTransient<GuestService>();
+builder.Services.AddHttpClient<CateringService>();
 
 var app = builder.Build();
 

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ThAmCo.Catering.Models;
+﻿using ThAmCo.Catering.Models;
 
 namespace ThAmCo.Catering.DTOs
 {
@@ -9,9 +8,9 @@ namespace ThAmCo.Catering.DTOs
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public float UnitPrice { get; set; }
-        public ICollection<MenuFoodItem> MenuFoodItems { get; set; } = [];
+        public ICollection<Catering.Models.MenuFoodItem> MenuFoodItems { get; set; } = [];
 
-        public FoodItemDTO CreateDTO(FoodItem foodItem)
+        public FoodItemDTO CreateDTO(Catering.Models.FoodItem foodItem)
         {
             return new FoodItemDTO
             {

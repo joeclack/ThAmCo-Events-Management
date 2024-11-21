@@ -30,6 +30,10 @@
             {
                 <div class="alert alert-danger">@Model.UnderStaffAlertText</div>
             }
+            @if (!Model.FirstAiderPresent)
+            {
+                <div class="alert alert-danger">Please add a staff member who is a first aider</div>
+            }
         </div>
     </div>
 

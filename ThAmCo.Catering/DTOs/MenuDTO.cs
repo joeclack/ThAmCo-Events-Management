@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ThAmCo.Catering.Models;
+﻿using ThAmCo.Catering.Models;
 
 namespace ThAmCo.Catering.DTOs
 {
