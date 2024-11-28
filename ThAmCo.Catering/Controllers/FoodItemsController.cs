@@ -33,7 +33,7 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/FoodItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FoodItemDTO>> GetFoodItem(int id)
+        public async Task<ActionResult<FlatFoodDTO>> GetFoodItem(int id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);
 
@@ -42,7 +42,7 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            return new FoodItemDTO().CreateDTO(foodItem);
+            return new FlatFoodDTO().CreateFlatFoodDTO(foodItem);
         }
 
         // PUT: api/FoodItems/5

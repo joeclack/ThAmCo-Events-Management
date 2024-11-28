@@ -33,19 +33,21 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/Menus/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MenuDTO>> GetMenu(int id)
+        public async Task<ActionResult<FlatMenuDTO>> GetMenu(int id)
         {
             var menu = await _context.Menus
                 .Include(m => m.MenuFoodItems)
-                .Include(m => m.FoodBookings)
+                .ThenInclude(m => m.FoodItem)
+                .Include(f => f.FoodBookings)
                 .FirstOrDefaultAsync(m => m.MenuId == id);
 
             if (menu == null)
             {
                 return NotFound();
             }
+            FlatMenuDTO dto = new FlatMenuDTO().CreateFlatMenuDTO(menu);
 
-            return new MenuDTO().CreateDTO(menu);
+            return dto;
         }
 
         // PUT: api/Menus/5

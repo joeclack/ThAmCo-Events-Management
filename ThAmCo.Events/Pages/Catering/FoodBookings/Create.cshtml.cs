@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Services;
 
-namespace ThAmCo.Events.Pages.Catering.Menus
+namespace ThAmCo.Events.Pages.Catering.FoodBookings
 {
     public class CreateModel : PageModel
     {
-        private readonly CateringService _cateringService;
+        public FoodBookingDTO Booking { get; set; }
+        public CateringService _cateringService;
 
         public CreateModel(CateringService cateringService)
         {
             _cateringService = cateringService;
         }
 
-        public async Task OnGet()
+        public void OnGet()
         {
-            
         }
     }
 }
