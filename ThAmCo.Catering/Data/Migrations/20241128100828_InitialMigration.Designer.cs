@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ThAmCo.Catering.Data.Migrations
 {
     [DbContext(typeof(CateringDbContext))]
-    [Migration("20241111130623_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241128100828_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,7 @@ namespace ThAmCo.Catering.Data.Migrations
                         {
                             FoodBookingId = 1,
                             ClientReferenceId = 1,
-                            FoodBookingDate = new DateTime(2024, 11, 11, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1568),
+                            FoodBookingDate = new DateTime(2024, 11, 28, 10, 8, 27, 416, DateTimeKind.Local).AddTicks(900),
                             MenuId = 1,
                             NumberOfGuests = 1
                         },
@@ -56,7 +56,7 @@ namespace ThAmCo.Catering.Data.Migrations
                         {
                             FoodBookingId = 2,
                             ClientReferenceId = 2,
-                            FoodBookingDate = new DateTime(2024, 11, 21, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1629),
+                            FoodBookingDate = new DateTime(2024, 12, 8, 10, 8, 27, 416, DateTimeKind.Local).AddTicks(948),
                             MenuId = 2,
                             NumberOfGuests = 5
                         },
@@ -64,7 +64,7 @@ namespace ThAmCo.Catering.Data.Migrations
                         {
                             FoodBookingId = 3,
                             ClientReferenceId = 3,
-                            FoodBookingDate = new DateTime(2024, 12, 11, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1634),
+                            FoodBookingDate = new DateTime(2024, 12, 28, 10, 8, 27, 416, DateTimeKind.Local).AddTicks(951),
                             MenuId = 3,
                             NumberOfGuests = 2
                         });
@@ -281,68 +281,6 @@ namespace ThAmCo.Catering.Data.Migrations
                     b.HasIndex("FoodItemId");
 
                     b.ToTable("MenuFoodItems");
-
-                    b.HasData(
-                        new
-                        {
-                            MenuId = 1,
-                            FoodItemId = 1
-                        },
-                        new
-                        {
-                            MenuId = 1,
-                            FoodItemId = 3
-                        },
-                        new
-                        {
-                            MenuId = 1,
-                            FoodItemId = 5
-                        },
-                        new
-                        {
-                            MenuId = 1,
-                            FoodItemId = 6
-                        },
-                        new
-                        {
-                            MenuId = 2,
-                            FoodItemId = 2
-                        },
-                        new
-                        {
-                            MenuId = 2,
-                            FoodItemId = 3
-                        },
-                        new
-                        {
-                            MenuId = 2,
-                            FoodItemId = 7
-                        },
-                        new
-                        {
-                            MenuId = 2,
-                            FoodItemId = 15
-                        },
-                        new
-                        {
-                            MenuId = 3,
-                            FoodItemId = 4
-                        },
-                        new
-                        {
-                            MenuId = 3,
-                            FoodItemId = 10
-                        },
-                        new
-                        {
-                            MenuId = 3,
-                            FoodItemId = 14
-                        },
-                        new
-                        {
-                            MenuId = 3,
-                            FoodItemId = 13
-                        });
                 });
 
             modelBuilder.Entity("ThAmCo.Catering.Models.FoodBooking", b =>
@@ -361,13 +299,13 @@ namespace ThAmCo.Catering.Data.Migrations
                     b.HasOne("ThAmCo.Catering.Models.FoodItem", "FoodItem")
                         .WithMany("MenuFoodItems")
                         .HasForeignKey("FoodItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ThAmCo.Catering.Models.Menu", "Menu")
                         .WithMany("MenuFoodItems")
                         .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FoodItem");

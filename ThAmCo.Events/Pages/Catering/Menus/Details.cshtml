@@ -25,7 +25,6 @@
             @foreach (var menu in Model.Menu.MenuFoodItems)
             {
                 <li class="list-group-item d-flex justify-content-between">
-                    @menu.FoodItem.Name @menu.FoodItem.Description
                     <a asp-page="/FoodItems/Details" asp-route-id="@menu.FoodItemId" class="btn btn-primary text-light">Details</a>
                 </li>
             }

@@ -27,15 +27,18 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            var dto = menus.Select(m => new MenuDTO().CreateDTO(m)).ToList();
-            return dto;
+            var meunDTOS = menus.Select(m => new MenuDTO().CreateDTO(m)).ToList();
+            return meunDTOS;
         }
 
         // GET: api/Menus/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MenuDTO>> GetMenu(int id)
         {
-            var menu = await _context.Menus.FindAsync(id);
+            var menu = await _context.Menus
+                .Include(m => m.MenuFoodItems)
+                .Include(m => m.FoodBookings)
+                .FirstOrDefaultAsync(m => m.MenuId == id);
 
             if (menu == null)
             {

@@ -8,9 +8,9 @@ namespace ThAmCo.Catering.DTOs
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public float UnitPrice { get; set; }
-        public ICollection<Catering.Models.MenuFoodItem> MenuFoodItems { get; set; } = [];
+        public ICollection<MenuFoodItem> MenuFoodItems { get; set; } = [];
 
-        public FoodItemDTO CreateDTO(Catering.Models.FoodItem foodItem)
+        public FoodItemDTO CreateDTO(FoodItem foodItem)
         {
             return new FoodItemDTO
             {

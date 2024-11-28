@@ -7,7 +7,7 @@ namespace ThAmCo.Catering.DTOs
         public int MenuId { get; set; }
         public int FoodItemId { get; set; }
 
-        public MenuFoodItemDTO CreateDTO(Catering.Models.MenuFoodItem menuFoodItem)
+        public MenuFoodItemDTO CreateDTO(MenuFoodItem menuFoodItem)
         {
             return new MenuFoodItemDTO
             {

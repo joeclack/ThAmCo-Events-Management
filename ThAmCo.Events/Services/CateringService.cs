@@ -49,5 +49,12 @@ namespace ThAmCo.Events.Services
             }
             return item;
         }
+
+        public async Task<List<MenuFoodItemDTO>> GetMenuFoodItemsForMenu(int menuId)
+        {
+            MenuDTO menu = await GetMenu(menuId);
+            var mfis = menu.MenuFoodItems;
+            return mfis.ToList();
+        }
     }
 }

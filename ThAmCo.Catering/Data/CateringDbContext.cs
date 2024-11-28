@@ -52,6 +52,13 @@ public class CateringDbContext : DbContext
             .HasForeignKey(mfi => mfi.FoodItemId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<FoodBooking>()
+            .HasOne(fb => fb.Menu)
+            .WithMany(m => m.FoodBookings)
+            .HasForeignKey(fb => fb.MenuId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
         modelBuilder.Entity<FoodItem>().HasData(
             new FoodItem { FoodItemId = 1, Name = "Classic Chicken Sandwich", Description = "Grilled chicken breast with lettuce, tomato, and mayo on a toasted bun", UnitPrice = 5.99f },
             new FoodItem { FoodItemId = 2, Name = "Fresh Veggie Wrap", Description = "Whole-wheat wrap with hummus, fresh veggies, and a hint of vinaigrette", UnitPrice = 4.49f },
@@ -80,21 +87,6 @@ public class CateringDbContext : DbContext
             new Menu { MenuId = 1, MenuName = "Basic Lunch" },
             new Menu { MenuId = 2, MenuName = "Vegetarian Feast" },
             new Menu { MenuId = 3, MenuName = "Deluxe Dinner" }
-        );
-
-        modelBuilder.Entity<MenuFoodItem>().HasData(
-            new MenuFoodItem { MenuId = 1, FoodItemId = 1 }, 
-            new MenuFoodItem { MenuId = 1, FoodItemId = 3 }, 
-            new MenuFoodItem { MenuId = 1, FoodItemId = 5 }, 
-            new MenuFoodItem { MenuId = 1, FoodItemId = 6 }, 
-            new MenuFoodItem { MenuId = 2, FoodItemId = 2 }, 
-            new MenuFoodItem { MenuId = 2, FoodItemId = 3 }, 
-            new MenuFoodItem { MenuId = 2, FoodItemId = 7 }, 
-            new MenuFoodItem { MenuId = 2, FoodItemId = 15 },
-            new MenuFoodItem { MenuId = 3, FoodItemId = 4 }, 
-            new MenuFoodItem { MenuId = 3, FoodItemId = 10 },
-            new MenuFoodItem { MenuId = 3, FoodItemId = 14 },
-            new MenuFoodItem { MenuId = 3, FoodItemId = 13 }
         );
 
         modelBuilder.Entity<FoodBooking>().HasData(

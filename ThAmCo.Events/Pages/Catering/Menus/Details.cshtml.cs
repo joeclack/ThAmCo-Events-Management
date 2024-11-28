@@ -19,6 +19,7 @@ namespace ThAmCo.Events.Pages.Catering.Menus
         public async Task OnGet(int id)
         {
             Menu = await _cateringService.GetMenu(id);
+            //var mfis = _cateringService.GetMenuFoodItemsForMenu(id);
         }
     }
 }

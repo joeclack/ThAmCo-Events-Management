@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ThAmCo.Catering.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,13 +78,13 @@ namespace ThAmCo.Catering.Data.Migrations
                         column: x => x.FoodItemId,
                         principalTable: "FoodItems",
                         principalColumn: "FoodItemId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MenuFoodItems_Menus_MenuId",
                         column: x => x.MenuId,
                         principalTable: "Menus",
                         principalColumn: "MenuId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -129,28 +129,9 @@ namespace ThAmCo.Catering.Data.Migrations
                 columns: new[] { "FoodBookingId", "ClientReferenceId", "FoodBookingDate", "MenuId", "NumberOfGuests" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 11, 11, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1568), 1, 1 },
-                    { 2, 2, new DateTime(2024, 11, 21, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1629), 2, 5 },
-                    { 3, 3, new DateTime(2024, 12, 11, 13, 6, 22, 821, DateTimeKind.Local).AddTicks(1634), 3, 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "MenuFoodItems",
-                columns: new[] { "FoodItemId", "MenuId" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 3, 1 },
-                    { 5, 1 },
-                    { 6, 1 },
-                    { 2, 2 },
-                    { 3, 2 },
-                    { 7, 2 },
-                    { 15, 2 },
-                    { 4, 3 },
-                    { 10, 3 },
-                    { 13, 3 },
-                    { 14, 3 }
+                    { 1, 1, new DateTime(2024, 11, 28, 10, 8, 27, 416, DateTimeKind.Local).AddTicks(900), 1, 1 },
+                    { 2, 2, new DateTime(2024, 12, 8, 10, 8, 27, 416, DateTimeKind.Local).AddTicks(948), 2, 5 },
+                    { 3, 3, new DateTime(2024, 12, 28, 10, 8, 27, 416, DateTimeKind.Local).AddTicks(951), 3, 2 }
                 });
 
             migrationBuilder.CreateIndex(
