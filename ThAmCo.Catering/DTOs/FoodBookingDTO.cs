@@ -21,6 +21,18 @@ namespace ThAmCo.Catering.DTOs
                 FoodBookingDate = foodBooking.FoodBookingDate
             };
         }
+        
+        public FoodBooking CreateModel(FoodBookingDTO foodBookingDTO)
+        {
+            return new FoodBooking
+            {
+                FoodBookingId = foodBookingDTO.FoodBookingId,
+                ClientReferenceId = foodBookingDTO.ClientReferenceId,
+                NumberOfGuests = foodBookingDTO.NumberOfGuests,
+                MenuId = foodBookingDTO.MenuId,
+                FoodBookingDate = foodBookingDTO.FoodBookingDate
+            };
+        }
 
     }
 }

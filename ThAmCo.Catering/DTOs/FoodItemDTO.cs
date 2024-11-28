@@ -21,5 +21,17 @@ namespace ThAmCo.Catering.DTOs
                 MenuFoodItems = foodItem.MenuFoodItems
             };
         }
+
+        public FoodItem CreateModel(FoodItemDTO foodItemDTO)
+        {
+            return new FoodItem
+            {
+                FoodItemId = foodItemDTO.FoodItemId,
+                Name = foodItemDTO.Name,
+                Description = foodItemDTO.Description,
+                UnitPrice = foodItemDTO.UnitPrice,
+                MenuFoodItems = foodItemDTO.MenuFoodItems
+            };
+        }
     }
 }

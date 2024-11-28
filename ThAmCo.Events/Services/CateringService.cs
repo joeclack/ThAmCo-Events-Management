@@ -1,4 +1,5 @@
-﻿using NHibernate.Cfg.MappingSchema;
+﻿using Microsoft.AspNetCore.Mvc;
+using NHibernate.Cfg.MappingSchema;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -50,11 +51,25 @@ namespace ThAmCo.Events.Services
             return item;
         }
 
-        public async Task<List<MenuFoodItemDTO>> GetMenuFoodItemsForMenu(int menuId)
+        public async Task<IActionResult> CreateMenu(MenuDTO menuDTO)
         {
-            MenuDTO menu = await GetMenu(menuId);
-            var mfis = menu.MenuFoodItems;
-            return mfis.ToList();
+            var response = await _httpClient.PostAsync(ServiceBaseUrl + CategoryEndPoint, menuDTO);
+            response.EnsureSuccessStatusCode();
+            return new OkResult();
+        }
+
+        public async Task<IActionResult> EditMenu(int id, MenuDTO menuDTO)
+        {
+            var response = await _httpClient.PutAsync(ServiceBaseUrl + CategoryEndPoint + $"/{id}", menuDTO);
+            response.EnsureSuccessStatusCode();
+            return new OkResult();
+        }
+
+        public async Task<IActionResult> DeleteMenu(int id)
+        {
+            var response = await _httpClient.DeleteAsync(ServiceBaseUrl + CategoryEndPoint + $"/{id}");
+            response.EnsureSuccessStatusCode();
+            return new OkResult();
         }
     }
 }

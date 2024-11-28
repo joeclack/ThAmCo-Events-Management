@@ -10,6 +10,5 @@ namespace ThAmCo.Events.DTOs
         public int MenuId { get; set; }
         public DateTime FoodBookingDate { get; set; }
 
-
     }
 }
