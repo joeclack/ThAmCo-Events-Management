@@ -22,5 +22,12 @@ namespace ThAmCo.Events.Pages.Catering.Menus
             Menus = await _cateringService.GetMenus();
         }
 
+        public async Task<IActionResult> OnPostDeleteMenu(int menuId)
+        {
+            await _cateringService.DeleteMenu(menuId);
+
+            return Redirect("./Menus");
+        }
+
     }
 }

@@ -40,30 +40,36 @@
         <div class="w-100 mx-2">
             <h5>Manage Food Items</h5>
 
-            <form asp-page-handler="AssignFoodItemToMenu" method="post">
-                <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
+            @if (!Model.AvailableFoodItems.Any())
+            {
+                <div class="alert alert-info mt-2">All food items are either assigned to this menu or unavailable</div>
+            }
+            else
+            {
+                <form asp-page-handler="AssignFoodItemToMenu" method="post">
+                    <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
 
-                <div class="form-group mt-2">
-                    <div class="d-flex">
-                        <select id="foodList" class="form-control me-2" name="foodItemId">
-                            <option value="">Select Food</option>
-                            @foreach (var food in Model.AvailableFoodItems)
-                            {
-                                <option value="@food.FoodItemId">@food.Name</option>
-                            }
-                        </select>
+                    <div class="form-group mt-2">
+                        <div class="d-flex">
+                            <select id="foodList" class="form-control me-2" name="foodItemId">
+                                <option value="">Select Food</option>
+                                @foreach (var food in Model.AvailableFoodItems)
+                                {
+                                    <option value="@food.FoodItemId">@food.Name</option>
+                                }
+                            </select>
 
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-person-plus"></i> Add
-                        </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-person-plus"></i> Add
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
-
+                </form>
+            }
             <ul class="list-group mt-4">
                 @foreach (var food in Model.Menu.MenuFoodItems)
                 {
-                    <form asp-page-handler="RemoveFoodItem" method="post">
+                    <form asp-page-handler="DeleteMenuFoodItem" method="post">
                         <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
                         <input type="hidden" name="foodItemId" value="@food.FoodItemId" />
 

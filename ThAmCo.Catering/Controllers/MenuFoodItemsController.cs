@@ -28,20 +28,6 @@ namespace ThAmCo.Catering.Controllers
             return await _context.MenuFoodItems.ToListAsync();
         }
 
-        //// GET: api/MenuFoodItems/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<MenuFoodItem>> GetMenuFoodItem(int id)
-        //{
-        //    var menuFoodItem = await _context.MenuFoodItems.FindAsync(id);
-
-        //    if (menuFoodItem == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return menuFoodItem;
-        //}
-
         // PUT: api/MenuFoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{menuId}/{foodItemId}")]
@@ -81,10 +67,13 @@ namespace ThAmCo.Catering.Controllers
             var mfi = new MenuFoodItem()
             {
                 MenuId = menuId,
-                FoodItemId = foodItemId,
-                Menu = _context.Menus.FirstOrDefault(m => m.MenuId == menuId),
-                FoodItem = _context.FoodItems.FirstOrDefault(fi => fi.FoodItemId == foodItemId)
+                FoodItemId = foodItemId
             };
+            if (mfi.MenuId == null || mfi.FoodItemId == null)
+            {
+                return BadRequest("Menu or Food Item not found");
+            }
+
             _context.MenuFoodItems.Add(mfi);
             try
             {
@@ -102,7 +91,7 @@ namespace ThAmCo.Catering.Controllers
                 }
             }
 
-            return CreatedAtAction("GetMenuFoodItem", new { id = menuId }, mfi);
+            return Created();
         }
 
         // DELETE: api/MenuFoodItems/5

@@ -18,7 +18,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
 
         public async Task OnGet(int id)
         {
-            
+            FoodItem = await _cateringService.GetFoodItem(id);
         }
     }
 }

@@ -56,17 +56,17 @@ namespace ThAmCo.Catering.Controllers
         // PUT: api/Menus/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditMenu(int id, MenuDTO menu)
+        public async Task<IActionResult> PutMenu(int id, MenuDTO Menu)
         {
-            if (id != menu.MenuId)
+            if (id != Menu.MenuId)
             {
                 return BadRequest();
             }
 
             var menuToEdit = await _context.Menus.FindAsync(id);
-            menuToEdit = new MenuDTO().CreateModel(menu);
+            menuToEdit.MenuName = Menu.MenuName;
 
-            _context.Entry(menu).State = EntityState.Modified;
+            _context.Entry(menuToEdit).State = EntityState.Modified;
 
             try
             {
@@ -84,7 +84,7 @@ namespace ThAmCo.Catering.Controllers
                 }
             }
 
-            return NoContent();
+            return Created();
         }
 
         // POST: api/Menus
@@ -104,7 +104,7 @@ namespace ThAmCo.Catering.Controllers
             }
 
 
-            return CreatedAtAction("GetMenu", new { id = menu.MenuId }, menu);
+            return Created();
         }
 
         // DELETE: api/Menus/5

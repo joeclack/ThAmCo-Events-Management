@@ -33,7 +33,7 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/FoodItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FlatFoodDTO>> GetFoodItem(int id)
+        public async Task<ActionResult<FoodItemDTO>> GetFoodItem(int id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);
 
@@ -42,7 +42,7 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            return new FlatFoodDTO().CreateFlatFoodDTO(foodItem);
+            return new FoodItemDTO().CreateDTO(foodItem);
         }
 
         // PUT: api/FoodItems/5
@@ -57,13 +57,11 @@ namespace ThAmCo.Catering.Controllers
 
             var foodItemToEdit = await _context.FoodItems.FindAsync(id);
 
-            foodItemToEdit.FoodItemId = foodItem.FoodItemId;
-            foodItemToEdit.MenuFoodItems = foodItem.MenuFoodItems;
-            foodItemToEdit.UnitPrice = foodItem.UnitPrice;
-            foodItemToEdit.Name = foodItem.Name;
             foodItemToEdit.Description = foodItem.Description;
+            foodItemToEdit.Name = foodItem.Name;
+            foodItemToEdit.UnitPrice = foodItem.UnitPrice;
 
-            _context.Entry(foodItem).State = EntityState.Modified;
+            _context.Entry(foodItemToEdit).State = EntityState.Modified;
 
             try
             {

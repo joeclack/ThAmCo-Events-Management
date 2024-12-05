@@ -10,6 +10,7 @@ namespace ThAmCo.Events.Pages.Catering.Menus
 {
     public class EditModel : PageModel
     {
+        [BindProperty]
         public MenuGetDTO Menu { get; set; }
         public CateringService _cateringService;
         public List<FoodItemGetDTO> AvailableFoodItems { get; set; } = [];
@@ -22,7 +23,13 @@ namespace ThAmCo.Events.Pages.Catering.Menus
         public async Task OnGet(int id)
         {
             Menu = await _cateringService.GetMenu(id);
-            AvailableFoodItems = await _cateringService.GetAvailableFoodItems();
+            AvailableFoodItems = await _cateringService.GetAvailableFoodItems(Menu);
+        }
+
+        public async Task<IActionResult> OnPostDeleteMenuFoodItem(int foodItemId, int menuId)
+        {
+            await _cateringService.DeleteMenuFoodItem(foodItemId, menuId);
+            return Redirect($"../Menus/Edit?id={menuId}");
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -35,6 +42,7 @@ namespace ThAmCo.Events.Pages.Catering.Menus
             {
                 return Page();
             }
+            await _cateringService.UpdateMenu(Menu);
             return RedirectToPage("./Index");
         }
 

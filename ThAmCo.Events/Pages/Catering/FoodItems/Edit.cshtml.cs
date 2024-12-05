@@ -7,6 +7,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
 {
     public class EditModel : PageModel
     {
+        [BindProperty]
         public FoodItemGetDTO FoodItem { get; set; }
         public CateringService _cateringService;
 
@@ -17,7 +18,21 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
 
         public async Task OnGet(int id)
         {
+            FoodItem = await _cateringService.GetFoodItem(id);
+        }
 
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            if (FoodItem == null)
+            {
+                return Page();
+            }
+            await _cateringService.UpdateFoodItem(FoodItem);
+            return RedirectToPage("./Index");
         }
     }
 }
