@@ -22,6 +22,17 @@ namespace ThAmCo.Catering.DTOs
             };
         }
 
+        public FoodItemDTO CreateDTOFromMFI(MenuFoodItem foodItem)
+        {
+            return new FoodItemDTO
+            {
+                FoodItemId = foodItem.FoodItemId,
+                Name = foodItem.FoodItem.Name,
+                Description = foodItem.FoodItem.Description,
+                UnitPrice = foodItem.FoodItem.UnitPrice
+            };
+        }
+
         public FoodItem CreateModel(FoodItemDTO foodItemDTO)
         {
             return new FoodItem

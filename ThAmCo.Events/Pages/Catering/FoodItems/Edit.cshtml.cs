@@ -7,7 +7,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
 {
     public class EditModel : PageModel
     {
-        public FoodItemDTO FoodItem { get; set; }
+        public FoodItemGetDTO FoodItem { get; set; }
         public CateringService _cateringService;
 
         public EditModel(CateringService cateringService)

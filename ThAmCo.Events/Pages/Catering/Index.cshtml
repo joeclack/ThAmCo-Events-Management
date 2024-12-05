@@ -5,41 +5,9 @@
 }
 
 <div class="mx-5 mt-5">
-    <div class="mb-5">
-        <h1 class="display-4">ThreeAmigos Corp Catering Management</h1>
-    </div>
+    <a asp-page="/Catering/Menus/Index" class="btn btn-primary">Go to Menus</a>
 
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Menu Details</h5>
-                    <p class="card-text">View, create, and edit menu information</p>
-                    <a asp-page="/Catering/Menus/Index" class="btn btn-primary">Go to Menus</a>
-                </div>
-            </div>
-        </div>
+    <a asp-page="/Catering/FoodItems/Index" class="btn btn-primary">Manage Food</a>
 
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Attach Food to Menus</h5>
-                    <p class="card-text">Manage food items and assign food to menus</p>
-                    <a asp-page="/Guests/Index" class="btn btn-primary">Manage Food</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Assign Food Bookings to Events</h5>
-                    <p class="card-text">Manage food bookings for events</p>
-                    <a asp-page="/Staff/Index" class="btn btn-primary">Manage Bookings</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <a asp-page="/Catering/Menus/Index" class="btn btn-primary">Manage Bookings</a>
 </div>

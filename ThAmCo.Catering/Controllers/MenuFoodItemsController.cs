@@ -75,15 +75,15 @@ namespace ThAmCo.Catering.Controllers
 
         // POST: api/MenuFoodItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<MenuFoodItemDTO>> PostMenuFoodItem(MenuFoodItemDTO menuFoodItem)
+        [HttpPost("{menuId}/{foodItemId}")]
+        public async Task<ActionResult<MenuFoodItemDTO>> PostMenuFoodItem(int foodItemId, int menuId)
         {
             var mfi = new MenuFoodItem()
             {
-                MenuId = menuFoodItem.MenuId,
-                FoodItemId = menuFoodItem.FoodItemId,
-                Menu = _context.Menus.FirstOrDefault(m => m.MenuId == menuFoodItem.MenuId),
-                FoodItem = _context.FoodItems.FirstOrDefault(fi => fi.FoodItemId == menuFoodItem.FoodItemId)
+                MenuId = menuId,
+                FoodItemId = foodItemId,
+                Menu = _context.Menus.FirstOrDefault(m => m.MenuId == menuId),
+                FoodItem = _context.FoodItems.FirstOrDefault(fi => fi.FoodItemId == foodItemId)
             };
             _context.MenuFoodItems.Add(mfi);
             try
@@ -92,7 +92,7 @@ namespace ThAmCo.Catering.Controllers
             }
             catch (DbUpdateException)
             {
-                if (MenuFoodItemExists(menuFoodItem.MenuId, menuFoodItem.FoodItemId))
+                if (MenuFoodItemExists(menuId, foodItemId))
                 {
                     return Conflict();
                 }
@@ -102,7 +102,7 @@ namespace ThAmCo.Catering.Controllers
                 }
             }
 
-            return CreatedAtAction("GetMenuFoodItem", new { id = menuFoodItem.MenuId }, menuFoodItem);
+            return CreatedAtAction("GetMenuFoodItem", new { id = menuId }, mfi);
         }
 
         // DELETE: api/MenuFoodItems/5

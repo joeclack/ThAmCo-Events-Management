@@ -18,22 +18,25 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/Menus
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MenuDTO>>> GetMenus()
+        public async Task<ActionResult<List<MenuDTO>>> GetMenus()
         {
-            var menus = await _context.Menus.ToListAsync();
+            var menus = await _context.Menus
+                .Include(m => m.MenuFoodItems)
+                .ThenInclude(m => m.FoodItem)
+                .Include(f => f.FoodBookings).ToListAsync();
 
             if(menus == null)
             {
                 return NotFound();
             }
 
-            var meunDTOS = menus.Select(m => new MenuDTO().CreateDTO(m)).ToList();
+            List<MenuDTO> meunDTOS = menus.Select(m => new MenuDTO().CreateDTO(m)).ToList();
             return meunDTOS;
         }
 
         // GET: api/Menus/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FlatMenuDTO>> GetMenu(int id)
+        public async Task<ActionResult<MenuDTO>> GetMenu(int id)
         {
             var menu = await _context.Menus
                 .Include(m => m.MenuFoodItems)
@@ -45,7 +48,7 @@ namespace ThAmCo.Catering.Controllers
             {
                 return NotFound();
             }
-            FlatMenuDTO dto = new FlatMenuDTO().CreateFlatMenuDTO(menu);
+            MenuDTO dto = new MenuDTO().CreateDTO(menu);
 
             return dto;
         }
@@ -61,11 +64,7 @@ namespace ThAmCo.Catering.Controllers
             }
 
             var menuToEdit = await _context.Menus.FindAsync(id);
-
-            menuToEdit.MenuId = menu.MenuId;
-            menuToEdit.MenuFoodItems = menu.MenuFoodItems;
-            menuToEdit.MenuName = menu.MenuName;
-            menuToEdit.FoodBookings = menu.FoodBookings;
+            menuToEdit = new MenuDTO().CreateModel(menu);
 
             _context.Entry(menu).State = EntityState.Modified;
 
@@ -93,13 +92,7 @@ namespace ThAmCo.Catering.Controllers
         [HttpPost]
         public async Task<ActionResult<MenuDTO>> CreateMenu(MenuDTO menu)
         {
-            var newMenu = new Menu()
-            {
-                MenuId = menu.MenuId,
-                MenuName = menu.MenuName,
-                MenuFoodItems = menu.MenuFoodItems,
-                FoodBookings = menu.FoodBookings
-            };
+            var newMenu = new MenuDTO().CreateModel(menu);
 
             try
             {

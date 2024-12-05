@@ -6,7 +6,6 @@ namespace ThAmCo.Events.DTOs
     {
         public int MenuId { get; set; }
         public int FoodItemId { get; set; }
-        public MenuDTO Menu { get; set; }
-        public FoodItemDTO FoodItem { get; set; }
+        public FoodItemGetDTO FoodItem { get; set; }
     }
 }

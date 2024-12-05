@@ -7,7 +7,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
     public class FoodItemsModel : PageModel
     {
 
-        public List<FoodItemDTO> FoodItems { get; set; } = [];
+        public List<FoodItemGetDTO> FoodItems { get; set; } = [];
         public CateringService _cateringService;
 
         public FoodItemsModel(CateringService cateringService)

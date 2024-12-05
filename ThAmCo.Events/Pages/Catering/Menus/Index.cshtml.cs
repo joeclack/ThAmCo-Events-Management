@@ -15,7 +15,7 @@ namespace ThAmCo.Events.Pages.Catering.Menus
         {
             _cateringService = cateringService;
         }
-        public ICollection<MenuDTO> Menus { get; set; } = [];
+        public ICollection<MenuGetDTO> Menus { get; set; } = [];
 
         public async Task OnGet()
         {

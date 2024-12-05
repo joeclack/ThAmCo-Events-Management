@@ -6,13 +6,15 @@ namespace ThAmCo.Catering.DTOs
     {
         public int MenuId { get; set; }
         public int FoodItemId { get; set; }
+        public FoodItemDTO FoodItem { get; set; }
 
         public MenuFoodItemDTO CreateDTO(MenuFoodItem menuFoodItem)
         {
             return new MenuFoodItemDTO
             {
                 MenuId = menuFoodItem.MenuId,
-                FoodItemId = menuFoodItem.FoodItemId
+                FoodItemId = menuFoodItem.FoodItemId,
+                FoodItem = new FoodItemDTO().CreateDTO(menuFoodItem.FoodItem)
             };
         }
 

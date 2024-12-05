@@ -29,15 +29,15 @@
             </div>
         </div>
 
-        @if (Model.Menu.FoodItems.Any())
+        @if (Model.Menu.MenuFoodItems.Any())
         {
             <h4 class="card-title mb-3">Food Items</h4>
             <ul class="list-group">
-                @foreach (var menu in Model.Menu.FoodItems)
+                @foreach (var foodItem in Model.Menu.MenuFoodItems)
                 {
                     <li class="list-group-item d-flex justify-content-between">
-                    <span>@menu.FoodItemName</span>
-                        <a asp-page="/FoodItems/Details" asp-route-id="@menu.FoodItemId" class="btn btn-primary text-light">Details</a>
+                    <span>@foodItem.Name</span>
+                        <a asp-page="/FoodItems/Details" asp-route-id="@foodItem.FoodItemId" class="btn btn-primary text-light">Details</a>
                     </li>
                 }
             </ul>

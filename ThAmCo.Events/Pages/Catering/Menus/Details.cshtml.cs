@@ -8,7 +8,7 @@ namespace ThAmCo.Events.Pages.Catering.Menus
 {
     public class DetailsModel : PageModel
     {
-        public FlatMenuDTO Menu { get; set; }
+        public MenuGetDTO Menu { get; set; }
         public CateringService _cateringService;
 
         public DetailsModel(CateringService cateringService)

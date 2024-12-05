@@ -7,7 +7,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
 {
     public class CreateModel : PageModel
     {
-        public FoodItemDTO FoodItem { get; set; }
+        public FoodItemGetDTO FoodItem { get; set; }
         public CateringService _cateringService;
 
         public CreateModel(CateringService cateringService)

@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
+﻿using Microsoft.EntityFrameworkCore;
+using NHibernate.Cfg.MappingSchema;
+using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ThAmCo.Events.DTOs;
+using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Services
 {
     public class CateringService
     {
         const string ServiceBaseUrl = "https://localhost:7012/api";
-        const string CategoryEndPoint = "/menus";
+        const string MenuEndPoint = "/menus";
+        const string FoodItemsEndPoint = "/fooditems";
+        const string FoodBookingsEndPoint = "/foodbookings";
+        const string MenuFoodItemsEndpoint = "/menufooditems";
         private readonly HttpClient _httpClient; 
                                                  
         JsonSerializerOptions jsonOptions = new JsonSerializerOptions
@@ -22,15 +27,13 @@ namespace ThAmCo.Events.Services
             _httpClient = httpClient; // Initialise the HttpClient property.
         }
 
-        #region Menus
-
-        public async Task<List<MenuDTO>> GetMenus()
+        public async Task<List<MenuGetDTO>> GetMenus()
         {
-            var response = await _httpClient.GetAsync(ServiceBaseUrl + CategoryEndPoint);
+            var response = await _httpClient.GetAsync(ServiceBaseUrl + MenuEndPoint);
             response.EnsureSuccessStatusCode();
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var items = JsonConvert.DeserializeObject<List<MenuDTO>>(jsonResponse);
+            var items = JsonSerializer.Deserialize<List<MenuGetDTO>>(jsonResponse, jsonOptions);
             if (items == null)
             {
                 throw new ArgumentNullException(nameof(response), "The Menus response is null.");
@@ -38,187 +41,52 @@ namespace ThAmCo.Events.Services
             return items;
         }
 
-        public async Task<FlatMenuDTO> GetMenu(int id)
+        public async Task<MenuGetDTO> GetMenu(int id)
         {
-            try
-            {
-                var response = await _httpClient.GetAsync(ServiceBaseUrl + CategoryEndPoint + $"/{id}");
-                response.EnsureSuccessStatusCode();
-
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var item = JsonConvert.DeserializeObject<FlatMenuDTO>(jsonResponse);
-                if (item == null)
-                {
-                    throw new ArgumentNullException(nameof(response), "The Menu response is null");
-                }
-                return item;
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("Could not get menu");
-                return null;
-            }
-        }
-
-        public async Task<IActionResult> CreateMenu(MenuDTO menuDTO)
-        {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(menuDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PostAsync(ServiceBaseUrl + CategoryEndPoint, httpContent);
+            var response = await _httpClient.GetAsync(ServiceBaseUrl + MenuEndPoint + $"/{id}");
             response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
 
-        public async Task<IActionResult> EditMenu(int id, MenuDTO menuDTO)
-        {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(menuDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PutAsync(ServiceBaseUrl + CategoryEndPoint + $"/{id}", httpContent);
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        public async Task<IActionResult> DeleteMenu(int id)
-        {
-            var response = await _httpClient.DeleteAsync(ServiceBaseUrl + CategoryEndPoint + $"/{id}");
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        #endregion
-
-        #region FoodItems
-
-        public async Task<IActionResult> CreateFoodItem(FoodItemDTO foodItemDTO)
-        {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(foodItemDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PostAsync(ServiceBaseUrl + CategoryEndPoint + "/fooditems", httpContent);
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        public async Task<IActionResult> EditFoodItem(int id, FoodItemDTO foodItemDTO)
-        {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(foodItemDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PutAsync(ServiceBaseUrl + CategoryEndPoint + $"/fooditems/{id}", httpContent);
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        public async Task<IActionResult> DeleteFoodItem(int id)
-        {
-            var response = await _httpClient.DeleteAsync(ServiceBaseUrl + CategoryEndPoint + $"/fooditems/{id}");
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        public async Task<List<FoodItemDTO>> GetFoodItems()
-        {
-            var response = await _httpClient.GetAsync(ServiceBaseUrl + CategoryEndPoint + "/fooditems");
-            response.EnsureSuccessStatusCode();
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var items = JsonConvert.DeserializeObject<List<FoodItemDTO>>(jsonResponse);
-            if (items == null)
+            var item = JsonSerializer.Deserialize<MenuGetDTO>(jsonResponse, jsonOptions);
+            if(item == null)
             {
-                throw new ArgumentNullException(nameof(response), "The FoodItems response is null.");
-            }
-            return items;
-        }
-
-        public async Task<FoodItemDTO> GetFoodItem(int id)
-        {
-            var response = await _httpClient.GetAsync(ServiceBaseUrl + CategoryEndPoint + $"/fooditems/{id}");
-            response.EnsureSuccessStatusCode();
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            var item = JsonConvert.DeserializeObject<FoodItemDTO>(jsonResponse);
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(response), "The FoodItem response is null.");
+                throw new ArgumentNullException(nameof(response), "The Menu response is null");
             }
             return item;
         }
 
-        #endregion
-
-        #region FoodBookings
-
-        public async Task<IActionResult> CreateFoodBooking(FoodBookingDTO foodBookingDTO)
+        internal async Task UpdateMenu(MenuGetDTO menu)
         {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(foodBookingDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PostAsync(ServiceBaseUrl + CategoryEndPoint + "/foodbookings", httpContent);
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
+            
         }
 
-        public async Task<IActionResult> EditFoodBooking(int id, FoodBookingDTO foodBookingDTO)
+        internal async Task<List<FoodItemGetDTO>> GetAvailableFoodItems()
         {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(foodBookingDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PutAsync(ServiceBaseUrl + CategoryEndPoint + $"/foodbookings/{id}", httpContent);
+            var response = await _httpClient.GetAsync(ServiceBaseUrl + FoodItemsEndPoint);
             response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
 
-        public async Task<IActionResult> DeleteFoodBooking(int id)
-        {
-            var response = await _httpClient.DeleteAsync(ServiceBaseUrl + CategoryEndPoint + $"/foodbookings/{id}");
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        public async Task<List<FoodBookingDTO>> GetFoodBookings()
-        {
-            var response = await _httpClient.GetAsync(ServiceBaseUrl + CategoryEndPoint + "/foodbookings");
-            response.EnsureSuccessStatusCode();
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var items = JsonConvert.DeserializeObject<List<FoodBookingDTO>>(jsonResponse);
+            var items = JsonSerializer.Deserialize<List<FoodItemGetDTO>>(jsonResponse, jsonOptions);
             if (items == null)
             {
-                throw new ArgumentNullException(nameof(response), "The FoodBookings response is null.");
+                throw new ArgumentNullException(nameof(response), "The Food Items response was null");
             }
             return items;
         }
 
-        #endregion
-
-        #region MenuFoodItems
-
-        public async Task<IActionResult> CreateMenuFoodItem(MenuFoodItemDTO menuFoodItemDTO)
+        internal async Task CreateMenuFoodItem(int foodItemId, int menuId)
         {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(menuFoodItemDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var request = await _httpClient.PostAsync($"{ServiceBaseUrl}{MenuFoodItemsEndpoint}/{menuId}/{foodItemId}", null);
+            
+            //response.EnsureSuccessStatusCode();
 
-            var response = await _httpClient.PostAsync(ServiceBaseUrl + CategoryEndPoint + "/menufooditems", httpContent);
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
+            //var jsonResponse = await response.Content.ReadAsStringAsync();
+            //var items = JsonSerializer.Deserialize<List<FoodItemGetDTO>>(jsonResponse, jsonOptions);
+            //if (items == null)
+            //{
+            //    throw new ArgumentNullException(nameof(response), "The Food Items response was null");
+            //}
+            //return items;
         }
-
-        public async Task<IActionResult> EditMenuFoodItem(int id, MenuFoodItemDTO menuFoodItemDTO)
-        {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(menuFoodItemDTO));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var response = await _httpClient.PutAsync(ServiceBaseUrl + CategoryEndPoint + $"/menufooditems/{id}", httpContent);
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        public async Task<IActionResult> DeleteMenuFoodItem(int id)
-        {
-            var response = await _httpClient.DeleteAsync(ServiceBaseUrl + CategoryEndPoint + $"/menufooditems/{id}");
-            response.EnsureSuccessStatusCode();
-            return new OkResult();
-        }
-
-        #endregion
     }
 }

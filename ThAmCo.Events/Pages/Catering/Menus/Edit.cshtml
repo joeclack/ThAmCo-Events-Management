@@ -4,7 +4,7 @@
 }
 <div class="mx-5 mt-5">
     <div class="mb-5">
-        <h1 class="display-4">Edit Event</h1>
+        <h1 class="display-4">Edit Menu</h1>
         <p class="lead">Modify the details of this menu.</p>
     </div>
 
@@ -40,16 +40,16 @@
         <div class="w-100 mx-2">
             <h5>Manage Food Items</h5>
 
-            <form asp-page-handler="AddFoodItem" method="post">
+            <form asp-page-handler="AssignFoodItemToMenu" method="post">
                 <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
 
                 <div class="form-group mt-2">
                     <div class="d-flex">
-                        <select id="foodList" class="form-control me-2" name="staffId">
+                        <select id="foodList" class="form-control me-2" name="foodItemId">
                             <option value="">Select Food</option>
                             @foreach (var food in Model.AvailableFoodItems)
                             {
-                                <option value="@food.FoodItemId">@food.FoodItemName</option>
+                                <option value="@food.FoodItemId">@food.Name</option>
                             }
                         </select>
 
@@ -61,14 +61,14 @@
             </form>
 
             <ul class="list-group mt-4">
-                @foreach (var food in Model.Menu.FoodItems)
+                @foreach (var food in Model.Menu.MenuFoodItems)
                 {
                     <form asp-page-handler="RemoveFoodItem" method="post">
                         <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
                         <input type="hidden" name="foodItemId" value="@food.FoodItemId" />
 
                     <li class="list-group-item d-flex justify-content-between">
-                            @food.FoodItemName
+                            @food.Name
                         <button type="submit" class="btn btn-danger btn-sm">
                             <i class="bi bi-x-circle"></i> Remove
                         </button>
