@@ -19,6 +19,7 @@
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Event.EventId" />
+                <input type="hidden" asp-for="Event.Date" />
 
                 <!-- Event Form Fields -->
                 <div class="form-group">
@@ -144,7 +145,7 @@
                     <form asp-page-handler="CancelGuestBooking" method="post">
                         <!-- Hidden inputs for EventId and GuestId -->
                         <input type="hidden" name="eventId" value="@Model.Event.EventId" />
-                        <input type="hidden" name="guestId" value="@guestBooking.GuestId" />
+                        <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
 
                     <li class="list-group-item d-flex justify-content-between">
                             @guestBooking.Guest.FirstName @guestBooking.Guest.LastName

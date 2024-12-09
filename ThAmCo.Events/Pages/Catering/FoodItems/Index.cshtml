@@ -8,12 +8,12 @@
         <h1 class="display-4">Food Management</h1>
     </div>
 
-    <div class="align-items-center d-flex flex-row mb-4">
+    <div class="align-items-center d-flex flex-row mb-2">
         <a class="btn btn-primary bg-gradient" asp-page="Create">
             <i class="bi bi-person-plus"></i> Create New Food Item
         </a>
-        <h5 class="mx-2">@Model.FoodItems.Count() food items</h5>
     </div>
+        <span class="mb-3 badge bg-info">@Model.FoodItems.Count() food items</span>
 
     <div class="table-responsive">
         <table class="table align-middle mb-0 bg-white">

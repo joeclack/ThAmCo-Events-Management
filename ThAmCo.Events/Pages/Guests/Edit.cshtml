@@ -82,8 +82,8 @@
             {
                 <form asp-page-handler="CancelGuestBooking" method="post">
                     <!-- Hidden inputs for EventId and GuestId -->
-                    <input type="hidden" name="eventId" value="@guestBooking.EventId" />
-                    <input type="hidden" name="guestId" value="@guestBooking.GuestId" />
+                    <input type="hidden" name="eventId" value="@guestBooking.Event.EventId" />
+                    <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
 
                 <li class="list-group-item d-flex justify-content-between">
                         @guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()

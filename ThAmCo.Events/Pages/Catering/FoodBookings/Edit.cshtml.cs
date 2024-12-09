@@ -7,8 +7,11 @@ namespace ThAmCo.Events.Pages.Catering.FoodBookings
 {
     public class EditModel : PageModel
     {
-        public FoodBookingDTO Booking { get; set; }
-        public CateringService _cateringService;
+        [BindProperty]
+        public FoodBookingDTO FoodBooking { get; set; }
+        public List<MenuGetDTO> AvailableMenus { get; set; }
+
+		public CateringService _cateringService;
 
         public EditModel(CateringService cateringService)
         {
@@ -17,7 +20,21 @@ namespace ThAmCo.Events.Pages.Catering.FoodBookings
 
         public async Task OnGet(int id)
         {
-
+            AvailableMenus = await _cateringService.GetMenus();
+            FoodBooking = await _cateringService.GetFoodBooking(id);
         }
-    }
+
+		public async Task<IActionResult> OnPostAsync()
+		{
+			if (!ModelState.IsValid)
+			{
+				AvailableMenus = await _cateringService.GetMenus();
+				return Page();
+			}
+
+			await _cateringService.UpdateFoodBooking(FoodBooking);
+			return RedirectToPage("Index");
+		}
+
+	}
 }

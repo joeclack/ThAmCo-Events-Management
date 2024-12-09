@@ -8,7 +8,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodBookings
 {
     public class DetailsModel : PageModel
     {
-        public FoodBookingDTO Booking { get; set; }
+        public FoodBookingDTO FoodBooking { get; set; }
         public CateringService _cateringService;
 
         public DetailsModel(CateringService cateringService)
@@ -18,7 +18,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodBookings
 
         public async Task OnGet(int id)
         {
-            
+            FoodBooking = await _cateringService.GetFoodBooking(id);
         }
     }
 }

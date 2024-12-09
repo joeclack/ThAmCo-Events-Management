@@ -18,10 +18,15 @@ namespace ThAmCo.Events.Models
         public DateTime Date { get; set; }
         [DisplayName("Location")]
         public string Location { get; set; } = string.Empty;
+        [DisplayName("Guests")]
         public ICollection<GuestBooking> GuestBookings { get; set; } = [];
-        public ICollection<Staffing> Staffings { get; set; } = [];
+		[DisplayName("Staff")]
+		public ICollection<Staffing> Staffings { get; set; } = [];
         public string EventTypeId { get; set; } = string.Empty;
         public string ReservationId { get; set; } = string.Empty;
-        public int FoodBookingId { get; set; }
+		[DisplayName("Food Booking")]
+		public int FoodBookingId { get; set; }
+        public bool IsCanceled { get; set; }
+        public bool IsFoodBooked { get; set; }
     }
 }

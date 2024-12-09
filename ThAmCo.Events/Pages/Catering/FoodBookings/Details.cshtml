@@ -2,3 +2,55 @@
 @model ThAmCo.Events.Pages.Catering.FoodBookings.DetailsModel
 @{
 }
+<div class="mx-5 mt-2">
+	<div>
+		<h1 class="display-4 mb-4">Food Booking Details</h1>
+	</div>
+	@if (Model.FoodBooking == null)
+	{
+		<div class="alert alert-danger" role="alert">
+			<h4 class="alert-heading">Food booking not found</h4>
+			<p>The requested booking could not be found.</p>
+		</div>
+		<a asp-page="./Index" class="btn btn-secondary btn">
+			<i class="bi bi-arrow-left-circle"></i> Back to List
+		</a>
+		return;
+	}
+	else
+	{
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
+				<h4 class="card-title mb-3">Booking Information</h4>
+				<dl class="row">
+					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingId)</dt>
+					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingId)</dd>
+
+					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.ClientReferenceId)</dt>
+					<dd class="col-sm-9">
+						@if (Model.FoodBooking.ClientReferenceId.HasValue)
+						{
+							@Model.FoodBooking.ClientReferenceId
+						}
+						else
+						{
+							<span class="text-muted">No client reference</span>
+						}
+					</dd>
+
+					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.NumberOfGuests)</dt>
+					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.NumberOfGuests)</dd>
+
+					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.MenuId)</dt>
+					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.MenuId)</dd>
+
+					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.MenuName)</dt>
+					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.MenuName)</dd>
+
+					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingDate)</dt>
+					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingDate)</dd>
+				</dl>
+			</div>
+		</div>
+	}
+</div>

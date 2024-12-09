@@ -85,8 +85,8 @@
             @foreach (var staffing in Model.Staff.Staffings)
             {
                 <form asp-page-handler="CancelStaffing" method="post">
-                    <input type="hidden" name="eventId" value="@staffing.EventId" />
-                    <input type="hidden" name="staffId" value="@staffing.StaffId" />
+                    <input type="hidden" name="eventId" value="@staffing.Event.EventId" />
+                    <input type="hidden" name="staffId" value="@staffing.Staff.StaffId" />
 
                     <li class="list-group-item d-flex justify-content-between">
                         @staffing.Event.Name - @staffing.Event.Date.ToShortDateString()

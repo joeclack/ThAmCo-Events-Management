@@ -2,3 +2,71 @@
 @model ThAmCo.Events.Pages.Catering.FoodBookings.EditModel
 @{
 }
+<div class="mx-5 mt-2">
+    <div class="mb-3">
+        <h1 class="display-4">Edit Menu</h1>
+        <p class="lead">Modify the details of this food booking</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <h4 class="card-title m-3">Food Booking Details</h4>
+        <dl class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingId)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingId)</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FoodBooking.ClientReferenceId)</dt>
+                <dd class="col-sm-9">
+                    @if (Model.FoodBooking.ClientReferenceId.HasValue)
+                    {
+                        @Model.FoodBooking.ClientReferenceId
+                    }
+                    else
+                    {
+                        <span class="text-muted">No client reference</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingDate)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingDate.Date)</dd>
+            </dl>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="FoodBooking.FoodBookingId" />
+                <input type="hidden" asp-for="FoodBooking.ClientReferenceId" />
+                <input type="hidden" asp-for="FoodBooking.FoodBookingDate" />
+
+                <div class="form-group">
+                    <label asp-for="FoodBooking.NumberOfGuests" class="control-label">Guests</label>
+                    <input type="number" asp-for="FoodBooking.NumberOfGuests" class="form-control" />
+                    <span asp-validation-for="FoodBooking.NumberOfGuests" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FoodBooking.MenuId" class="control-label">Menu</label>
+                    <select asp-for="FoodBooking.MenuId" class="form-control">
+                        <option value="">Select Menu</option>
+                        @foreach (var menu in Model.AvailableMenus)
+                        {
+                            <option value="@menu.MenuId" selected="@(menu.MenuId == Model.FoodBooking.MenuId)">
+                                @menu.MenuName
+                            </option>
+
+                        }
+                    </select>
+                    <span asp-validation-for="FoodBooking.MenuId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Save
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </dl>
+    </div>
+</div>
+

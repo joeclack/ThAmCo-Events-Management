@@ -7,6 +7,8 @@ namespace ThAmCo.Events.Models
     {
         public int GuestId { get; set; }
         public int EventId { get; set; }
+        public bool IsCancled { get; set; }
+
 
         // Navigation
 

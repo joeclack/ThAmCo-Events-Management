@@ -1,5 +1,91 @@
 ﻿@page
 @model FoodBookingsModel
 @{
-    ViewData["Title"] = "Food Items";
+	ViewData["Title"] = "Food Items";
 }
+
+<div class="mx-5 my-2">
+	<div class="mb-3">
+		<h1 class="display-4">Food Bookings Management</h1>
+	</div>
+
+	<span class="mb-3 badge bg-info">@Model.FoodBookings.Count() bookings</span>
+
+	<div class="table-responsive">
+		<table class="table align-middle bg-white">
+			<thead class="bg-light">
+				<tr>
+					@* <th>Food Booking ID</th> *@
+					<th>Client Reference ID</th>
+					<th>Number of Guests</th>
+					<th>Menu</th>
+					<th class="w-50">Booking Date (DD/MM/YYYY)</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.FoodBookings)
+				{
+					<tr>
+						@*                         <td>@item.FoodBookingId</td> *@
+						<td>@item.ClientReferenceId</td>
+						<td>@item.NumberOfGuests</td>
+						<td>@item.MenuName</td>
+						<td class="w-50">@item.FoodBookingDate.ToString("dd-MM-yyyy")</td>
+						<td>
+							<div class="hstack gap-1" role="group">
+								<a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.FoodBookingId">
+									<i class="bi bi-pencil-square"></i> Edit
+								</a>
+								<a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.FoodBookingId">
+									<i class="bi bi-info-circle"></i> Details
+								</a>
+								<a data-toggle="modal" data-id="@item.FoodBookingId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm">
+									<i class="bi bi-trash"></i> Delete
+								</a>
+							</div>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteConfirmationModalTitle">Are you sure you want to delete this booking?</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>This action cannot be undone.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+					<!-- Form for delete confirmation -->
+					<form asp-page-handler="DeleteFoodBooking" method="post">
+						<input type="hidden" name="foodBookingId" id="deleteFoodBookingId" />
+						<button type="submit" class="btn btn-danger">Delete</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+<script>
+	$(document).ready(function () {
+						$('#deleteConfirmationModal').on('show.bs.modal', function (event) {
+									var button = $(event.relatedTarget);
+									var foodBookingId = button.data('id');
+
+									$('#deleteFoodBookingId').val(foodBookingId);
+						});
+	});
+</script>

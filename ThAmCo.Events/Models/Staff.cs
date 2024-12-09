@@ -17,5 +17,7 @@ namespace ThAmCo.Events.Models
         public bool IsFirstAider { get; set; }
         [DisplayName("Events")]
         public ICollection<Staffing>? Staffings { get; set; } = [];
+        public bool IsAnonymised { get; set; }
+
     }
 }

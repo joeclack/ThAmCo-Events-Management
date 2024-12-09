@@ -3,3 +3,37 @@
 @{
     ViewData["Title"] = "Home page";
 }
+
+<div class="mx-5 my-2">
+    @* <h1 class="mb-4">Overview</h1> *@
+    <div>
+        <h5 class="mb-2">Next Event</h5>
+
+        @if (@Model.UpcomingEvent == null)
+        {
+            <div class="alert alert-warning" role="alert">
+                No upcoming events.
+            </div>
+            <a asp-page="/Events/Index" class="btn btn-primary">Manage</a>
+        }
+        else
+        {
+            <a asp-page="/Events/Details" asp-route-id="@Model.UpcomingEvent.EventId" class="card shadow-lg border-light rounded p-3 mb-3 text-decoration-none">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="flex-grow-1">
+                        <div class="card-text hstack gap-2">
+                            <div class="d-flex">
+                                <h5 class="fw-bold me-2">@Html.DisplayFor(modelItem => @Model.UpcomingEvent.Name)</h5>
+                                <span>@Html.DisplayFor(modelItem => @Model.UpcomingEvent.Date)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hstack gap-2">
+                        <span class="badge bg-primary">Staff @Model.UpcomingEvent.Staffings.Count()</span>
+                        <span class="badge bg-primary">Guests @Model.UpcomingEvent.GuestBookings.Count()</span>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>

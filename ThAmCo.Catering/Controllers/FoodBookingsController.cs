@@ -66,7 +66,7 @@ namespace ThAmCo.Catering.Controllers
             bookingToEdit.FoodBookingDate = foodBooking.FoodBookingDate;
             bookingToEdit.NumberOfGuests = foodBooking.NumberOfGuests;
 
-            _context.Entry(foodBooking).State = EntityState.Modified;
+            _context.Entry(bookingToEdit).State = EntityState.Modified;
 
             try
             {

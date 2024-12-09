@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Services
@@ -37,7 +38,20 @@ namespace ThAmCo.Events.Services
 
             return _event;
         }
-        
+
+        public async Task<Event> GetUpcomingEvent()
+        {
+            var _event = await _context.Events
+                .Include(e => e.Staffings)
+                    .ThenInclude(s => s.Staff)
+                .Include(e => e.GuestBookings)
+                    .ThenInclude(g => g.Guest)
+                .OrderBy(e => e.Date)
+                .FirstOrDefaultAsync(x=>x.Date >= DateTime.Today);
+
+            return _event;
+        }
+
         public async Task RemoveStaffFromEventStaffing(Staff staffMember, int eventId)
         {
             var _event = await GetEvent(eventId);
@@ -89,7 +103,7 @@ namespace ThAmCo.Events.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Event>> GetAvailableEventsForStaffMember(Staff staff)
+		public async Task<List<Event>> GetAvailableEventsForStaffMember(Staff staff)
         {
             List<Event> availableEvents = new List<Event>();
 
@@ -100,5 +114,5 @@ namespace ThAmCo.Events.Services
 
             return availableEvents;
         }
-    }
+	}
 }

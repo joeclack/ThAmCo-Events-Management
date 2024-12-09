@@ -10,13 +10,12 @@
         <h1 class="display-4">Staff Management</h1>
     </div>
     
-    <div class="align-items-center d-flex flex-row mb-4">
+    <div class="align-items-center d-flex flex-row mb-2">
         <a class="btn btn-primary bg-gradient" asp-page="Create">
             <i class="bi bi-person-plus"></i> Create New Staff
         </a>
-        <h5 class="mx-2">@Model.StaffMembers.Count() staff</h5>
     </div>
-
+    <span class="mb-3 badge bg-info">@Model.StaffMembers.Count() staff</span>
     
     <div class="table-responsive">
         <table class="table align-middle mb-0 bg-white">

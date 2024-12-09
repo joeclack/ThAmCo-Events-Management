@@ -13,8 +13,9 @@ namespace ThAmCo.Events.Models
         public string LastName { get; set; } = string.Empty;
         [DisplayName("Email")]
         public string Email { get; set; } = string.Empty;
-        [DisplayName("Bookings")]
+        [DisplayName("FoodBookings")]
         public ICollection<GuestBooking> GuestBookings { get; set; } = [];
+        public bool IsAnonymised { get; set; }
 
     }
 }

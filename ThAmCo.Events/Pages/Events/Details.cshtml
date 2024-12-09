@@ -1,11 +1,11 @@
-﻿@page
+﻿@page "{id:int}"
 @model ThAmCo.Events.Pages.Events.DetailsModel
 
 @{
-    ViewData["Title"] = "Events Details";
+    ViewData["Title"] = "Event Details";
 }
 
-<div class="mx-5 mt-5">
+<div class="container-fluid px-4 mt-4">
     <div class="mb-5">
         <h1 class="display-4">Event Details</h1>
         <p class="lead">View the details for this event.</p>
@@ -15,21 +15,41 @@
         <div class="card-body">
             <h4 class="card-title mb-3">Event Information</h4>
             <dl class="row">
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Name)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Name)</dd>
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Date)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Date)</dd>
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Location)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Location)</dd>
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.GuestBookings)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.GuestBookings.Count)</dd>
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Event.Staffings)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Event.Staffings.Count)</dd>   
+                <dt class="col-sm-3 font-weight-bold">Name</dt>
+                <dd class="col-sm-9">@Model.Event.Name</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Date</dt>
+                <dd class="col-sm-9">@Model.Event.Date.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Location</dt>
+                <dd class="col-sm-9">@Model.Event.Location</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Guests</dt>
+                <dd class="col-sm-9">@Model.Event.GuestBookings.Count</dd>
+
+                <dt class="col-sm-3 font-weight-bold">Staff</dt>
+                <dd class="col-sm-9">@Model.Event.Staffings.Count</dd>
+
+                @if (Model.Event.IsFoodBooked)
+                {
+                    <dt class="col-sm-3 font-weight-bold">Menu</dt>
+                    <dd class="col-sm-9">@Model.FoodBooking.MenuName</dd>
+                }
+                else
+                {
+                    <dd class="col-sm-9">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createFoodBookingModal">
+                            Book Food
+                        </button>
+                    </dd>
+                }
             </dl>
+
             @if (Model.IsUnderStaffed)
             {
                 <div class="alert alert-danger">@Model.UnderStaffAlertText</div>
             }
+
             @if (!Model.FirstAiderPresent)
             {
                 <div class="alert alert-danger">Please add a staff member who is a first aider</div>
@@ -37,40 +57,41 @@
         </div>
     </div>
 
-    @if (Model.Event.Staffings.Any())
-    {
-        <h4 class="card-title mb-3">Staffing</h4>
-        <ul class="list-group">
-            @foreach (var staff in Model.Event.Staffings)
-            {
-                <li class="list-group-item d-flex justify-content-between">
-                    @staff.Staff.FirstName @staff.Staff.LastName
-                    <a asp-page="/Staff/Details" asp-route-id="@staff.Staff.StaffId" class="btn btn-primary text-light">Details</a>
-                </li>
-            }
-        </ul>
-    }
+</div>
 
-    @if (Model.Event.GuestBookings.Any())
-    {
-        <h4 class="card-title mb-3 mt-3">Guests</h4>
-        <ul class="list-group">
-            @foreach (var booking in Model.Event.GuestBookings)
-            {
-                <li class="list-group-item d-flex justify-content-between">
-                    @booking.Guest.FirstName @booking.Guest.LastName
-                    <a asp-page="/Guests/Details" asp-route-id="@booking.Guest.GuestId" class="btn btn-primary text-light">Details</a>
-                </li>
-            }
-        </ul>
-    }
-
-    <div class=" mt-4">
-        <a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.Event.EventId">
-            <i class="bi bi-pencil-square"></i> Edit Event
-        </a>
-        <a asp-page="./Index" class="btn btn-secondary btn">
-            <i class="bi bi-arrow-left-circle"></i> Back to List
-        </a>
+<div class="modal fade" id="createFoodBookingModal" tabindex="-1" role="dialog" aria-labelledby="createFoodBookingModalLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createFoodBookingModalLabel">Create Food Booking</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-page-handler="CreateFoodBooking">
+                <input type="hidden" asp-for="Event.EventId" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="FoodBooking.MenuId">Menu</label>
+                        <select asp-for="FoodBooking.MenuId" class="form-control">
+                            <option value="">Select Menu</option>
+                            @foreach (var menu in Model.AvailableMenus)
+                            {
+                                <option value="@menu.MenuId">@menu.MenuName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="FoodBooking.MenuId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Food Booking</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

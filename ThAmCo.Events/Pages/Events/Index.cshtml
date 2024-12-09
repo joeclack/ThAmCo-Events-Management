@@ -10,12 +10,12 @@
         <h1 class="display-4">Event Management</h1>
     </div>
 
-    <div class="text-right mb-4">
+    <div class="text-right mb-2">
         <a asp-page="Create" class="btn btn-primary bg-gradient">
             <i class="bi bi-plus-lg"></i> Create New Event
         </a>
     </div>
-
+    <span class="mb-3 badge bg-info">@Model.Events.Count() events</span>
     <div class="d-flex flex-column gap-4">
         @foreach (var item in Model.Events)
         {
@@ -56,7 +56,7 @@
     @if (!Model.Events.Any())
     {
         <div class="alert alert-warning text-center" role="alert">
-            <strong>Oh no!</strong> No events found. Click "Create New Event" to add your first event.
+            <strong>No events found.</strong> Click "Create New Event" to add your first event.
         </div>
     }
 </div>
