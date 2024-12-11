@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 
@@ -9,9 +10,10 @@ namespace ThAmCo.Events.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly EventService _eventsService;
-        public Event UpcomingEvent { get; set; }
-
-        public IndexModel(ILogger<IndexModel> logger, IServiceProvider serviceProvider)
+        public List<Event> UpcomingEvents { get; set; } = [];
+        public List<Event> PastEvents { get; set; } = [];
+        public List<EventTypeDTO> EventTypes { get; set; } = [];
+		public IndexModel(ILogger<IndexModel> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _eventsService = serviceProvider.GetRequiredService<EventService>();
@@ -19,7 +21,9 @@ namespace ThAmCo.Events.Pages
 
         public async Task OnGet()
         {
-            UpcomingEvent = await _eventsService.GetUpcomingEvent();
-        }
+            UpcomingEvents = await _eventsService.GetUpcomingEvents();
+            PastEvents = await _eventsService.GetPastEvents();
+            EventTypes = await _eventsService.GetEventTypes();
+		}
     }
 }

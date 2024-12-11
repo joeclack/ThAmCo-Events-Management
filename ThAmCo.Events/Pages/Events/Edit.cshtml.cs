@@ -16,8 +16,8 @@ namespace ThAmCo.Events.Pages.Events
         private readonly GuestService _guestService;
 		private readonly CateringService _cateringService;
 
-		public List<MenuGetDTO> AvailableMenus { get; set; }
-
+        public List<MenuGetDTO> AvailableMenus { get; set; } = [];
+        public List<EventTypeDTO> EventTypes { get; set; } = [];
 		[BindProperty]
         public int? SelectedStaffId { get; set; }
         public FoodBookingDTO FoodBooking { get; set; }
@@ -31,8 +31,9 @@ namespace ThAmCo.Events.Pages.Events
         [BindProperty]
         public Event Event { get; set; } = default!;
         public int EventId { get; set; }
+        public string SelectedMenuId { get; set; }
 
-        public EditModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
+		public EditModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
             _eventService = serviceProvider.GetRequiredService<EventService>();
@@ -55,10 +56,12 @@ namespace ThAmCo.Events.Pages.Events
 
             Event = _event;
             EventId = _event.EventId;
+
 			AvailableMenus = await _cateringService.GetMenus();
 			AvailableStaff = await _staffService.GetAvailableStaff(EventId);
             AvailableGuests = await _guestService.GetAvailableGuests(EventId);
             FoodBooking = await _cateringService.GetFoodBooking(Event.FoodBookingId);
+            EventTypes = await _eventService.GetEventTypes();
             return Page();
         }
 

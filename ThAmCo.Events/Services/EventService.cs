@@ -1,21 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Services
 {
-    public class EventService
+	public class EventService
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
+		private readonly HttpClient _httpClient; 
+        const string ServiceBaseUrl = "https://localhost:7088/api";
+		const string EventTypesEndPoint = "/EventTypes"; 
+			const string VenuesEndPoint = "/Venues"; 
+		JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+		{
+			PropertyNameCaseInsensitive = true
+		};
 
-        public EventService(ThAmCo.Events.Data.EventsDbContext context)
-        {
-            _context = context;
-        }
+		public EventService(HttpClient httpClient, ThAmCo.Events.Data.EventsDbContext context)
+		{
+			_context = context; 
+            _httpClient = httpClient;
+		}
 
-        public async Task<List<Event>> GetAllEvents()
+
+
+		public async Task<List<Event>> GetAllEvents()
         {
             var events = await _context.Events
             .Include(e => e.Staffings)
@@ -127,6 +137,52 @@ namespace ThAmCo.Events.Services
 			{
 
 			}
+		}
+
+		internal async Task<List<Event>> GetUpcomingEvents()
+		{
+            var events = await GetAllEvents();
+            return new List<Event>(events.Where(x => x.Date >= DateTime.Today));
+        }
+
+		internal async Task<List<Event>> GetPastEvents()
+		{
+			var events = await GetAllEvents();
+			return new List<Event>(events.Where(x => x.Date < DateTime.Today));
+		}
+
+		internal async Task<List<VenueDTO>> GetVenues()
+		{
+			var response = await _httpClient.GetAsync(ServiceBaseUrl + VenuesEndPoint);
+			if (response.IsSuccessStatusCode)
+			{
+				var jsonResponse = await response.Content.ReadAsStringAsync();
+				var types = JsonSerializer.Deserialize<List<VenueDTO>>(jsonResponse, jsonOptions);
+				if (types == null)
+				{
+					throw new ArgumentNullException(nameof(response), "Venues were null");
+				}
+				return types;
+			}
+
+			return [];
+		}
+
+		public async Task<List<EventTypeDTO>> GetEventTypes()
+		{
+			var response = await _httpClient.GetAsync(ServiceBaseUrl + EventTypesEndPoint);
+			if (response.IsSuccessStatusCode)
+			{
+				var jsonResponse = await response.Content.ReadAsStringAsync();
+				var types = JsonSerializer.Deserialize<List<EventTypeDTO>>(jsonResponse, jsonOptions);
+				if (types == null)
+				{
+					throw new ArgumentNullException(nameof(response), "Event types were null");
+				}
+				return types;
+			}
+
+			return [];
 		}
 	}
 }

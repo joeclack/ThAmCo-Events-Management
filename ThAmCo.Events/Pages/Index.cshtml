@@ -1,39 +1,102 @@
 ﻿@page
-@model IndexModel
+@model ThAmCo.Events.Pages.Catering.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
 <div class="mx-5 my-2">
-    @* <h1 class="mb-4">Overview</h1> *@
-    <div>
-        <h5 class="mb-2">Next Event</h5>
+    <div class="mb-4 d-flex justify-content-around">
+        <div class="card shadow-sm" style="width: 18rem;">
+            <div class="card-body text-center">
+                <h5 class="card-title">Menus</h5>
+                <p class="card-text">Manage and browse all available menus.</p>
+                <a asp-page="/Catering/Menus/Index" class="btn btn-outline-primary">Go to Menus</a>
+            </div>
+        </div>
+        <div class="card shadow-sm" style="width: 18rem;">
+            <div class="card-body text-center">
+                <h5 class="card-title">Food Items</h5>
+                <p class="card-text">Add, edit, and manage food items.</p>
+                <a asp-page="/Catering/FoodItems/Index" class="btn btn-outline-primary">Manage Food</a>
+            </div>
+        </div>
+        <div class="card shadow-sm" style="width: 18rem;">
+            <div class="card-body text-center">
+                <h5 class="card-title">Food Bookings</h5>
+                <p class="card-text">View and manage all food bookings.</p>
+                <a asp-page="/Catering/FoodBookings/Index" class="btn btn-outline-primary">Manage Bookings</a>
+            </div>
+        </div>
+    </div>
 
-        @if (@Model.UpcomingEvent == null)
+    <div>
+        <h5 class="mb-2">Event Types</h5>
+        <div class="list-group">
+            @foreach (var eventType in Model.EventTypes)
+            {
+                <div class="list-group-item">
+                    <h6>@eventType.Title (@eventType.Id)</h6>
+                    <p>Suitable Venues: @string.Join(", ", eventType.SuitableVenues?.Select(v => v.Venue.Name) ?? Enumerable.Empty<string>())</p>
+                </div>
+            }
+        </div>
+    </div>
+    <div>
+        <h5 class="mb-2">Upcoming Food Bookings</h5>
+
+        @if (!Model.UpcomingFoodBookings.Any())
         {
             <div class="alert alert-warning" role="alert">
-                No upcoming events.
+                No upcoming food bookings.
             </div>
-            <a asp-page="/Events/Index" class="btn btn-primary">Manage</a>
+            <a asp-page="/Catering/FoodBookings/Index" class="btn btn-primary">Manage Bookings</a>
         }
         else
         {
-            <a asp-page="/Events/Details" asp-route-id="@Model.UpcomingEvent.EventId" class="card shadow-lg border-light rounded p-3 mb-3 text-decoration-none">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="flex-grow-1">
-                        <div class="card-text hstack gap-2">
-                            <div class="d-flex">
-                                <h5 class="fw-bold me-2">@Html.DisplayFor(modelItem => @Model.UpcomingEvent.Name)</h5>
-                                <span>@Html.DisplayFor(modelItem => @Model.UpcomingEvent.Date)</span>
-                            </div>
+            <div class="list-group">
+                @foreach (var booking in Model.UpcomingFoodBookings.Take(3))
+                {
+                    <a asp-page="/Catering/FoodBookings/Details" asp-route-id="@booking.FoodBookingId" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="fw-bold">@booking.EventName</h5>
+                            <span>@booking.FoodBookingDate.ToString("dd MMM yyyy")</span>
                         </div>
-                    </div>
-                    <div class="hstack gap-2">
-                        <span class="badge bg-primary">Staff @Model.UpcomingEvent.Staffings.Count()</span>
-                        <span class="badge bg-primary">Guests @Model.UpcomingEvent.GuestBookings.Count()</span>
-                    </div>
-                </div>
-            </a>
+                        <div class="hstack gap-2">
+                            <span class="badge bg-primary">@booking.MenuName</span>
+                            <span class="badge bg-primary">Guests @booking.NumberOfGuests</span>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="mt-4">
+        <h5 class="mb-2">Past Food Bookings</h5>
+
+        @if (!Model.PastFoodBookings.Any())
+        {
+            <div class="alert alert-secondary" role="alert">
+                No past food bookings.
+            </div>
+        }
+        else
+        {
+            <div class="list-group">
+                @foreach (var booking in Model.PastFoodBookings.Take(3))
+                {
+                    <a asp-page="/Catering/FoodBookings/Details" asp-route-id="@booking.FoodBookingId" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="fw-bold">@booking.EventName</h5>
+                            <span>@booking.FoodBookingDate.ToString("dd MMM yyyy")</span>
+                        </div>
+                        <div class="hstack gap-2">
+                            <span class="badge bg-primary">@booking.MenuName</span>
+                            <span class="badge bg-primary">Guests @booking.NumberOfGuests</span>
+                        </div>
+                    </a>
+                }
+            </div>
         }
     </div>
 </div>

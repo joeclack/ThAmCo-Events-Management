@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 
@@ -23,7 +24,7 @@ namespace ThAmCo.Events.Pages.Events
 
         public IList<Event> Events { get;set; } = default!;
 
-        public async Task OnGetAsync()
+		public async Task OnGetAsync()
         {
             Events = await _eventService.GetAllEvents();
         }

@@ -88,11 +88,5 @@ public class CateringDbContext : DbContext
             new Menu { MenuId = 2, MenuName = "Vegetarian Feast" },
             new Menu { MenuId = 3, MenuName = "Deluxe Dinner" }
         );
-
-        modelBuilder.Entity<FoodBooking>().HasData(
-            new FoodBooking { FoodBookingId = 1, ClientReferenceId = 1, NumberOfGuests = 1, MenuId = 1, FoodBookingDate = DateTime.Now },
-            new FoodBooking { FoodBookingId = 2, ClientReferenceId = 2, NumberOfGuests = 5, MenuId = 2, FoodBookingDate = DateTime.Now.AddDays(10) },
-            new FoodBooking { FoodBookingId = 3, ClientReferenceId = 3, NumberOfGuests = 2, MenuId = 3, FoodBookingDate = DateTime.Now.AddMonths(1) }
-        );
     }
 }

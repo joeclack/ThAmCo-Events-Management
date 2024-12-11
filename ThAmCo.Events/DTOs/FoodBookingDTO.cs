@@ -10,6 +10,7 @@ namespace ThAmCo.Events.DTOs
         public int MenuId { get; set; }
         public string? MenuName { get; set; }
         public DateTime FoodBookingDate { get; set; }
+        public string EventName { get; set; }
 
     }
 }

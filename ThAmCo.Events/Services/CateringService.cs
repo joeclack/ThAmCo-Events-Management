@@ -181,8 +181,17 @@ namespace ThAmCo.Events.Services
 				throw new ArgumentNullException(nameof(response), "The FoodBookings response is null");
 			}
 			var menus = await GetMenus();
-
+			var events = await _eventService.GetAllEvents();
 			items.Select(fb => fb.MenuName = menus.FirstOrDefault(m => m.MenuId == fb.MenuId).MenuName).ToList();
+			foreach(var booking in items)
+			{
+				booking.MenuName = menus.FirstOrDefault(x => x.MenuId == booking.MenuId).MenuName;
+				var matchedEvent = events.FirstOrDefault(x => x.FoodBookingId == booking.FoodBookingId);
+				if (matchedEvent != null)
+				{
+					booking.EventName = matchedEvent.Name;
+				}
+			}
 			return items;
 		}
 
@@ -231,6 +240,27 @@ namespace ThAmCo.Events.Services
 			}
 
 			return -1;
+		}
+
+		internal async Task<List<FoodBookingDTO>> GetUpcomingFoodBookings()
+		{
+			var bookings = await GetFoodBookings();
+			if(bookings.Count == 0)
+			{
+				return [];
+			}
+			var upcoming = new List<FoodBookingDTO>(bookings.Where(x=>x.FoodBookingDate >= DateTime.Today));
+			return upcoming;
+		}
+
+		internal async Task<List<FoodBookingDTO>> GetPastFoodBookings()
+		{
+			var bookings = await GetFoodBookings();
+			if (bookings.Count == 0)
+			{
+				return [];
+			}
+			return new List<FoodBookingDTO>(bookings.Where(x => x.FoodBookingDate < DateTime.Today));
 		}
 	}
 }

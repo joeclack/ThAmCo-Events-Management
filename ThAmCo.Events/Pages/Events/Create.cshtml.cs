@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ThAmCo.Events.Data;
+using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 
@@ -15,17 +16,19 @@ namespace ThAmCo.Events.Pages.Events
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
         private EventService _eventService;
+		public List<EventTypeDTO> EventTypes { get; set; } = [];
 
-        public CreateModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider provider)
+		public CreateModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider provider)
         {
             _context = context;
             _eventService = provider.GetRequiredService<EventService>();
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            EventTypes = await _eventService.GetEventTypes();
             return Page();
-        }
+		}
 
         [BindProperty]
         public Event Event { get; set; } = default!;
