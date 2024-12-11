@@ -114,5 +114,19 @@ namespace ThAmCo.Events.Services
 
             return availableEvents;
         }
+
+		internal async Task UpdateEvent(Event @event)
+		{
+			_context.Attach(@event).State = EntityState.Modified;
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+
+			}
+		}
 	}
 }

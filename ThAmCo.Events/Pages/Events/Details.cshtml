@@ -30,17 +30,15 @@
                 <dt class="col-sm-3 font-weight-bold">Staff</dt>
                 <dd class="col-sm-9">@Model.Event.Staffings.Count</dd>
 
-                @if (Model.Event.IsFoodBooked)
+                @if (Model.FoodBookingMenuInfo != null)
                 {
                     <dt class="col-sm-3 font-weight-bold">Menu</dt>
-                    <dd class="col-sm-9">@Model.FoodBooking.MenuName</dd>
+                    <dd class="col-sm-9">@Model.FoodBookingMenuInfo.MenuName</dd>
                 }
                 else
                 {
                     <dd class="col-sm-9">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createFoodBookingModal">
-                            Book Food
-                        </button>
+                        <strong class="badge bg-danger">No food booking found</strong>
                     </dd>
                 }
             </dl>
@@ -56,41 +54,16 @@
             }
         </div>
     </div>
-
-</div>
-
-<div class="modal fade" id="createFoodBookingModal" tabindex="-1" role="dialog" aria-labelledby="createFoodBookingModalLabel">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createFoodBookingModalLabel">Create Food Booking</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" asp-page-handler="CreateFoodBooking">
-                <input type="hidden" asp-for="Event.EventId" />
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label asp-for="FoodBooking.MenuId">Menu</label>
-                        <select asp-for="FoodBooking.MenuId" class="form-control">
-                            <option value="">Select Menu</option>
-                            @foreach (var menu in Model.AvailableMenus)
-                            {
-                                <option value="@menu.MenuId">@menu.MenuName</option>
-                            }
-                        </select>
-                        <span asp-validation-for="FoodBooking.MenuId" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Food Booking</button>
-                </div>
-            </form>
-        </div>
+    <div class=" mt-4">
+        <a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.Event.EventId">
+            <i class="bi bi-pencil-square"></i> Edit Event
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary btn">
+            <i class="bi bi-arrow-left-circle"></i> Back to List
+        </a>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -1,4 +1,5 @@
-﻿using NuGet.Versioning;
+﻿using Microsoft.DotNet.MSIdentity.Shared;
+using NuGet.Versioning;
 using System.Text;
 using System.Text.Json;
 using ThAmCo.Events.DTOs;
@@ -14,14 +15,17 @@ namespace ThAmCo.Events.Services
 		const string MenuFoodItemsEndpoint = "/menufooditems";
 		private readonly HttpClient _httpClient;
 
+		private readonly EventService _eventService;
+
 		JsonSerializerOptions jsonOptions = new JsonSerializerOptions
 		{
 			PropertyNameCaseInsensitive = true
 		};
 
-		public CateringService(HttpClient httpClient)
+		public CateringService(HttpClient httpClient, IServiceProvider serviceProvider)
 		{
-			_httpClient = httpClient; // Initialise the HttpClient property.
+			_httpClient = httpClient;
+			_eventService = serviceProvider.GetRequiredService<EventService>();
 		}
 
 		public async Task<List<MenuGetDTO>> GetMenus()
@@ -103,6 +107,28 @@ namespace ThAmCo.Events.Services
 			var json = JsonSerializer.Serialize(menu);
 			HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 			var request = await _httpClient.PostAsync($"{ServiceBaseUrl}{MenuEndPoint}", content);
+		}
+
+		public async Task<MenuInfoDTO> FetchMenuInfoForBooking(int foodBookingId)
+		{
+			var foodBooking = await GetFoodBooking(foodBookingId);
+			var menuId = foodBooking.MenuId;
+			var response = await _httpClient.GetAsync($"{ServiceBaseUrl}{MenuEndPoint}/{menuId}");
+
+			var jsonResponse = await response.Content.ReadAsStringAsync();
+			var menuInfo = JsonSerializer.Deserialize<MenuInfoDTO>(jsonResponse, jsonOptions);
+
+			return menuInfo;
+		}
+
+		public async Task<MenuInfoDTO> GetMenuInfo(int menuId)
+		{
+			var response = await _httpClient.GetAsync($"{ServiceBaseUrl}{MenuEndPoint}/{menuId}");
+
+			var jsonResponse = await response.Content.ReadAsStringAsync();
+			var menuInfo = JsonSerializer.Deserialize<MenuInfoDTO>(jsonResponse, jsonOptions);
+
+			return menuInfo;
 		}
 
 		public async Task DeleteMenu(int menuId)
@@ -189,12 +215,22 @@ namespace ThAmCo.Events.Services
 		internal async Task DeleteFoodBooking(int foodBookingId)
 		{
 			var request = await _httpClient.DeleteAsync($"{ServiceBaseUrl}{FoodBookingsEndPoint}/{foodBookingId}");
+			var events = await _eventService.GetAllEvents();
+			var _event = events.FirstOrDefault(x=>x.FoodBookingId == foodBookingId);
+			_event.FoodBookingId = -1;
+			await _eventService.UpdateEvent(_event);
 		}
 
-		internal async Task CreateFoodBooking(FoodBookingDTO foodBooking)
+		internal async Task<int> CreateFoodBooking(FoodBookingDTO foodBooking)
 		{
 			var response = await _httpClient.PostAsJsonAsync($"{ServiceBaseUrl}{FoodBookingsEndPoint}", foodBooking);
-			response.EnsureSuccessStatusCode();
+			if (response.IsSuccessStatusCode)
+			{
+				var createdDto = await response.Content.ReadFromJsonAsync<FoodBookingDTO>();
+				return createdDto?.FoodBookingId ?? -1;
+			}
+
+			return -1;
 		}
 	}
 }

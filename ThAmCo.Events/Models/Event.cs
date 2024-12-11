@@ -24,9 +24,8 @@ namespace ThAmCo.Events.Models
 		public ICollection<Staffing> Staffings { get; set; } = [];
         public string EventTypeId { get; set; } = string.Empty;
         public string ReservationId { get; set; } = string.Empty;
-		[DisplayName("Food Booking")]
-		public int FoodBookingId { get; set; }
+        [DisplayName("Food Booking")]
+        public int FoodBookingId { get; set; } = -1;
         public bool IsCanceled { get; set; }
-        public bool IsFoodBooked { get; set; }
     }
 }

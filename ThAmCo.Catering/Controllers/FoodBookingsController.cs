@@ -94,25 +94,32 @@ namespace ThAmCo.Catering.Controllers
         {
             var newFoodBooking = new FoodBooking()
             {
-                FoodBookingId = foodBooking.FoodBookingId,
                 MenuId = foodBooking.MenuId,
                 NumberOfGuests = foodBooking.NumberOfGuests,
                 ClientReferenceId = foodBooking.ClientReferenceId,
                 FoodBookingDate = foodBooking.FoodBookingDate
             };
-            try
+            int confirmationId = -1;
+
+			try
             {
-                _context.FoodBookings.Add(newFoodBooking);
-                await _context.SaveChangesAsync();
-            }
-            catch
+				_context.FoodBookings.Add(newFoodBooking);
+				await _context.SaveChangesAsync();
+
+				var booking = await _context.FoodBookings
+					.OrderByDescending(fb => fb.FoodBookingId)
+					.FirstAsync();
+
+				confirmationId = booking.FoodBookingId;
+			}
+			catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
             var dto = new FoodBookingDTO().CreateDTO(newFoodBooking);
-
-            return new ObjectResult(dto.FoodBookingId) { StatusCode = StatusCodes.Status201Created };
+            dto.FoodBookingId = confirmationId;
+			return CreatedAtAction(nameof(CreateFoodBooking), new { id = dto.FoodBookingId }, dto);
         }
 
         // DELETE: api/FoodBookings/5

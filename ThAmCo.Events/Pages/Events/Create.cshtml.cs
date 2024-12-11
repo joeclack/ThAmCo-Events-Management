@@ -37,7 +37,6 @@ namespace ThAmCo.Events.Pages.Events
             {
                 return Page();
             }
-
             await _eventService.CreateEvent(Event);
 
             return RedirectToPage("./Index");

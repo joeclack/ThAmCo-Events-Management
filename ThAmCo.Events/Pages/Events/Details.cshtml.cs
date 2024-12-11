@@ -23,14 +23,13 @@ namespace ThAmCo.Events.Pages.Events
         }
         [BindProperty]
         public Event Event { get; set; } = default!;
-        [BindProperty]
-        public FoodBookingDTO FoodBooking { get; set; } = default!;
 		public List<MenuGetDTO> AvailableMenus { get; set; }
 
 		public bool FirstAiderPresent { get; set; }
         public bool IsUnderStaffed { get; set; }
         public int StaffRequiredForEvent { get; set; }
         public string UnderStaffAlertText { get; set; } = string.Empty;
+        public MenuInfoDTO FoodBookingMenuInfo { get; set; }
 
         public bool IsEventUnderStaffed()
         {
@@ -80,39 +79,16 @@ namespace ThAmCo.Events.Pages.Events
                 Event = _event;
                 IsUnderStaffed = IsEventUnderStaffed();
                 FirstAiderPresent = IsFirstAiderPresent();
+                if(Event.FoodBookingId != -1)
+                {
+                    FoodBookingMenuInfo = await _cateringService.FetchMenuInfoForBooking(Event.FoodBookingId);
+                }
+                
 				AvailableMenus = await _cateringService.GetMenus();
 			}
 			return Page();
         }
 
-		public async Task<IActionResult> OnPostCreateFoodBookingAsync()
-		{
-			if (!ModelState.IsValid)
-			{
-				// Reload menus in case of validation error
-				AvailableMenus = await _cateringService.GetMenus();
-				return Page();
-			}
-
-			FoodBooking.NumberOfGuests = Event.GuestBookings.Count();
-			FoodBooking.FoodBookingDate = Event.Date;
-
-			await _cateringService.CreateFoodBooking(FoodBooking);
-
-			Event.FoodBookingId = FoodBooking.FoodBookingId;
-			Event.IsFoodBooked = true;
-			if (!ModelState.IsValid)
-			{
-				return Page();
-			}
-			if (Event == null)
-			{
-				return Page();
-			}
-
-			_context.Attach(Event).State = EntityState.Modified;
-
-			return RedirectToPage("./Details", new { id = Event.EventId });
-		}
+		
 	}
 }

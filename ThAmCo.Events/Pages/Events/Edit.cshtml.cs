@@ -14,10 +14,14 @@ namespace ThAmCo.Events.Pages.Events
         private readonly EventService _eventService;
         private readonly StaffService _staffService;
         private readonly GuestService _guestService;
-        [BindProperty]
-        public int? SelectedStaffId { get; set; }
+		private readonly CateringService _cateringService;
 
-        [BindProperty]
+		public List<MenuGetDTO> AvailableMenus { get; set; }
+
+		[BindProperty]
+        public int? SelectedStaffId { get; set; }
+        public FoodBookingDTO FoodBooking { get; set; }
+		[BindProperty]
         public int? SelectedGuestId { get; set; }
         public List<ThAmCo.Events.Models.Staff> AvailableStaff { get; set; } = [];
         public List<Guest> AvailableGuests { get; set; } = [];
@@ -34,7 +38,8 @@ namespace ThAmCo.Events.Pages.Events
             _eventService = serviceProvider.GetRequiredService<EventService>();
             _staffService = serviceProvider.GetRequiredService<StaffService>();
             _guestService = serviceProvider.GetRequiredService<GuestService>();
-        }
+            _cateringService = serviceProvider.GetRequiredService<CateringService>();
+		}
         public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == 0)
@@ -50,30 +55,74 @@ namespace ThAmCo.Events.Pages.Events
 
             Event = _event;
             EventId = _event.EventId;
-
-            AvailableStaff = await _staffService.GetAvailableStaff(EventId);
+			AvailableMenus = await _cateringService.GetMenus();
+			AvailableStaff = await _staffService.GetAvailableStaff(EventId);
             AvailableGuests = await _guestService.GetAvailableGuests(EventId);
+            FoodBooking = await _cateringService.GetFoodBooking(Event.FoodBookingId);
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public int NewMenuId { get; set; }
+
+        public async Task<IActionResult> OnPostEditFoodBookingMenu(int foodBookingId, int menuId, int eventId)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            var _event = await _eventService.GetEvent(eventId);
+
+			FoodBooking = await _cateringService.GetFoodBooking(foodBookingId);
+			if (FoodBooking.MenuId != menuId)
+			{
+				var menu = await _cateringService.GetMenuInfo(menuId);
+				FoodBooking.MenuName = menu.MenuName;
+				FoodBooking.MenuId = menu.MenuId;
+				await _cateringService.UpdateFoodBooking(FoodBooking);
+			}
+
+			return Redirect($"../Events/Edit?id={eventId}");
+		}
+		public async Task<IActionResult> OnPostCreateFoodBookingAsync(int eventId, int menuId)
+		{
+			Event = await _eventService.GetEvent(eventId);
+			var FoodBooking = new FoodBookingDTO();
+			FoodBooking.NumberOfGuests = Event.GuestBookings.Count();
+			FoodBooking.FoodBookingDate = Event.Date;
+			FoodBooking.MenuId = menuId;
+
+			var confirmationBookingId = await _cateringService.CreateFoodBooking(FoodBooking);
+			if (confirmationBookingId == -1)
+			{
+				AvailableMenus = await _cateringService.GetMenus();
+				return Page();
+			}
+			else
+			{
+				Event.FoodBookingId = confirmationBookingId;
+				if (Event == null)
+				{
+					return Page();
+				}
+
+				_context.Attach(Event).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+
+				return Redirect($"../Events/Edit?id={eventId}");
+			}
+		}
+
+		public async Task<IActionResult> OnPostAsync()
+        {
+
             if (Event == null)
             {
                 return Page();
             }
 
-            _context.Attach(Event).State = EntityState.Modified;
+			_context.Attach(Event).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+			}
+			catch (DbUpdateConcurrencyException)
             {
                 if (!EventExists(Event.EventId))
                 {
