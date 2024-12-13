@@ -25,6 +25,7 @@ namespace ThAmCo.Events.Pages.Events
         public int? SelectedGuestId { get; set; }
         public List<ThAmCo.Events.Models.Staff> AvailableStaff { get; set; } = [];
         public List<Guest> AvailableGuests { get; set; } = [];
+        public List<VenueDTO> AvailableVenues{ get; set; } = [];
 
         //[BindProperty]
         //public int EventId { get; set; }
@@ -62,6 +63,7 @@ namespace ThAmCo.Events.Pages.Events
             AvailableGuests = await _guestService.GetAvailableGuests(EventId);
             FoodBooking = await _cateringService.GetFoodBooking(Event.FoodBookingId);
             EventTypes = await _eventService.GetEventTypes();
+            AvailableVenues = await _eventService.GetAvailableVenues(Event);
             return Page();
         }
 

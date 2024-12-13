@@ -44,6 +44,17 @@
 					</select>
 				</div>
 
+				<div class="form-group">
+					<label class="control-label">Venue</label>
+					<select class="form-control" asp-for=Event.EventTypeId>
+						<option value="">Select Event Type</option>
+						@foreach (var venue in Model.AvailableVenues)
+						{
+							<option value="@venue.Code" >@venue.Name</option>
+						}
+					</select>
+				</div>
+
 				<div class="form-group mt-4">
 					<button type="submit" class="btn btn-primary">
 						<i class="bi bi-save"></i> Save

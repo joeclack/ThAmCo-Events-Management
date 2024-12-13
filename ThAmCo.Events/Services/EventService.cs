@@ -9,9 +9,9 @@ namespace ThAmCo.Events.Services
     {
         private readonly ThAmCo.Events.Data.EventsDbContext _context;
 		private readonly HttpClient _httpClient; 
-        const string ServiceBaseUrl = "https://localhost:7088/api";
+        const string VenuesServiceBaseUrl = "https://localhost:7088/api";
 		const string EventTypesEndPoint = "/EventTypes"; 
-			const string VenuesEndPoint = "/Venues"; 
+		const string AvailabilityEndPoint = "/Availability"; 
 		JsonSerializerOptions jsonOptions = new JsonSerializerOptions
 		{
 			PropertyNameCaseInsensitive = true
@@ -151,26 +151,9 @@ namespace ThAmCo.Events.Services
 			return new List<Event>(events.Where(x => x.Date < DateTime.Today));
 		}
 
-		internal async Task<List<VenueDTO>> GetVenues()
-		{
-			var response = await _httpClient.GetAsync(ServiceBaseUrl + VenuesEndPoint);
-			if (response.IsSuccessStatusCode)
-			{
-				var jsonResponse = await response.Content.ReadAsStringAsync();
-				var types = JsonSerializer.Deserialize<List<VenueDTO>>(jsonResponse, jsonOptions);
-				if (types == null)
-				{
-					throw new ArgumentNullException(nameof(response), "Venues were null");
-				}
-				return types;
-			}
-
-			return [];
-		}
-
 		public async Task<List<EventTypeDTO>> GetEventTypes()
 		{
-			var response = await _httpClient.GetAsync(ServiceBaseUrl + EventTypesEndPoint);
+			var response = await _httpClient.GetAsync(VenuesServiceBaseUrl + EventTypesEndPoint);
 			if (response.IsSuccessStatusCode)
 			{
 				var jsonResponse = await response.Content.ReadAsStringAsync();
@@ -184,5 +167,28 @@ namespace ThAmCo.Events.Services
 
 			return [];
 		}
-	}
+
+		public async Task<List<VenueDTO>> GetAvailableVenues(Event @event)
+		{
+			string type = @event.EventTypeId;
+			string startDate = @event.Date.ToString("yyyy-MM-dd");
+			string endDate = @event.Date.ToString("yyyy-MM-dd");
+			var response = await _httpClient.GetAsync($"{VenuesServiceBaseUrl}{AvailabilityEndPoint}" +
+			                                          $"?eventType={type}" +
+			                                          $"&beginDate={startDate}" +
+			                                          $"&endDate={endDate}");
+			if (response.IsSuccessStatusCode)
+			{
+				var jsonResponse = await response.Content.ReadAsStringAsync();
+				var venues = JsonSerializer.Deserialize<List<VenueDTO>>(jsonResponse, jsonOptions);
+				if (venues == null)
+				{
+					throw new ArgumentNullException(nameof(response), "Availabilities were null");
+				}
+				return venues;
+			}
+
+			return [];
+		}
+    }
 }
