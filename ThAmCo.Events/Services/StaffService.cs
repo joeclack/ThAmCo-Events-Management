@@ -33,29 +33,42 @@ namespace ThAmCo.Events.Services
             return staffMember;
         }
 
-        public async Task<List<Staff>> GetAvailableStaff(int eventId)
-        {
-            List<Staff> AvailableStaff = [];
-            var staff = await GetAllStaff();
-            foreach(var s in staff)
-            {
-                var staffing = s.Staffings;
-                if(staffing.Count == 0)
-                {
-                    AvailableStaff.Add(s);
-                }
-                foreach(var x in staffing)
-                {
-                    if(x.EventId != eventId)
-                    {
-                        AvailableStaff.Add(s);
-                    }
-                }
-            }
-            return AvailableStaff;
-        }
+		public async Task<List<Staff>> GetAvailableStaff(Event _event)
+		{
+			List<Staff> AvailableStaff = [];
+			var staff = await GetAllStaff();
 
-        public async Task DeleteStaffMember(int staffId)
+			foreach (var s in staff)
+			{
+				var staffings = s.Staffings;
+
+				if (staffings.Count == 0)
+				{
+					AvailableStaff.Add(s);
+					continue;
+				}
+
+				bool isAvailable = true;
+				foreach (var staffing in staffings)
+				{
+					if (staffing.EventId == _event.EventId || staffing.Event.Date == _event.Date.Date)
+					{
+						isAvailable = false;
+						break;
+					}
+				}
+
+				if (isAvailable)
+				{
+					AvailableStaff.Add(s);
+				}
+			}
+
+			return AvailableStaff;
+		}
+
+
+		public async Task DeleteStaffMember(int staffId)
         {
             try
             {

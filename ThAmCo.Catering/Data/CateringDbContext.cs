@@ -79,14 +79,37 @@ public class CateringDbContext : DbContext
             new FoodItem { FoodItemId = 17, Name = "Pepperoni Pizza", Description = "Classic pepperoni pizza with marinara sauce and mozzarella", UnitPrice = 11.49f },
             new FoodItem { FoodItemId = 18, Name = "Margherita Pizza", Description = "Pizza with fresh tomatoes, mozzarella, and basil", UnitPrice = 9.99f },
             new FoodItem { FoodItemId = 19, Name = "Cheeseburger", Description = "Beef burger with melted cheddar, lettuce, and tomato on a brioche bun", UnitPrice = 6.49f },
-            new FoodItem { FoodItemId = 20, Name = "Veggie Burger", Description = "Grilled veggie patty with lettuce, tomato, and avocado on a whole-wheat bun", UnitPrice = 5.99f }
+            new FoodItem { FoodItemId = 20, Name = "Veggie Burger", Description = "Grilled veggie patty with lettuce, tomato, and avocado on a whole-wheat bun", UnitPrice = 5.99f },
+			new FoodItem { FoodItemId = 21, Name = "Chicken Wings", Description = "Crispy chicken wings with your choice of sauce", UnitPrice = 7.99f },
+	        new FoodItem { FoodItemId = 22, Name = "Mozzarella Sticks", Description = "Golden-brown mozzarella sticks with marinara sauce", UnitPrice = 4.99f },
+	        new FoodItem { FoodItemId = 23, Name = "Onion Rings", Description = "Crispy onion rings with a tangy dipping sauce", UnitPrice = 3.99f },
+	        new FoodItem { FoodItemId = 24, Name = "Nachos", Description = "Crispy tortilla chips topped with cheese, beans, and your choice of toppings", UnitPrice = 6.99f },
+	        new FoodItem { FoodItemId = 25, Name = "Hummus and Pita Bread", Description = "Creamy hummus served with warm pita bread", UnitPrice = 4.49f },
+	        new FoodItem { FoodItemId = 26, Name = "Spaghetti and Meatballs", Description = "Classic spaghetti and meatballs with marinara sauce", UnitPrice = 8.99f },
+	        new FoodItem { FoodItemId = 27, Name = "Lasagna", Description = "Layers of pasta, meat sauce, and cheese", UnitPrice = 9.99f },
+	        new FoodItem { FoodItemId = 28, Name = "Chicken Parmesan", Description = "Breaded chicken cutlet topped with marinara sauce and cheese", UnitPrice = 10.99f },
+	        new FoodItem { FoodItemId = 29, Name = "Steak", Description = "Grilled steak with your choice of sides", UnitPrice = 12.99f },
+	        new FoodItem { FoodItemId = 30, Name = "Salmon", Description = "Grilled salmon with lemon and dill", UnitPrice = 11.99f },
+	        new FoodItem { FoodItemId = 31, Name = "French Fries", Description = "Crispy french fries", UnitPrice = 2.99f },
+	        new FoodItem { FoodItemId = 32, Name = "Mashed Potatoes", Description = "Creamy mashed potatoes", UnitPrice = 2.49f },
+	        new FoodItem { FoodItemId = 33, Name = "Green Beans", Description = "Steamed green beans", UnitPrice = 1.99f },
+	        new FoodItem { FoodItemId = 34, Name = "Corn", Description = "Buttered corn", UnitPrice = 1.99f },
+	        new FoodItem { FoodItemId = 35, Name = "Salad", Description = "Fresh salad with your choice of dressing", UnitPrice = 2.99f },
+	        new FoodItem { FoodItemId = 36, Name = "Ice Cream", Description = "Your choice of flavor", UnitPrice = 2.99f },
+	        new FoodItem { FoodItemId = 37, Name = "Cake", Description = "A slice of cake", UnitPrice = 3.99f },
+	        new FoodItem { FoodItemId = 38, Name = "Brownies", Description = "Chocolate brownies", UnitPrice = 2.99f },
+	        new FoodItem { FoodItemId = 39, Name = "Cookies", Description = "Your choice of cookie", UnitPrice = 1.99f },
+	        new FoodItem { FoodItemId = 40, Name = "Fruit Salad", Description = "Fresh fruit salad", UnitPrice = 2.99f }
         );
 
 
-        modelBuilder.Entity<Menu>().HasData(
+		modelBuilder.Entity<Menu>().HasData(
             new Menu { MenuId = 1, MenuName = "Basic Lunch" },
             new Menu { MenuId = 2, MenuName = "Vegetarian Feast" },
-            new Menu { MenuId = 3, MenuName = "Deluxe Dinner" }
-        );
+            new Menu { MenuId = 3, MenuName = "Deluxe Dinner" },
+		    new Menu { MenuId = 4, MenuName = "Healthy Lunch" },
+            new Menu { MenuId = 5, MenuName = "Pizza Party" },
+            new Menu { MenuId = 6, MenuName = "BBQ Feast" }
+		);
     }
 }

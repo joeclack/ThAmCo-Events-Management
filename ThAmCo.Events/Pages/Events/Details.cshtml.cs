@@ -24,7 +24,7 @@ namespace ThAmCo.Events.Pages.Events
         [BindProperty]
         public Event Event { get; set; } = default!;
 		public List<MenuGetDTO> AvailableMenus { get; set; }
-
+        public ReservationGetDTO Reservation { get; set; }
 		public bool FirstAiderPresent { get; set; }
         public bool IsUnderStaffed { get; set; }
         public int StaffRequiredForEvent { get; set; }
@@ -83,7 +83,7 @@ namespace ThAmCo.Events.Pages.Events
                 {
                     FoodBookingMenuInfo = await _cateringService.FetchMenuInfoForBooking(Event.FoodBookingId);
                 }
-                
+                Reservation = await _eventService.GetReservation(Event.ReservationId);
 				AvailableMenus = await _cateringService.GetMenus();
 			}
 			return Page();

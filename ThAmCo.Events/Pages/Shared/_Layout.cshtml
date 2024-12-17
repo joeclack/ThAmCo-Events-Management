@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,13 +30,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Staff/Index">Staff</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Catering/Index">Catering</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="cateringDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Catering
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="cateringDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Catering/Menus/Index">Menus</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Catering/FoodItems/Index">Food Items</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Catering/FoodBookings/Index">Bookings</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
         <main role="main" class="pb-3">
             @RenderBody()

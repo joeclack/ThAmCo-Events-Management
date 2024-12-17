@@ -5,6 +5,7 @@ using ThAmCo.Events.Models;
 using ThAmCo.Events.Services;
 using ThAmCo.Events.DTOs;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace ThAmCo.Events.Pages.Events
 {
@@ -25,14 +26,16 @@ namespace ThAmCo.Events.Pages.Events
         public int? SelectedGuestId { get; set; }
         public List<ThAmCo.Events.Models.Staff> AvailableStaff { get; set; } = [];
         public List<Guest> AvailableGuests { get; set; } = [];
-        public List<VenueDTO> AvailableVenues{ get; set; } = [];
+        public List<VenueDTO> AvailableVenuesForEventDate { get; set; } = [];
+        public List<VenueDTO> AllAvailableVenues { get; set; } = [];
 
-        //[BindProperty]
-        //public int EventId { get; set; }
-        [BindProperty]
+		//[BindProperty]
+		//public int EventId { get; set; }
+		[BindProperty]
         public Event Event { get; set; } = default!;
         public int EventId { get; set; }
         public string SelectedMenuId { get; set; }
+        public ReservationGetDTO Reservation { get; set; } = new();
 
 		public EditModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
         {
@@ -59,15 +62,16 @@ namespace ThAmCo.Events.Pages.Events
             EventId = _event.EventId;
 
 			AvailableMenus = await _cateringService.GetMenus();
-			AvailableStaff = await _staffService.GetAvailableStaff(EventId);
-            AvailableGuests = await _guestService.GetAvailableGuests(EventId);
+			AvailableStaff = await _staffService.GetAvailableStaff(Event);
+            AvailableGuests = await _guestService.GetAvailableGuests(Event);
             FoodBooking = await _cateringService.GetFoodBooking(Event.FoodBookingId);
             EventTypes = await _eventService.GetEventTypes();
-            AvailableVenues = await _eventService.GetAvailableVenues(Event);
-            return Page();
-        }
-
-        public int NewMenuId { get; set; }
+            AvailableVenuesForEventDate = await _eventService.GetAvailableVenuesForEventDate(Event);
+            AllAvailableVenues = await _eventService.GetAllAvailableVenues(Event.EventTypeId);
+            Reservation = await _eventService.GetReservation(Event.ReservationId);
+			return Page();
+		}
+		public int NewMenuId { get; set; }
 
         public async Task<IActionResult> OnPostEditFoodBookingMenu(int foodBookingId, int menuId, int eventId)
         {
@@ -84,6 +88,23 @@ namespace ThAmCo.Events.Pages.Events
 
 			return Redirect($"../Events/Edit?id={eventId}");
 		}
+
+		public async Task<IActionResult> OnPostDeleteReservation(string reservationId, int eventId)
+		{
+			await _eventService.DeleteReservation(reservationId);
+			return RedirectToPage($"../Events/Edit", new { id = eventId});
+		}
+
+		public async Task<IActionResult> OnPostCreateReservation(int eventId, DateTime eventDate, string venueCode)
+        {
+            ReservationPostDTO reservationPostDTO = new() { EventDate = eventDate, StaffId = "0", VenueCode = venueCode };
+            string reference = await _eventService.CreateReservation(reservationPostDTO);
+            Event = await _eventService.GetEvent(eventId);
+            Event.ReservationId = reference;
+            await _eventService.UpdateEvent(Event);
+			return Redirect($"../Events/Edit?id={eventId}");
+		}
+
 		public async Task<IActionResult> OnPostCreateFoodBookingAsync(int eventId, int menuId)
 		{
 			Event = await _eventService.GetEvent(eventId);
@@ -139,8 +160,8 @@ namespace ThAmCo.Events.Pages.Events
                 }
             }
 
-            return RedirectToPage("./Index");
-        }
+            return Redirect($"../Events/Edit?id={Event.EventId}");
+		}
 
         public async Task<IActionResult> OnPostCreateStaffing(int staffId, int eventId)
         {

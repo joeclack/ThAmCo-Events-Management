@@ -24,26 +24,32 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Event.Date" class="control-label">Event Date</label>
-                    <input asp-for="Event.Date" class="form-control" />
-                    <span asp-validation-for="Event.Date" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
                     <label asp-for="Event.Location" class="control-label">Event Location</label>
                     <input asp-for="Event.Location" class="form-control" />
                     <span asp-validation-for="Event.Location" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label class="control-label">Event Type</label>
-                    <select class="form-control" asp-for=Event.EventTypeId>
-                        <option value="">Select Event Type</option>
-                        @foreach (var type in Model.EventTypes)
-                        {
-                            <option value="@type.Id">@type.Title</option>
-                        }
-                    </select>
-                </div>
+
+                @if(Model.Event.EventTypeId == ""){
+                    <div class="form-group">
+                        <label asp-for="Event.Date" class="control-label">Event Date</label>
+                        <input asp-for="Event.Date" class="form-control" />
+                        <span asp-validation-for="Event.Date" class="text-danger"></span>
+                    </div>
+                } else
+                {
+                    <div class="form-group">
+                        <input type="hidden" name="eventType" value="@Model.Event.EventTypeId" />
+                        <label class="control-label">Venue - @Model.Event.EventTypeId</label>
+                        <select class="form-control" asp-for="SelectedVenueIdentifier">
+                            <option value="">Select Available Venue</option>
+                            @foreach (var avail in Model.AllAvailableVenues)
+                            {
+                                <option value="@avail.Code|@avail.Date">@avail.Name - @avail.Date.Date.ToShortDateString() (Capacity: @avail.Capacity) (£@avail.CostPerHour per hour)</option>
+                            }
+                        </select>
+                    </div>
+                }
+
                 <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> Create Event

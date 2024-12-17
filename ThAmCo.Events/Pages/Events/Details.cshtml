@@ -27,8 +27,11 @@
                 <dt class="col-sm-3 font-weight-bold">Type</dt>
                 <dd class="col-sm-9">@Model.Event.EventTypeId</dd>
 
+                <dt class="col-sm-3 font-weight-bold">Reservation Ref</dt>
+                <dd class="col-sm-9">@Model.Reservation.Reference</dd>
+
                 <dt class="col-sm-3 font-weight-bold">Venue</dt>
-                <dd class="col-sm-9"></dd>
+                <dd class="col-sm-9">@Model.Reservation.VenueCode</dd>
 
                 <dt class="col-sm-3 font-weight-bold">Guests</dt>
                 <dd class="col-sm-9">@Model.Event.GuestBookings.Count</dd>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using ThAmCo.Venues.Data;
 
 namespace ThAmCo.Events.Models
 {
@@ -22,7 +21,8 @@ namespace ThAmCo.Events.Models
         public ICollection<GuestBooking> GuestBookings { get; set; } = [];
 		[DisplayName("Staff")]
 		public ICollection<Staffing> Staffings { get; set; } = [];
-        public string EventTypeId { get; set; } = string.Empty;
+		[DisplayName("Type")]
+		public string EventTypeId { get; set; } = string.Empty;
         public string ReservationId { get; set; } = string.Empty;
         [DisplayName("Food Booking")]
         public int FoodBookingId { get; set; } = -1;

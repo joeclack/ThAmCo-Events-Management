@@ -9,83 +9,152 @@
 		<h1 class="display-4">Food Bookings Management</h1>
 	</div>
 
-	<span class="mb-3 badge bg-info">@Model.FoodBookings.Count() bookings</span>
+	<div>
+		<div>
+			<h5 class="mb-2">Upcoming Food Bookings</h5>
 
-	<div class="table-responsive">
-		<table class="table align-middle bg-white">
-			<thead class="bg-light">
-				<tr>
-					@* <th>Food Booking ID</th> *@
-					<th>Client Reference ID</th>
-					<th>Number of Guests</th>
-					<th>Menu</th>
-					<th class="w-50">Booking Date (DD/MM/YYYY)</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in Model.FoodBookings)
-				{
-					<tr>
-						@*                         <td>@item.FoodBookingId</td> *@
-						<td>@item.ClientReferenceId</td>
-						<td>@item.NumberOfGuests</td>
-						<td>@item.MenuName</td>
-						<td class="w-50">@item.FoodBookingDate.ToString("dd-MM-yyyy")</td>
-						<td>
-							<div class="hstack gap-1" role="group">
-								<a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.FoodBookingId">
-									<i class="bi bi-pencil-square"></i> Edit
-								</a>
-								<a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.FoodBookingId">
+			@if (!Model.UpcomingFoodBookings.Any())
+			{
+				<div class="alert alert-warning" role="alert">
+					No upcoming food bookings.
+				</div>
+				<a asp-page="/Catering/FoodBookings/Index" class="btn btn-primary">Manage Bookings</a>
+			}
+			else
+			{
+				<div class="list-group">
+					@foreach (var booking in Model.UpcomingFoodBookings.Take(3))
+					{
+						<div class="list-group-item d-flex justify-content-between align-items-center">
+							<div>
+								<h5 class="fw-bold badge bg-primary">@booking.EventName</h5>
+								<span>@booking.FoodBookingDate.ToString("dd MMM yyyy")</span>
+							</div>
+							<div class="hstack gap-2">
+								@* <span class="badge bg-primary">@booking.MenuName</span>
+								<span class="badge bg-primary">Guests @booking.NumberOfGuests</span> *@
+								<a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@booking.FoodBookingId">
 									<i class="bi bi-info-circle"></i> Details
 								</a>
-								<a data-toggle="modal" data-id="@item.FoodBookingId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm">
+								<a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteConfirmationModal" data-id="@booking.FoodBookingId">
 									<i class="bi bi-trash"></i> Delete
 								</a>
 							</div>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
+						</div>
+						
+					}
+				</div>
+			}
+		</div>
 
-	<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="deleteConfirmationModalTitle">Are you sure you want to delete this booking?</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>This action cannot be undone.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<div class="mt-4">
+			<h5 class="mb-2">Past Food Bookings</h5>
 
-					<!-- Form for delete confirmation -->
-					<form asp-page-handler="DeleteFoodBooking" method="post">
-						<input type="hidden" name="foodBookingId" id="deleteFoodBookingId" />
-						<button type="submit" class="btn btn-danger">Delete</button>
-					</form>
+			@if (!Model.PastFoodBookings.Any())
+			{
+				<div class="alert alert-secondary" role="alert">
+					No past food bookings.
 				</div>
-			</div>
+			}
+			else
+			{
+				<div class="list-group">
+					@foreach (var booking in Model.PastFoodBookings)
+					{
+						<a asp-page="/Catering/FoodBookings/Details" asp-route-id="@booking.FoodBookingId" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+							<div>
+								<h5 class="fw-bold badge bg-success">@booking.EventName</h5>
+								<span>@booking.FoodBookingDate.ToString("dd MMM yyyy")</span>
+							</div>
+							<div class="hstack gap-2">
+								<span class="badge bg-success">@booking.MenuName</span>
+								<span class="badge bg-success">Guests @booking.NumberOfGuests</span>
+							</div>
+						</a>
+					}
+				</div>
+			}
 		</div>
 	</div>
 
+	<div>
+		@* <span class="mb-3 badge bg-info">@Model.FoodBookings.Count() bookings</span>
+
+		<div class="table-responsive ">
+			<table class="table align-middle bg-white">
+				<thead class="bg-light">
+					<tr>
+						<th>Client Reference ID</th>
+						<th>Number of Guests</th>
+						<th>Menu</th>
+						<th class="w-50">Booking Date (DD/MM/YYYY)</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.FoodBookings)
+					{
+						<tr>
+							<td>@item.ClientReferenceId</td>
+							<td>@item.NumberOfGuests</td>
+							<td>@item.MenuName</td>
+							<td class="w-50">@item.FoodBookingDate.ToString("dd-MM-yyyy")</td>
+							<td>
+								<div class="hstack gap-1" role="group">
+									<a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.FoodBookingId">
+										<i class="bi bi-pencil-square"></i> Edit
+									</a>
+									<a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.FoodBookingId">
+										<i class="bi bi-info-circle"></i> Details
+									</a>
+									<a data-toggle="modal" data-id="@item.FoodBookingId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm">
+										<i class="bi bi-trash"></i> Delete
+									</a>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div> *@
+
+		<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteConfirmationModalTitle">Are you sure you want to delete this booking?</h5>
+						<button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>This action cannot be undone.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+						<!-- Form for delete confirmation -->
+						<form asp-page-handler="DeleteFoodBooking" method="post">
+							<input type="hidden" name="foodBookingId" id="deleteFoodBookingId" />
+							<button type="submit" class="btn btn-danger">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div> 
+	
 
 </div>
 
 <script>
 	$(document).ready(function () {
-						$('#deleteConfirmationModal').on('show.bs.modal', function (event) {
-									var button = $(event.relatedTarget);
-									var foodBookingId = button.data('id');
+		$('#deleteConfirmationModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var foodBookingId = button.data('id');
 
-									$('#deleteFoodBookingId').val(foodBookingId);
-						});
+			$('#deleteFoodBookingId').val(foodBookingId);
+		});
 	});
 </script>

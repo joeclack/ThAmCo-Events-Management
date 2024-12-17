@@ -18,7 +18,7 @@ namespace ThAmCo.Catering.Controllers
 
         // GET: api/Menus
         [HttpGet]
-        public async Task<ActionResult<List<MenuDTO>>> GetMenus()
+        public async Task<ActionResult<List<MenuPostDTO>>> GetMenus()
         {
             var menus = await _context.Menus
                 .Include(m => m.MenuFoodItems)
@@ -30,13 +30,13 @@ namespace ThAmCo.Catering.Controllers
                 return NotFound();
             }
 
-            List<MenuDTO> meunDTOS = menus.Select(m => new MenuDTO().CreateDTO(m)).ToList();
+            List<MenuPostDTO> meunDTOS = menus.Select(m => new MenuPostDTO().CreateDTO(m)).ToList();
             return meunDTOS;
         }
 
         // GET: api/Menus/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MenuDTO>> GetMenu(int id)
+        public async Task<ActionResult<MenuPostDTO>> GetMenu(int id)
         {
             var menu = await _context.Menus
                 .Include(m => m.MenuFoodItems)
@@ -48,7 +48,7 @@ namespace ThAmCo.Catering.Controllers
             {
                 return NotFound();
             }
-            MenuDTO dto = new MenuDTO().CreateDTO(menu);
+			MenuPostDTO dto = new MenuPostDTO().CreateDTO(menu);
 
             return dto;
         }

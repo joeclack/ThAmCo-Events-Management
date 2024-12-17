@@ -10,8 +10,9 @@ namespace ThAmCo.Events.Pages.Catering.FoodBookings
 
         public List<FoodBookingDTO> FoodBookings { get; set; } = [];
         public CateringService _cateringService;
-
-        public FoodBookingsModel(CateringService cateringService)
+		public List<FoodBookingDTO> UpcomingFoodBookings { get; set; } = [];
+		public List<FoodBookingDTO> PastFoodBookings { get; set; } = [];
+		public FoodBookingsModel(CateringService cateringService)
         {
             _cateringService = cateringService;
         }
@@ -19,7 +20,9 @@ namespace ThAmCo.Events.Pages.Catering.FoodBookings
         public async Task OnGet(int id)
         {
             FoodBookings = await _cateringService.GetFoodBookings();
-        }
+			UpcomingFoodBookings = await _cateringService.GetUpcomingFoodBookings();
+			PastFoodBookings = await _cateringService.GetPastFoodBookings();
+		}
 
 		public async Task<IActionResult> OnPostDeleteFoodBooking(int foodBookingId)
 		{

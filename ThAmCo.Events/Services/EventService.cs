@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.DotNet.MSIdentity.Shared;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using ThAmCo.Events.DTOs;
 using ThAmCo.Events.Models;
@@ -12,6 +13,7 @@ namespace ThAmCo.Events.Services
         const string VenuesServiceBaseUrl = "https://localhost:7088/api";
 		const string EventTypesEndPoint = "/EventTypes"; 
 		const string AvailabilityEndPoint = "/Availability"; 
+		const string ReservationEndPoint = "/Reservations";
 		JsonSerializerOptions jsonOptions = new JsonSerializerOptions
 		{
 			PropertyNameCaseInsensitive = true
@@ -168,7 +170,7 @@ namespace ThAmCo.Events.Services
 			return [];
 		}
 
-		public async Task<List<VenueDTO>> GetAvailableVenues(Event @event)
+		public async Task<List<VenueDTO>> GetAvailableVenuesForEventDate(Event @event)
 		{
 			string type = @event.EventTypeId;
 			string startDate = @event.Date.ToString("yyyy-MM-dd");
@@ -190,5 +192,63 @@ namespace ThAmCo.Events.Services
 
 			return [];
 		}
-    }
+
+		public async Task<List<VenueDTO>> GetAllAvailableVenues(string eventType)
+		{
+			string type = eventType;
+			string startDate = DateTime.Today.Date.AddYears(-100).ToString("yyyy-MM-dd");
+			string endDate = DateTime.Today.Date.AddYears(100).ToString("yyyy-MM-dd");
+			var response = await _httpClient.GetAsync($"{VenuesServiceBaseUrl}{AvailabilityEndPoint}" +
+													  $"?eventType={type}" +
+													  $"&beginDate={startDate}" +
+													  $"&endDate={endDate}");
+			if (response.IsSuccessStatusCode)
+			{
+				var jsonResponse = await response.Content.ReadAsStringAsync();
+				var venues = JsonSerializer.Deserialize<List<VenueDTO>>(jsonResponse, jsonOptions);
+				if (venues == null)
+				{
+					throw new ArgumentNullException(nameof(response), "Availabilities were null");
+				}
+				return venues;
+			}
+
+			return [];
+		}
+
+		internal async Task<string> CreateReservation(ReservationPostDTO reservationPostDTO)
+		{
+			var response = await _httpClient.PostAsJsonAsync($"{VenuesServiceBaseUrl}{ReservationEndPoint}", reservationPostDTO);
+			if (response.IsSuccessStatusCode)
+			{
+				var reservationDto = await response.Content.ReadFromJsonAsync<ReservationGetDTO>();
+				return reservationDto.Reference;
+			}
+			return string.Empty;
+		}
+
+		internal async Task<ReservationGetDTO> GetReservation(string reference)
+		{
+			var response = await _httpClient.GetAsync($"{VenuesServiceBaseUrl}{ReservationEndPoint}/" + reference);
+			if (response.IsSuccessStatusCode)
+			{
+				var jsonResponse = await response.Content.ReadAsStringAsync();
+				var reservationDto = JsonSerializer.Deserialize<ReservationGetDTO>(jsonResponse, jsonOptions);
+				return reservationDto;
+			}
+			return new();
+		}
+
+		internal async Task DeleteReservation(string reservationId)
+		{
+			await _httpClient.DeleteAsync($"{VenuesServiceBaseUrl}{ReservationEndPoint}{reservationId}");
+			var events = await GetAllEvents();
+			var _event = events.FirstOrDefault(x => x.ReservationId == reservationId);
+			if(_event != null)
+			{
+				_event.ReservationId = string.Empty;
+				await UpdateEvent(_event);
+			}
+		}
+	}
 }

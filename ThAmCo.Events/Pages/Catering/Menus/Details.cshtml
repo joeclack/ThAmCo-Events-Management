@@ -21,10 +21,14 @@
     {
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h4 class="card-title mb-3">Event Information</h4>
+                <h4 class="card-title mb-3">Menu Information</h4>
                 <dl class="row">
                     <dt class="col-sm-3 font-weight-bold">Menu Name</dt>
                     <dd class="col-sm-9">@Html.DisplayFor(model => model.Menu.MenuName)</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-3 font-weight-bold">Menu Items</dt>
+                    <dd class="col-sm-9">@Model.Menu.MenuFoodItems.Count()</dd>
                 </dl>
             </div>
         </div>
@@ -36,8 +40,8 @@
                 @foreach (var foodItem in Model.Menu.MenuFoodItems)
                 {
                     <li class="list-group-item d-flex justify-content-between">
-                    <span>@foodItem.Name</span>
-                        <a asp-page="/FoodItems/Details" asp-route-id="@foodItem.FoodItemId" class="btn btn-primary text-light">Details</a>
+                    <span>@foodItem.FoodItemName</span>
+                        <a asp-page="../FoodItems/Details" asp-route-id="@foodItem.FoodItemId" class="btn btn-primary text-light">Details</a>
                     </li>
                 }
             </ul>

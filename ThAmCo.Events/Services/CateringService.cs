@@ -226,8 +226,11 @@ namespace ThAmCo.Events.Services
 			var request = await _httpClient.DeleteAsync($"{ServiceBaseUrl}{FoodBookingsEndPoint}/{foodBookingId}");
 			var events = await _eventService.GetAllEvents();
 			var _event = events.FirstOrDefault(x=>x.FoodBookingId == foodBookingId);
-			_event.FoodBookingId = -1;
-			await _eventService.UpdateEvent(_event);
+			if(_event != null)
+			{
+				_event.FoodBookingId = -1;
+				await _eventService.UpdateEvent(_event);
+			}
 		}
 
 		internal async Task<int> CreateFoodBooking(FoodBookingDTO foodBooking)

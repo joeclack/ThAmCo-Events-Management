@@ -42,29 +42,41 @@ namespace ThAmCo.Events.Services
             return bookings;
         }
 
-        public async Task<List<Guest>> GetAvailableGuests(int eventId)
-        {
-            List<Guest> AvailableGuests = [];
-            var guest = await _context.Guests.ToListAsync();
-            foreach (var g in guest)
-            {
-                var bookings = g.GuestBookings;
-                if (bookings.Count == 0)
-                {
-                    AvailableGuests.Add(g);
-                }
-                foreach (var x in bookings)
-                {
-                    if (x.EventId != eventId)
-                    {
-                        AvailableGuests.Add(g);
-                    }
-                }
-            }
-            return AvailableGuests;
-        }
+		public async Task<List<Guest>> GetAvailableGuests(Event _event)
+		{
+			List<Guest> AvailableGuests = [];
+			var guests = await GetAllGuests();
 
-        public async Task DeleteGuest(int guestId)
+			foreach (var g in guests)
+			{
+				var bookings = g.GuestBookings;
+
+				if (bookings.Count == 0)
+				{
+					AvailableGuests.Add(g);
+					continue;
+				}
+				bool isAvailable = true;
+				foreach (var booking in bookings)
+				{
+					if (booking.EventId == _event.EventId || booking.Event.Date == _event.Date.Date)
+					{
+						isAvailable = false;
+						break;
+					}
+				}
+
+				if (isAvailable)
+				{
+					AvailableGuests.Add(g);
+				}
+			}
+
+			return AvailableGuests;
+		}
+
+
+		public async Task DeleteGuest(int guestId)
         {
             try
             {
