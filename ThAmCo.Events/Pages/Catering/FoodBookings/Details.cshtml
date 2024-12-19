@@ -1,65 +1,81 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.FoodBookings.DetailsModel
 @{
+	ViewData["Title"] = "Food Booking Details";
 }
-<div class="mx-5 mt-2">
-	<div>
-		<h1 class="display-4 mb-4">Food Booking Details</h1>
-	</div>
-	@if (Model.FoodBooking == null)
-	{
-		<div class="alert alert-danger" role="alert">
-			<h4 class="alert-heading">Food booking not found</h4>
-			<p>The requested booking could not be found.</p>
+
+<div class="page-container">
+	<div class="card">
+		<div class="card-header">
+			<h1 class="card-title">Food Booking Details</h1>
 		</div>
-		<a asp-page="./Index" class="btn btn-secondary btn">
-			<i class="bi bi-arrow-left-circle"></i> Back to List
-		</a>
-		return;
-	}
-	else
-	{
-		<div class="card shadow-sm mb-4">
-			<div class="card-body">
-				<h4 class="card-title mb-3">Booking Information</h4>
-				<dl class="row">
-					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingId)</dt>
-					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingId)</dd>
 
-					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.ClientReferenceId)</dt>
-					<dd class="col-sm-9">
-						@if (Model.FoodBooking.ClientReferenceId.HasValue)
-						{
-							@Model.FoodBooking.ClientReferenceId
-						}
-						else
-						{
-							<span class="text-muted">No client reference</span>
-						}
-					</dd>
-
-					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.NumberOfGuests)</dt>
-					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.NumberOfGuests)</dd>
-
-					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.MenuId)</dt>
-					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.MenuId)</dd>
-
-					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.MenuName)</dt>
-					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.MenuName)</dd>
-
-					<dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingDate)</dt>
-					<dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingDate)</dd>
-				</dl>
+		@if (Model.FoodBooking == null)
+		{
+			<div class="alert error-alert" role="alert">
+				<h4>Food booking not found</h4>
+				<p>The requested booking could not be found.</p>
 			</div>
-		</div>
-	}
-	<div class=" mt-4">
-		<a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.FoodBooking.FoodBookingId">
-			<i class="bi bi-pencil-square"></i> Edit Booking
-		</a>
-		<a asp-page="./Index" class="btn btn-secondary btn">
-			<i class="bi bi-arrow-left-circle"></i> Back to List
-		</a>
+			<div class="modal-footer">
+				<a asp-page="./Index" class="btn-cancel">Back to List</a>
+			</div>
+		}
+		else
+		{
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<h3>Booking Information</h3>
+						<div class="list-item">
+							<span class="card-label">Booking ID</span>
+							<span class="card-value">@Model.FoodBooking.FoodBookingId</span>
+						</div>
+						<div class="list-item">
+							<span class="card-label">Client Reference</span>
+							<span class="card-value">
+								@if (Model.FoodBooking.ClientReferenceId.HasValue)
+								{
+									@Model.FoodBooking.ClientReferenceId
+								}
+								else
+								{
+									<span class="text-muted">No client reference</span>
+								}
+							</span>
+						</div>
+						<div class="list-item">
+							<span class="card-label">Number of Guests</span>
+							<span class="card-value">@Model.FoodBooking.NumberOfGuests</span>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<h3>Menu Details</h3>
+						<div class="list-item">
+							<span class="card-label">Menu ID</span>
+							<span class="card-value">@Model.FoodBooking.MenuId</span>
+						</div>
+						<div class="list-item">
+							<span class="card-label">Menu Name</span>
+							<span class="card-value">@Model.FoodBooking.MenuName</span>
+						</div>
+						<div class="list-item">
+							<span class="card-label">Booking Date</span>
+							<span class="card-value">@Model.FoodBooking.FoodBookingDate.ToShortDateString()</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-footer">
+				<div class="action-buttons">
+					<a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.FoodBooking.FoodBookingId">
+						Edit Booking
+					</a>
+					<a asp-page="./Index" class="btn-cancel">Back to List</a>
+				</div>
+			</div>
+		}
 	</div>
 </div>
 

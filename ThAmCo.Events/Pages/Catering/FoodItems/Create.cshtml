@@ -1,44 +1,46 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.FoodItems.CreateModel
 @{
+    ViewData["Title"] = "Create Food Item";
 }
-<div class="mx-5 mt-5">
-    <div class="mb-5">
-        <h1 class="display-4">Create New Menu</h1>
-        <p class="lead">Fill in the details to create a new menu.</p>
+
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Create New Food Item</h1>
+        <p>Fill in the details to create a new food item.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Menu Information</h4>
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Card Container -->
+    <div class="card">
+        <h4 class="card-title">Food Item Information</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
 
-                <div class="form-group">
-                    <label asp-for="FoodItem.Name" class="control-label">Name</label>
-                    <input asp-for="FoodItem.Name" class="form-control" />
-                    <span asp-validation-for="FoodItem.Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FoodItem.Description" class="control-label">Description</label>
-                    <input asp-for="FoodItem.Description" class="form-control" />
-                    <span asp-validation-for="FoodItem.Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FoodItem.UnitPrice" class="control-label">Unit Price</label>
-                    <input asp-for="FoodItem.UnitPrice" class="form-control" />
-                    <span asp-validation-for="FoodItem.UnitPrice" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Create Menu
-                    </button>
-                    <a class="btn btn-secondary" asp-page="Index">
-                        <i class="bi bi-arrow-left"></i> Back to List
-                    </a>
-                </div>
-            </form>
-        </div>
+            <div class="form-group">
+                <label asp-for="FoodItem.Name" class="card-label">Name</label>
+                <input asp-for="FoodItem.Name" class="form-select" />
+                <span asp-validation-for="FoodItem.Name" class="warning-alert"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FoodItem.Description" class="card-label">Description</label>
+                <input asp-for="FoodItem.Description" class="form-select" />
+                <span asp-validation-for="FoodItem.Description" class="warning-alert"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FoodItem.UnitPrice" class="card-label">Unit Price</label>
+                <input asp-for="FoodItem.UnitPrice" class="form-select" />
+                <span asp-validation-for="FoodItem.UnitPrice" class="warning-alert"></span>
+            </div>
+
+            <!-- Button Group -->
+            <div class="modal-footer">
+                <button type="submit" class="btn-submit">Create Food Item</button>
+                <a asp-page="Index" class="btn-cancel">Back to List</a>
+            </div>
+        </form>
     </div>
 </div>
 

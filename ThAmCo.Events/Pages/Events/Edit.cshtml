@@ -1,356 +1,362 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Events.EditModel
 
+<link rel="stylesheet" href="../Pages/Events/Create.cshtml.css" />
+
 @{
-	ViewData["Title"] = "Edit Events";
+    ViewData["Title"] = "Edit Event";
+    bool isEventEditable = !Model.Event.IsCanceled && Model.Event.Date > DateTime.Now;
 }
 
-<div class="mx-5 mt-5">
-	<div class="mb-5">
-		<h1 class="display-4">Edit Event</h1>
-		<p class="lead">Modify the details of this event.</p>
-		<p>@Model.Event.Date.ToShortDateString()</p>
-	</div>
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Edit Event</h1>
+        <p>@Model.Event.Date.ToShortDateString()</p>
+    </div>
 
-	<div class="card shadow-sm mb-4">
-		<div class="card-body">
-			<h4 class="card-title mb-3">Event Details</h4>
+    <!-- Card Container -->
+    <div class="card">
+        <h4 class="card-title">Event Information @(Model.Event.IsCanceled ? "(Cancelled)" : "")</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
+            <input type="hidden" asp-for="Event.EventId" />
+            <input type="hidden" asp-for="Event.Date" />
+            <input type="hidden" asp-for="Event.FoodBookingId" />
 
-			<form method="post">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<input type="hidden" asp-for="Event.EventId" />
-				<input type="hidden" asp-for="Event.Date" />
-				<input type="hidden" asp-for="Event.FoodBookingId" />
+            <div class="form-group">
+                <label asp-for="Event.Name" class="card-label">Event Name</label>
+                <input asp-for="Event.Name" class="form-select" disabled="@(!isEventEditable)" />
+                <span asp-validation-for="Event.Name" class="warning-alert"></span>
+            </div>
 
-				<div class="form-group">
-					<label asp-for="Event.Name" class="control-label"></label>
-					<input asp-for="Event.Name" class="form-control" />
-					<span asp-validation-for="Event.Name" class="text-danger"></span>
-				</div>
+            <div class="form-group">
+                <label asp-for="Event.Location" class="card-label">Event Location</label>
+                <input asp-for="Event.Location" class="form-select" disabled="@(!isEventEditable)" />
+                <span asp-validation-for="Event.Location" class="warning-alert"></span>
+            </div>
 
-				<div class="form-group">
-					<label asp-for="Event.Location" class="control-label"></label>
-					<input asp-for="Event.Location" class="form-control" />
-					<span asp-validation-for="Event.Location" class="text-danger"></span>
-				</div>
+            <div class="form-group">
+                <label asp-for="Event.EventTypeId" class="card-label">Event Type</label>
+                <input disabled asp-for="Event.EventTypeId" class="form-select" />
+            </div>
 
-				<div class="form-group">
-					<label asp-for="Event.EventTypeId" class="control-label"></label>
-					<input disabled asp-for="Event.EventTypeId" class="form-control" />
-				</div>
+            @if (isEventEditable)
+            {
+                <div class="form-group">
+                    <label class="card-label">Event Type</label>
+                    <select asp-for="Event.EventTypeId" class="form-select">
+                        <option value="">Select Event Type</option>
+                        @foreach (var type in Model.EventTypes)
+                        {
+                            <option value="@type.Id" selected="@(type.Id == Model.Event.EventTypeId)">@type.Title</option>
+                        }
+                    </select>
+                </div>
+            }
 
-				@if(Model.Event.ReservationId == "")
-				{
-					<div class="form-group">
-						<label class="control-label">Event Type</label>
-						<select class="form-control" asp-for=Event.EventTypeId>
-							<option value="">Select Event Type</option>
-							@foreach (var type in Model.EventTypes)
-							{
-								<option value="@type.Id" selected="@(type.Id == Model.Event.EventTypeId)">@type.Title</option>
-							}
-						</select>
-					</div>
-				} 
+            <!-- Button Group -->
+            @if (isEventEditable)
+            {
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit">Save Changes</button>
+                    <a asp-page="Index" class="btn-cancel">Back to List</a>
+                </div>
+            }
+        </form>
+    </div>
 
-
-				<div class="form-group mt-4">
-					<button type="submit" class="btn btn-primary">
-						<i class="bi bi-save"></i> Save
-					</button>
-					<a asp-page="Index" class="btn btn-secondary">
-						<i class="bi bi-arrow-left"></i> Back to List
-					</a>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<div class="card shadow-sm mb-4">
-		<div class="card-body">
-			<h4 class="card-title mb-3">Reservation Details</h4>
-			@if (Model.Event.ReservationId == string.Empty)
-			{
-				@if (!Model.AvailableVenuesForEventDate.Where(x => x.Date == Model.Event.Date).Any())
-				{
-					<strong class="badge bg-danger">No availabilities found for this event </strong>
-				} else{
-					<div class="col-sm-9">
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReservationModal">
-							Create Reservation
-						</button>
-					</div>
-				}
-			} else
-			{
-				<ul class="list-group">
-					<li class="list-group-item"><strong>Ref:</strong> @Model.Reservation.Reference</li>
-					<li class="list-group-item"><strong>Event Date:</strong> @Model.Reservation.EventDate.ToShortDateString()</li>
-					<li class="list-group-item"><strong>Venue Code:</strong> @Model.Reservation.VenueCode</li>
-					<li class="list-group-item"><strong>Created:</strong> @Model.Reservation.WhenMade</li>
-				</ul>
-			}
-			@if(Model.Event.ReservationId != "")
-			{
-				<div class="mt-2">
-					<a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteReservationConfirmationModal" data-id="@Model.Event.ReservationId">
-						<i class="bi bi-trash"></i> Delete
-					</a>
-				</div>
-			}
-			
-
-		</div>
-	</div>
-
-	<div class="card shadow-sm mb-4">
-		<div class="card-body">
-			<h4 class="card-title mb-3">Food Booking Details</h4>
-			@if (Model.FoodBooking == null)
-			{
-				<div class="col-sm-9">
-					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createFoodBookingModal">
-						Book Food
-					</button>
-				</div>
-			}
-			else
-			{
-				<form method="post" asp-page-handler="EditFoodBookingMenu" class="mt-4">
-					<input type="hidden" name="foodBookingId" value="@Model.FoodBooking.FoodBookingId" />
-					<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-					<div class="form-group">
-						<label class="control-label">Menu</label>
-						<select class="form-control" name="menuId">
-							<option value="">Select Menu</option>
-							@foreach (var menu in Model.AvailableMenus)
-							{
-								<option value="@menu.MenuId" selected="@(menu.MenuId == Model.FoodBooking.MenuId)">@menu.MenuName</option>
-							}
-						</select>
-					</div>
-
-					<div class="form-group mt-4">
-						<button type="submit" class="btn btn-primary">
-							<i class="bi bi-save"></i> Update Food Booking
-						</button>
-						<a asp-page="../Catering/Menus/Details" asp-route-id="@Model.FoodBooking.MenuId" class="btn btn-dark text-light">
-							<i class="bi bi-list"></i> View Menu
-						</a>
-					</div>
-				</form>
-			}
-		</div>
-	</div>
-
-	<div class="card shadow-sm mb-4">
-		<div class="card-body">
-			<h4 class="card-title mb-3">Edit Guests and Staff</h4>
-			<div class="d-flex justify-content-between">
-				<!-- Staff Section -->
-				<div class="w-100 mx-2">
-					<h5>Manage Staff</h5>
-					@if (!Model.AvailableStaff.Any())
-					{
-						<div class="alert alert-info mt-2">All staff are either assigned to this event or unavailable</div>
-					}
-					else
-					{
-						<form asp-page-handler="CreateStaffing" method="post">
-							<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-
-							<div class="form-group mt-2">
-								<label for="staffList">Add Staff</label>
-								<div class="d-flex">
-									<!-- Select Dropdown -->
-									<select id="staffList" class="form-control me-2" name="staffId">
-										<option value="">Select Staff</option>
-										@foreach (var staff in Model.AvailableStaff)
-										{
-											<option value="@staff.StaffId">@staff.FirstName @staff.LastName</option>
-										}
-									</select>
-
-									<!-- Submit Button with same height as Select -->
-									<button type="submit" class="btn btn-success">
-										<i class="bi bi-person-plus"></i> Assign To Event
-									</button>
-								</div>
-							</div>
-						</form>
+    <!-- Reservation Details Section -->
+    @if (isEventEditable)
+    {
+        <div class="card">
+            <h4 class="card-title">Reservation Details</h4>
+            @if (Model.Event.ReservationId == string.Empty)
+            {
+                @if (!Model.AvailableVenuesForEventDate.Where(x => x.Date == Model.Event.Date).Any())
+                {
+                    <div class="alert warning-alert">No availabilities found for this event type.</div>
+                }
+                else
+                {
+                    <div>
+                        <button type="button" id="openCreateReservationModal" class="btn-submit">
+                            Create Reservation
+                        </button>
+                    </div>
+                }
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ref</td>
+                            <td>@Model.Reservation.Reference</td>
+                        </tr>
+                        <tr>
+                            <td>Event Date</td>
+                            <td>@Model.Reservation.EventDate.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <td>Venue</td>
+                            <td>@Model.Reservation.VenueCode</td>
+                        </tr>
+                        <tr>
+                            <td>Created</td>
+                            <td>@Model.Reservation.WhenMade</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <form asp-page-handler="DeleteReservation" method="post">
+                    <input type="hidden" name="reservationId" asp-for="Event.ReservationId" />
+                    <input type="hidden" asp-for="Event.EventId" name="eventId" />
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            }
+        </div>
+    }
 
 
-					}
+    <!-- Food Booking Details Section -->
+    @if (isEventEditable)
+    {
+        <div class="card">
+            <h4 class="card-title">Food Booking Details</h4>
+            @if (Model.FoodBooking == null)
+            {
+                <div>
+                    <button type="button" class="btn-submit" id="openBookMenuModal">
+                        Book Food
+                    </button>
+                </div>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="EditFoodBookingMenu">
+                    <input type="hidden" name="foodBookingId" value="@Model.FoodBooking.FoodBookingId" />
+                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                    <div class="form-group">
+                        <label class="card-label">Menu</label>
+                        <select name="menuId" class="form-select">
+                            <option value="">Select Menu</option>
+                            @foreach (var menu in Model.AvailableMenus)
+                            {
+                                <option value="@menu.MenuId" selected="@(menu.MenuId == Model.FoodBooking.MenuId)">@menu.MenuName</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-edit">
+                        Update Food Booking
+                    </button>
+                    <a  asp-page="../Catering/Menus/Details" asp-route-id="@Model.FoodBooking.MenuId" class="btn-details">
+                        View Menu
+                    </a>
+                </form>
+                <form asp-page-handler="CancelFoodBooking" method="post" class="mt-1">
+                    <input type="hidden" name="foodBookingId" asp-for="Event.FoodBookingId" />
+                    <input type="hidden" asp-for="Event.EventId" name="eventId" />
+                    <button type="submit" class="btn-delete">
+                        Delete
+                    </button>
+                </form>
+            }
+        </div>
+    }
+    <div class="card-title">
+        <h4>Edit Guests and Staff</h4>
+    </div>
+    <!-- Guest & Staff Management Section -->
+    <div class="guests-staff-selection">
+        <div class="card width-full">
+            <div class="card-body">
+                @if (isEventEditable && Model.AvailableStaff.Any())
+                {
+                    <form asp-page-handler="CreateStaffing" method="post">
+                        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                        <div class="form-group">
+                            <label for="staffList" class="card-label">Add Staff</label>
+                            <select id="staffList" name="staffId" class="form-select">
+                                <option value="">Select Staff</option>
+                                @foreach (var staff in Model.AvailableStaff)
+                                {
+                                    <option value="@staff.StaffId">@staff.FirstName @staff.LastName</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit">Assign To Event</button>
+                    </form>
+                }
+                 @if(Model.Event.Staffings.Any()){
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Staff Name</th>
+                                <th>Attended</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var staff in Model.Event.Staffings)
+                            {
+                                <tr>
+                                    <td>@staff.Staff.FirstName @staff.Staff.LastName</td>
+                                    <td>
+                                        @if (!isEventEditable)
+                                        {
+                                            <form asp-page-handler="UpdateStaffAttendance" method="post" class="attendance-form">
+                                                <input type="hidden" name="staffId" value="@staff.StaffId" />
+                                                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                                <input type="checkbox" name="didAttend" @(staff.DidAttend ? "checked" : "") onchange="this.form.submit()" />
+                                            </form>
+                                        }
+                                    </td>
+                                    <td class="action-buttons">
+                                        <a class="btn-details" asp-page="../Staff/Details" asp-route-id="@staff.StaffId">Details</a>
+                                        @if (isEventEditable)
+                                        {
+                                            <form asp-page-handler="RemoveStaffing" method="post">
+                                                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                                <input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
+                                                <button type="submit" class="btn-delete">Remove</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+        <div class="card width-full">
+            <div class="card-body">
+                @if (isEventEditable && Model.AvailableGuests.Any())
+                {
+                    <form asp-page-handler="CreateGuestBooking" method="post">
+                        <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                        <div class="form-group">
+                            <label for="guestList" class="card-label">Add Guest</label>
+                            <select id="guestList" name="guestId" class="form-select">
+                                <option value="">Select Guests</option>
+                                @foreach (var guest in Model.AvailableGuests)
+                                {
+                                    <option value="@guest.GuestId">@guest.FirstName @guest.LastName</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit">Assign To Event</button>
+                    </form>
+                }
+                @if(Model.Event.GuestBookings.Any()){
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Guest Name</th>
+                                <th>Attended</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var guestBooking in Model.Event.GuestBookings)
+                            {
+                                <tr>
+                                    <td>@guestBooking.Guest.FirstName @guestBooking.Guest.LastName</td>
+                                    <td>
+                                        @if (!isEventEditable)
+                                        {
+                                            <form asp-page-handler="UpdateGuestAttendance" method="post" class="attendance-form">
+                                                <input type="hidden" name="guestId" value="@guestBooking.GuestId" />
+                                                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                                <input type="checkbox" name="didAttend"  checked="@guestBooking.DidAttend" onchange="this.form.submit()" />
+                                            </form>
+                                        }
+                                    </td>
+                                    <td class="action-buttons">
+                                        <a class="btn-details" asp-page="../Guests/Details" asp-route-id="@guestBooking.GuestId">Details</a>
+                                        @if (isEventEditable)
+                                        {
+                                            <form asp-page-handler="CancelGuestBooking" method="post">
+                                                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                                <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
+                                                <button type="submit" class="btn-delete">Cancel Booking</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
 
-					<ul class="list-group mt-4">
-						@foreach (var staff in Model.Event.Staffings)
-						{
-							<form asp-page-handler="RemoveStaffing" method="post">
-								<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-								<input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
-
-							<li class="list-group-item d-flex justify-content-between">
-									@staff.Staff.FirstName @staff.Staff.LastName
-								<button type="submit" class="btn btn-danger btn-sm">
-									<i class="bi bi-x-circle"></i> Remove
-								</button>
-							</li>
-							</form>
-						}
-					</ul>
-				</div>
-
-				<!-- Guest Section -->
-				<div class="w-100 mx-2">
-					<h5>Manage Guests</h5>
-
-					@if (!Model.AvailableGuests.Any())
-					{
-						<div class="alert alert-info mt-2">All guests are either assigned to this event or unavailable</div>
-					}
-					else
-					{
-						<form asp-page-handler="CreateGuestBooking" method="post">
-							<!-- Hidden input for EventId with name matching the parameter -->
-							<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-
-							<div class="form-group mt-2">
-								<label for="guestList">Add Guest</label>
-								<div class="d-flex">
-									<!-- Select Dropdown -->
-									<select id="guestList" class="form-control me-2" name="guestId">
-										<option value="">Select Guests</option>
-										@foreach (var guest in Model.AvailableGuests)
-										{
-											<option value="@guest.GuestId">@guest.FirstName @guest.LastName</option>
-										}
-									</select>
-
-									<!-- Submit Button with same height as Select -->
-									<button type="submit" class="btn btn-success h-100">
-										<i class="bi bi-person-plus"></i> Assign To Event
-									</button>
-								</div>
-							</div>
-						</form>
-
-					}
-					<ul class="list-group mt-4">
-						@foreach (var guestBooking in Model.Event.GuestBookings)
-						{
-							<form asp-page-handler="CancelGuestBooking" method="post">
-								<!-- Hidden inputs for EventId and GuestId -->
-								<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-								<input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
-
-							<li class="list-group-item d-flex justify-content-between">
-									@guestBooking.Guest.FirstName @guestBooking.Guest.LastName
-								<button type="submit" class="btn btn-danger btn-sm">
-									<i class="bi bi-x-circle"></i> Cancel booking
-								</button>
-							</li>
-							</form>
-						}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
 
-
-<div class="modal fade" id="createFoodBookingModal" tabindex="-1" role="dialog" aria-labelledby="createFoodBookingModalLabel">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="createFoodBookingModalLabel">Create Food Booking</h5>
-				<button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true"></span>
-				</button>
-			</div>
-			<form method="post" asp-page-handler="CreateFoodBooking">
-				<input type="hidden" asp-for="Event.EventId" name="eventId" />
-				<div class="modal-body">
-					<div class="form-group">
-						<label>Menu</label>
-						<select class="form-control" name="menuId">
-							<option value="">Select Menu</option>
-							@foreach (var menu in Model.AvailableMenus)
-							{
-								<option value="@menu.MenuId">@menu.MenuName</option>
-							}
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="submit" class="btn btn-primary">Book</button>
-				</div>
-			</form>
-		</div>
-	</div>
+<!-- Modal for Reservation -->
+<div id="createReservationModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Create New Event</h2>
+            <button class="close-modal-btn" id="closeCreateReservationModal"></button>
+        </div>
+        <form method="post" asp-page-handler="CreateReservation">
+            <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+            <input type="hidden" name="eventDate" value="@Model.Event.Date" />
+            <div class="form-group">
+                <label>Venue</label>
+                <select name="venueCode" class="form-select">
+                    <option value="">Select Available Venue</option>
+                    @foreach (var avail in Model.AvailableVenuesForEventDate)
+                    {
+                        <option value="@avail.Code">@avail.Name - @avail.Date.Date.ToShortDateString()</option>
+                    }
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelCreateReservationModal" class="btn-cancel">Cancel</button>
+                <button type="submit" class="btn-submit">Reserve</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<div class="modal fade" id="createReservationModal" tabindex="-1" role="dialog" aria-labelledby="createReservationModalLabel">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="createReservationModalLabel">Create Reservation</h5>
-				<button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true"></span>
-				</button>
-			</div>
-			<form method="post" asp-page-handler="CreateReservation">
-				<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-				<input type="hidden" name="eventDate" value="@Model.Event.Date" />
-				<div class="form-group modal-body">
-					<label class="control-label">Venue</label>
-					<select class="form-control" name="venueCode">
-						<option value="">Select Available Venue</option>
-						@foreach (var avail in Model.AvailableVenuesForEventDate)
-						{
-							<option value="@avail.Code">@avail.Name - @avail.Date.Date.ToShortDateString()</option>
-						}
-					</select>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="submit" class="btn btn-primary">Reserve</button>
-				</div>
-			</form>
-		</div>
-	</div>
+<div class="modal" id="bookMenuModal" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Choose Menu</h2>
+            <button class="close-modal-btn" id="closeBookMenuModal"></button>
+        </div>
+        <form method="post" asp-page-handler="CreateFoodBooking">
+            <input type="hidden" asp-for="Event.EventId" name="eventId" />
+            <div class="modal-body">
+                <div class="form-group">
+                    <select class="form-select" name="menuId">
+                        <option value="">Select Menu</option>
+                        @foreach (var menu in Model.AvailableMenus)
+                        {
+                            <option value="@menu.MenuId">@menu.MenuName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn-cancel" id="cancelBookMenuModal">Cancel</a>
+                <button type="submit" class="btn-submit">Book</button>
+            </div>
+        </form>
+    </div>
 </div>
-
-<!-- Delete Confirmation Modal Section -->
-<div class="modal fade" id="deleteReservationConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteReservationConfirmationModalTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="deleteReservationConfirmationModalTitle">Are you sure you want to delete this reservation?</h5>
-				<button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>This action cannot be undone.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-
-				<form asp-page-handler="DeleteReservation" method="post">
-					<input type="hidden" name="reservationId" asp-for="Event.ReservationId" />
-					<input type="hidden" asp-for="Event.EventId" name="eventId"/>
-					<button type="submit" class="btn btn-danger">Delete</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-
 
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

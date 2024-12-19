@@ -1,65 +1,68 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Events.CreateModel
+<link rel="stylesheet" href="../Pages/Events/Create.cshtml.css" />
+
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<div class="mx-5 mt-2">
-    <div class="mb-2">
-        <h1 class="display-4">Create New Event</h1>
-        <p class="lead">Fill in the details to create a new event.</p>
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Create New Event</h1>
+        <p>Fill in the details to create a new event.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Event Information</h4>
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Card Container -->
+    <div>
+        <h4 class="card-title">Event Information</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
 
+            <div class="form-group">
+                <label asp-for="Event.Name" class="card-label">Event Name</label>
+                <input asp-for="Event.Name" class="form-select" />
+                <span asp-validation-for="Event.Name" class="warning-alert"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Event.Location" class="card-label">Event Location</label>
+                <input asp-for="Event.Location" class="form-select" />
+                <span asp-validation-for="Event.Location" class="warning-alert"></span>
+            </div>
+
+            @if (Model.Event.EventTypeId == "")
+            {
                 <div class="form-group">
-                    <label asp-for="Event.Name" class="control-label">Event Name</label>
-                    <input asp-for="Event.Name" class="form-control" />
-                    <span asp-validation-for="Event.Name" class="text-danger"></span>
+                    <label asp-for="Event.Date" class="card-label">Event Date</label>
+                    <input asp-for="Event.Date" class="form-select" />
+                    <span asp-validation-for="Event.Date" class="warning-alert"></span>
                 </div>
-
+            }
+            else
+            {
                 <div class="form-group">
-                    <label asp-for="Event.Location" class="control-label">Event Location</label>
-                    <input asp-for="Event.Location" class="form-control" />
-                    <span asp-validation-for="Event.Location" class="text-danger"></span>
+                    <input type="hidden" name="eventType" value="@Model.Event.EventTypeId" />
+                    <label class="card-label">Venue - @Model.Event.EventTypeId</label>
+                    <select asp-for="SelectedVenueIdentifier" class="form-select">
+                        <option value="">Select Available Venue</option>
+                        @foreach (var avail in Model.AllAvailableVenues)
+                        {
+                            <option value="@avail.Code|@avail.Date">
+                                @avail.Name - @avail.Date.Date.ToShortDateString() (Capacity: @avail.Capacity) (£@avail.CostPerHour per hour)
+                            </option>
+                        }
+                    </select>
                 </div>
+            }
 
-                @if(Model.Event.EventTypeId == ""){
-                    <div class="form-group">
-                        <label asp-for="Event.Date" class="control-label">Event Date</label>
-                        <input asp-for="Event.Date" class="form-control" />
-                        <span asp-validation-for="Event.Date" class="text-danger"></span>
-                    </div>
-                } else
-                {
-                    <div class="form-group">
-                        <input type="hidden" name="eventType" value="@Model.Event.EventTypeId" />
-                        <label class="control-label">Venue - @Model.Event.EventTypeId</label>
-                        <select class="form-control" asp-for="SelectedVenueIdentifier">
-                            <option value="">Select Available Venue</option>
-                            @foreach (var avail in Model.AllAvailableVenues)
-                            {
-                                <option value="@avail.Code|@avail.Date">@avail.Name - @avail.Date.Date.ToShortDateString() (Capacity: @avail.Capacity) (£@avail.CostPerHour per hour)</option>
-                            }
-                        </select>
-                    </div>
-                }
-
-                <div class="form-group mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Create Event
-                    </button>
-                    <a class="btn btn-secondary" asp-page="Index">
-                        <i class="bi bi-arrow-left"></i> Back to List
-                    </a>
-                </div>
-            </form>
-        </div>
+            <!-- Button Group -->
+            <div class="modal-footer">
+                <button type="submit" class="btn-submit">Create Event</button>
+                <a asp-page="Index" class="btn-cancel">Back to List</a>
+            </div>
+        </form>
     </div>
 </div>
 

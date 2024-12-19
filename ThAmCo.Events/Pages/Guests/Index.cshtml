@@ -1,114 +1,82 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Guests.IndexModel
-
 @{
     ViewData["Title"] = "Guests List";
 }
 
-<div class="mx-5 my-2">
-    <div class="mb-3">
-        <h1 class="display-4">Guest Management</h1>
-    </div>
-
-    <div class="align-items-center d-flex flex-row mb-2">
-        <a class="btn btn-primary bg-gradient" asp-page="Create">
-            <i class="bi bi-person-plus"></i> Create New Staff
+<div class="page-container">
+    <div class="create-total-header">
+        <h1 class="header">Guest Management</h1>
+        <a asp-page="Create" class="btn-submit">
+            Create New Guest
         </a>
     </div>
- <span class="mb-3 badge bg-info">@Model.Guests.Count() guests</span>
-    <div class="table-responsive">
-        <table class="table align-middle mb-0 bg-white">
-            <thead class="bg-light">
-                <tr>
-                    <th>Name</th>
-                    <th class="w-100">Bookings</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Guests)
-                {
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <p class="fw-bold mb-1">@item.FirstName @item.LastName</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="w-100">
-                            <div class="d-flex flex-wrap">
-                                @foreach (var booking in item.GuestBookings)
-                                {
-                                    <span class="badge bg-info text-light me-1 p-2">
-                                        @booking.Event.Name
-                                    </span>
-                                }
-                            </div>
-                        </td>
-                        <td>
-                            <div class="hstack gap-1" role="group">
-                                <a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.GuestId">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-                                <a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.GuestId">
-                                    <i class="bi bi-info-circle"></i> Details
-                                </a>
-                                <a data-toggle="modal" data-id="@item.GuestId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm" asp-route-id="@item.GuestId">
-                                    <i class="bi bi-trash"></i> Delete
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
 
+    <div class="card">
+        <div class="card-header">
+            <span class="count-span">@Model.Guests.Count() guests</span>
+        </div>
 
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteConfirmationModalTitle">Are you sure you want to delete this guest?</h5>
-                    <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <div class="card-body">
+            @if (Model.Guests.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Name</th>
+                            <th style="width: 5%;">Email</th>
+                            <th style="width: 100%;">Bookings</th>
+                            <th style="width: min-content">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Guests)
+                        {
+                            <tr>
+                                <td>
+                                    <div>
+                                        <p>@item.FirstName @item.LastName</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p>@item.Email</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        @if (item.GuestBookings.Any())
+                                        {
+                                            @foreach (var booking in item.GuestBookings)
+                                            {
+                                                <span class="badge">@booking.Event.Name</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No bookings</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="person-row">
+                                    <form method="post" class="action-buttons" asp-page-handler="DeleteGuest">
+                                        <a class="btn-edit" asp-page="./Edit" asp-route-id="@item.GuestId">Edit</a>
+                                        <a class="btn-details" asp-page="./Details" asp-route-id="@item.GuestId">Details</a>
+                                        <input type="hidden" name="guestId" value="@item.GuestId" />
+                                        <button type="submit" class="btn-delete">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert info-alert">
+                    No guests found. Click "Create New Guest" to add your first guest.
                 </div>
-                <div class="modal-body">
-                    <p>This action cannot be undone.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-
-                    <!-- Form for delete confirmation -->
-                    <form asp-page-handler="DeleteGuest" method="post">
-                        <input type="hidden" name="guestId" id="deleteGuestId" />
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-            </div>
+            }
         </div>
     </div>
-
-    @if (!Model.Guests.Any())
-    {
-        <div class="alert alert-warning text-center" role="alert">
-            No guests found. Click "Create New Guest" to add your first guest.
-        </div>
-    }
 </div>
-
-<script>
-    $(document).ready(function () {
-        $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var guestId = button.data('id');
-
-            $('#modalGuestId').text(guestId);
-            $('#deleteGuestId').val(guestId);
-        });
-    });
-</script>
-
-

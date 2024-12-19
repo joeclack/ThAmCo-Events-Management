@@ -181,7 +181,13 @@ namespace ThAmCo.Events.Pages.Events
             return Redirect($"../Events/Edit?id={eventId}");
         }
 
-        public async Task<IActionResult> OnPostCreateGuestBooking(int guestId, int eventId)
+		public async Task<IActionResult> OnPostCancelFoodBooking(int foodBookingId, int eventId)
+		{
+            await _cateringService.DeleteFoodBooking(foodBookingId);
+			return Redirect($"../Events/Edit?id={eventId}");
+		}
+
+		public async Task<IActionResult> OnPostCreateGuestBooking(int guestId, int eventId)
         {
             await _guestService.CreateBooking(guestId, await _eventService.GetEvent(eventId));
             return Redirect($"../Events/Edit?id={eventId}");
@@ -191,5 +197,20 @@ namespace ThAmCo.Events.Pages.Events
         {
             return _context.Events.Any(e => e.EventId == id);
         }
+
+        public async Task<IActionResult> OnPostUpdateGuestAttendance(int guestId, int eventId, bool didAttend)
+        {
+            await _guestService.UpdateGuestAttendance(guestId, eventId, didAttend);
+            return Redirect($"../Events/Edit?id={eventId}");
+        }
+
+        public async Task<IActionResult> OnPostUpdateStaffAttendance(int staffId, int eventId, bool didAttend)
+        {
+            await _staffService.UpdateStaffAttendance(staffId, eventId, didAttend);
+            return Redirect($"../Events/Edit?id={eventId}");
+        }
+
+        // Add a helper property to determine if event is editable
+        public bool IsEventEditable => !Event.IsCanceled && Event.Date > DateTime.Now;
     }
 }

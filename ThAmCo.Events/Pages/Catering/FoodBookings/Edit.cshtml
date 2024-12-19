@@ -1,72 +1,86 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.FoodBookings.EditModel
 @{
+    ViewData["Title"] = "Edit Food Booking";
 }
-<div class="mx-5 mt-2">
-    <div class="mb-3">
-        <h1 class="display-4">Edit Menu</h1>
-        <p class="lead">Modify the details of this food booking</p>
+
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Edit Food Booking</h1>
+        <p>Modify the details of this food booking</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <h4 class="card-title m-3">Food Booking Details</h4>
-        <dl class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingId)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingId)</dd>
+    <!-- Card Container -->
+    <div class="card">
+        <h4 class="card-title">Booking Information</h4>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Reference Details</h3>
+                    <div class="list-item">
+                        <span class="card-label">Booking ID</span>
+                        <span class="card-value">@Model.FoodBooking.FoodBookingId</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="card-label">Client Reference</span>
+                        <span class="card-value">
+                            @if (Model.FoodBooking.ClientReferenceId.HasValue)
+                            {
+                                @Model.FoodBooking.ClientReferenceId
+                            }
+                            else
+                            {
+                                <span class="text-muted">No client reference</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="list-item">
+                        <span class="card-label">Booking Date</span>
+                        <span class="card-value">@Model.FoodBooking.FoodBookingDate.Date.ToShortDateString()</span>
+                    </div>
+                </div>
+            </div>
 
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FoodBooking.ClientReferenceId)</dt>
-                <dd class="col-sm-9">
-                    @if (Model.FoodBooking.ClientReferenceId.HasValue)
-                    {
-                        @Model.FoodBooking.ClientReferenceId
-                    }
-                    else
-                    {
-                        <span class="text-muted">No client reference</span>
-                    }
-                </dd>
-
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FoodBooking.FoodBookingDate)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.FoodBooking.FoodBookingDate.Date)</dd>
-            </dl>
             <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
                 <input type="hidden" asp-for="FoodBooking.FoodBookingId" />
                 <input type="hidden" asp-for="FoodBooking.ClientReferenceId" />
                 <input type="hidden" asp-for="FoodBooking.FoodBookingDate" />
 
                 <div class="form-group">
-                    <label asp-for="FoodBooking.NumberOfGuests" class="control-label">Guests</label>
-                    <input type="number" asp-for="FoodBooking.NumberOfGuests" class="form-control" />
-                    <span asp-validation-for="FoodBooking.NumberOfGuests" class="text-danger"></span>
+                    <label asp-for="FoodBooking.NumberOfGuests" class="card-label">Number of Guests</label>
+                    <input type="number" asp-for="FoodBooking.NumberOfGuests" class="form-select" />
+                    <span asp-validation-for="FoodBooking.NumberOfGuests" class="warning-alert"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="FoodBooking.MenuId" class="control-label">Menu</label>
-                    <select asp-for="FoodBooking.MenuId" class="form-control">
+                    <label asp-for="FoodBooking.MenuId" class="card-label">Menu</label>
+                    <select asp-for="FoodBooking.MenuId" class="form-select">
                         <option value="">Select Menu</option>
                         @foreach (var menu in Model.AvailableMenus)
                         {
                             <option value="@menu.MenuId" selected="@(menu.MenuId == Model.FoodBooking.MenuId)">
                                 @menu.MenuName
                             </option>
-
                         }
                     </select>
-                    <span asp-validation-for="FoodBooking.MenuId" class="text-danger"></span>
+                    <span asp-validation-for="FoodBooking.MenuId" class="warning-alert"></span>
                 </div>
 
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Save
-                    </button>
-                    <a asp-page="Index" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Back to List
-                    </a>
+                <!-- Button Group -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit">Save Changes</button>
+                    <a asp-page="Index" class="btn-cancel">Back to List</a>
                 </div>
             </form>
-        </dl>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 

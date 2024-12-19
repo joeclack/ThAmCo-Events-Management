@@ -1,60 +1,65 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.Menus.DetailsModel
 @{
+    ViewData["Title"] = "Menu Details";
 }
-<div class="mx-5 mt-5">
-    <div>
-        <h1 class="display-4">Menu Details</h1>
-    </div>
-    @if (Model.Menu == null)
-    {
-        <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">Menu not found</h4>
-            <p>The requested menu could not be found.</p>
-        </div>
-        <a asp-page="./Index" class="btn btn-secondary btn">
-            <i class="bi bi-arrow-left-circle"></i> Back to List
-        </a>
-        return;
-    } 
-    else
-    {
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h4 class="card-title mb-3">Menu Information</h4>
-                <dl class="row">
-                    <dt class="col-sm-3 font-weight-bold">Menu Name</dt>
-                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Menu.MenuName)</dd>
-                </dl>
-                <dl class="row">
-                    <dt class="col-sm-3 font-weight-bold">Menu Items</dt>
-                    <dd class="col-sm-9">@Model.Menu.MenuFoodItems.Count()</dd>
-                </dl>
-            </div>
+
+<div class="page-container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Menu Details</h1>
         </div>
 
-        @if (Model.Menu.MenuFoodItems.Any())
+        @if (Model.Menu == null)
         {
-            <h4 class="card-title mb-3">Food Items</h4>
-            <ul class="list-group">
-                @foreach (var foodItem in Model.Menu.MenuFoodItems)
-                {
-                    <li class="list-group-item d-flex justify-content-between">
-                    <span>@foodItem.FoodItemName</span>
-                        <a asp-page="../FoodItems/Details" asp-route-id="@foodItem.FoodItemId" class="btn btn-primary text-light">Details</a>
-                    </li>
-                }
-            </ul>
+            <div class="alert error-alert" role="alert">
+                <h4>Menu not found</h4>
+                <p>The requested menu could not be found.</p>
+            </div>
+            <div class="modal-footer">
+                <a asp-page="./Index" class="btn-cancel">Back to List</a>
+            </div>
         }
+        else
+        {
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Menu Information</h3>
+                        <div class="list-item">
+                            <span class="card-label">Menu Name</span>
+                            <span class="card-value">@Model.Menu.MenuName</span>
+                        </div>
+                        <div class="list-item">
+                            <span class="card-label">Number of Items</span>
+                            <span class="card-value">@Model.Menu.MenuFoodItems.Count()</span>
+                        </div>
+                    </div>
 
-        <div class=" mt-4">
-            <a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.Menu.MenuId">
-                <i class="bi bi-pencil-square"></i> Edit Menu
-            </a>
-            <a asp-page="./Index" class="btn btn-secondary btn">
-                <i class="bi bi-arrow-left-circle"></i> Back to List
-            </a>
-        </div>
-    }
-    
+                    @if (Model.Menu.MenuFoodItems.Any())
+                    {
+                        <div class="col-md-6">
+                            <h3>Food Items</h3>
+                            <div class="list-group">
+                                @foreach (var foodItem in Model.Menu.MenuFoodItems)
+                                {
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>@foodItem.FoodItemName</span>
+                                        <a asp-page="../FoodItems/Details" asp-route-id="@foodItem.FoodItemId" class="btn-details">Details</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="action-buttons">
+                    <a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.Menu.MenuId">Edit Menu</a>
+                    <a asp-page="./Index" class="btn-cancel">Back to List</a>
+                </div>
+            </div>
+        }
+    </div>
 </div>

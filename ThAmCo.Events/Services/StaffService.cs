@@ -147,5 +147,16 @@ namespace ThAmCo.Events.Services
             _context.Staff.Add(staff);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateStaffAttendance(int staffId, int eventId, bool didAttend)
+        {
+            var staffing = await GetStaffing(staffId, eventId);
+            
+            if (staffing != null)
+            {
+                staffing.DidAttend = didAttend;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace ThAmCo.Events.Models
     {
         public int StaffId { get; set; }
         public int EventId { get; set; }
-        public bool IsCancled { get; set; }
+        public bool DidAttend { get; set; }
 
         // Navigation props
         public Staff Staff { get; set; } = default!;

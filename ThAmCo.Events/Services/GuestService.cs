@@ -142,5 +142,16 @@ namespace ThAmCo.Events.Services
             await _context.Guests.AddAsync(guest);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateGuestAttendance(int guestId, int eventId, bool didAttend)
+        {
+            var guestBooking = await GetBooking(guestId, eventId);
+            
+            if (guestBooking != null)
+            {
+                guestBooking.DidAttend = didAttend;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

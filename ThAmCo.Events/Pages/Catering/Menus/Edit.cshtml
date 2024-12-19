@@ -1,91 +1,78 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.Menus.EditModel
 @{
+    ViewData["Title"] = "Edit Menu";
 }
-<div class="mx-5 mt-5">
-    <div class="mb-5">
-        <h1 class="display-4">Edit Menu</h1>
-        <p class="lead">Modify the details of this menu.</p>
+
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Edit Menu</h1>
+        <p>Modify the details of this menu.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Event Details</h4>
+    <!-- Card Container -->
+    <div class="card">
+        <h4 class="card-title">Menu Details</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
+            <input type="hidden" asp-for="Menu.MenuId" />
 
-            <!-- Main Event Form -->
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Menu.MenuId" />
+            <div class="form-group">
+                <label asp-for="Menu.MenuName" class="card-label">Menu Name</label>
+                <input asp-for="Menu.MenuName" class="form-select" />
+                <span asp-validation-for="Menu.MenuName" class="warning-alert"></span>
+            </div>
 
-                <!-- Event Form Fields -->
-                <div class="form-group">
-                    <label asp-for="Menu.MenuName" class="control-label"></label>
-                    <input asp-for="Menu.MenuName" class="form-control" />
-                    <span asp-validation-for="Menu.MenuName" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Save
-                    </button>
-                    <a asp-page="Index" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Back to List
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
+            <!-- Button Group -->
+            <div class="modal-footer">
+                <button type="submit" class="btn-submit">Save Changes</button>
+                <a asp-page="Index" class="btn-cancel">Back to List</a>
+            </div>
+        </form>
 
-    <div class="d-flex justify-content-between">
-        <!-- Staff Section -->
-        <div class="w-100 mx-2">
-            <h5>Manage Food Items</h5>
+        <!-- Food Items Section -->
+        <div class="mt-4">
+            <h5 class="card-subtitle">Manage Food Items</h5>
 
             @if (!Model.AvailableFoodItems.Any())
             {
-                <div class="alert alert-info mt-2">All food items are either assigned to this menu or unavailable</div>
+                <div class="alert info-alert">All food items are either assigned to this menu or unavailable</div>
             }
             else
             {
-                <form asp-page-handler="AssignFoodItemToMenu" method="post">
+                <form asp-page-handler="AssignFoodItemToMenu" method="post" class="mt-3">
                     <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
-
-                    <div class="form-group mt-2">
-                        <div class="d-flex">
-                            <select id="foodList" class="form-control me-2" name="foodItemId">
-                                <option value="">Select Food</option>
-                                @foreach (var food in Model.AvailableFoodItems)
-                                {
-                                    <option value="@food.FoodItemId">@food.Name</option>
-                                }
-                            </select>
-
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-person-plus"></i> Add
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <select id="foodList" class="form-select" name="foodItemId">
+                            <option value="">Select Food Item</option>
+                            @foreach (var food in Model.AvailableFoodItems)
+                            {
+                                <option value="@food.FoodItemId">@food.Name</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn-submit mt-1">Add Food Item</button>
                     </div>
                 </form>
             }
-            <ul class="list-group mt-4">
+
+            <div class="list-group mt-3">
                 @foreach (var food in Model.Menu.MenuFoodItems)
                 {
-                    <form asp-page-handler="DeleteMenuFoodItem" method="post">
-                        <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
-                        <input type="hidden" name="foodItemId" value="@food.FoodItemId" />
-
-                    <li class="list-group-item d-flex justify-content-between">
-                            @food.FoodItemName - £@food.FoodItemUnitPrice
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="bi bi-x-circle"></i> Remove
-                        </button>
-                    </li>
-                    </form>
+                    <div class="list-item">
+                        <span>@food.FoodItemName - £@food.FoodItemUnitPrice</span>
+                        <form asp-page-handler="DeleteMenuFoodItem" method="post" class="d-inline">
+                            <input type="hidden" name="menuId" value="@Model.Menu.MenuId" />
+                            <input type="hidden" name="foodItemId" value="@food.FoodItemId" />
+                            <button type="submit" class="btn-delete">Remove</button>
+                        </form>
+                    </div>
                 }
-            </ul>
+            </div>
         </div>
-
     </div>
 </div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

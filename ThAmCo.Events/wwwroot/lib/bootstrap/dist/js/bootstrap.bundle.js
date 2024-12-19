@@ -5326,7 +5326,8 @@
   };
   const Default$3 = {
     animation: true,
-    template: '<div class="tooltip" role="tooltip">' + '<div class="tooltip-arrow"></div>' + '<div class="tooltip-inner"></div>' + '</div>',
+        template: '<div 
+    "tooltip" role = "tooltip" > ' + ' < div class= "tooltip-arrow" ></div> ' + ' < div class="tooltip-inner" ></div > ' + '</div > ',
     trigger: 'hover focus',
     title: '',
     delay: 0,

@@ -1,7 +1,99 @@
 ﻿@page
-@model ThAmCo.Events.Pages.Events.IndexModel
+@model ThAmCo.Events.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Event Dashboard";
 }
 
-    
+<div class="page-container">
+    <header class="header">
+        <h1>Event Dashboard</h1>
+    </header>
+
+    <div class="create-total-header">
+        <h2>Upcoming Events</h2>
+        <span class="count-span">Total: @Model.UpcomingEvents.Count</span>
+    </div>
+
+    @if (Model.UpcomingEvents.Any())
+    {
+        <div class="events-grid">
+            @foreach (var eventItem in Model.UpcomingEvents)
+            {
+                <div class="event-card">
+                    <h3 class="card-title">@eventItem.Name</h3>
+                    <div class="card-body">
+                        <p>
+                            <span class="card-label">Date:</span>
+                            <span class="card-value">@eventItem.Date.ToString("dd MMM yyyy")</span>
+                        </p>
+                        <p>
+                            <span class="card-label">Location:</span>
+                            <span class="card-value">@eventItem.Location</span>
+                        </p>
+                        <p>
+                            <span class="card-label">Type:</span>
+                            <span class="card-value">@eventItem.EventTypeId</span>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-page="/Events/Details" asp-route-id="@eventItem.EventId" class="btn-details">View Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert info-alert">
+            No upcoming events scheduled.
+        </div>
+    }
+
+    <div class="create-total-header mt-1">
+        <h2>Past Events</h2>
+        <span class="count-span">Total: @Model.PastEvents.Count</span>
+    </div>
+
+    @if (Model.PastEvents.Any())
+    {
+        <div class="events-grid">
+            @foreach (var eventItem in Model.PastEvents)
+            {
+                <div class="event-card">
+                    <h3 class="card-title">@eventItem.Name</h3>
+                    <div class="card-body">
+                        <p>
+                            <span class="card-label">Date:</span>
+                            <span class="card-value">@eventItem.Date.ToString("dd MMM yyyy")</span>
+                        </p>
+                        <p>
+                            <span class="card-label">Location:</span>
+                            <span class="card-value">@eventItem.Location</span>
+                        </p>
+                        <p>
+                            <span class="card-label">Type:</span>
+                            <span class="card-value">@eventItem.EventTypeId</span>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-page="/Events/Details" asp-route-id="@eventItem.EventId" class="btn-details">View Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert info-alert">
+            No past events found.
+        </div>
+    }
+</div>
+
+<style>
+    .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+</style>

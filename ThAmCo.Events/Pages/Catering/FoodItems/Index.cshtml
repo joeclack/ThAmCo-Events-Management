@@ -3,21 +3,34 @@
 @{
     ViewData["Title"] = "Food Items";
 }
-<div class="mx-5 my-2">
-    <div class="mb-3">
-        <h1 class="display-4">Food Management</h1>
-    </div>
 
-    <div class="align-items-center d-flex flex-row mb-2">
-        <a class="btn btn-primary bg-gradient" asp-page="Create">
-            <i class="bi bi-person-plus"></i> Create New Food Item
-        </a>
-    </div>
-        <span class="mb-3 badge bg-info">@Model.FoodItems.Count() food items</span>
+<div class="page-container">
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Food Items Management</h1>
+    </header>
 
-    <div class="table-responsive">
-        <table class="table align-middle mb-0 bg-white">
-            <thead class="bg-light">
+    <!-- Create New Food Item and Count Section -->
+    <section class="create-total-header">
+        <a asp-page="Create" class="btn-submit">Create New Food Item</a>
+        @if (Model.FoodItems.Any())
+        {
+            <span class="count-span">@Model.FoodItems.Count() food items</span>
+        }
+    </section>
+
+    <!-- No Food Items Warning Section -->
+    @if (!Model.FoodItems.Any())
+    {
+        <div class="alert warning-alert" role="alert">
+            <strong>No food items found.</strong> Click "Create New Food Item" to add your first food item.
+        </div>
+    }
+
+    <!-- Food Items Table Section -->
+    <section>
+        <table class="table">
+            <thead>
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
@@ -29,87 +42,20 @@
                 @foreach (var item in Model.FoodItems)
                 {
                     <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <p class="fw-bold mb-1">@item.Name</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <p class="fw-bold mb-1">@item.Description</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <p class="fw-bold mb-1">@item.UnitPrice</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="hstack gap-1" role="group">
-                                <a asp-page="./Edit" class="btn btn-primary btn-sm" asp-route-id="@item.FoodItemId">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-                                <a asp-page="./Details" class="btn btn-info btn-sm text-white" asp-route-id="@item.FoodItemId">
-                                    <i class="bi bi-info-circle"></i> Details
-                                </a>
-                                <a data-toggle="modal" data-id="@item.FoodItemId" data-target="#deleteConfirmationModal" class="btn btn-danger btn-sm" asp-route-id="@item.FoodItemId">
-                                    <i class="bi bi-trash"></i> Delete
-                                </a>
-                            </div>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>£@item.UnitPrice</td>
+                        <td class="person-row">
+                            <form method="post" class="action-buttons" asp-page-handler="DeleteFoodItem">
+                                <a class="btn-edit" asp-page="./Edit" asp-route-id="@item.FoodItemId">Edit</a>
+                                <a class="btn-details" asp-page="./Details" asp-route-id="@item.FoodItemId">Details</a>
+                                <input type="hidden" name="foodItemId" value="@item.FoodItemId" />
+                                <button type="submit" class="btn-delete">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    </div>
-
-    @if (!Model.FoodItems.Any())
-    {
-        <div class="alert alert-warning text-center" role="alert">
-            No food items found. Click "Create New Food Item" to add your first food item.
-        </div>
-    }
+    </section>
 </div>
-
-<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalTitle">Are you sure you want to delete this item?</h5>
-                <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>This action cannot be undone.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-
-                <!-- Form for delete confirmation -->
-                <form asp-page-handler="DeleteFoodItem" method="post">
-                    <input type="hidden" name="foodItemId" id="deleteFoodItemId" />
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var foodItemId = button.data('id');
-
-            $('#modalFoodItemId').text(foodItem);
-            $('#deleteFoodItemId').val(foodItem);
-        });
-    });
-</script>

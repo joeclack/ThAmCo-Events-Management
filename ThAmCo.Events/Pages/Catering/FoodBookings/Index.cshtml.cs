@@ -5,14 +5,14 @@ using ThAmCo.Events.Services;
 
 namespace ThAmCo.Events.Pages.Catering.FoodBookings
 {
-    public class FoodBookingsModel : PageModel
+    public class IndexModel : PageModel
     {
 
         public List<FoodBookingDTO> FoodBookings { get; set; } = [];
         public CateringService _cateringService;
 		public List<FoodBookingDTO> UpcomingFoodBookings { get; set; } = [];
 		public List<FoodBookingDTO> PastFoodBookings { get; set; } = [];
-		public FoodBookingsModel(CateringService cateringService)
+		public IndexModel(CateringService cateringService)
         {
             _cateringService = cateringService;
         }

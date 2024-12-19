@@ -51,6 +51,13 @@ namespace ThAmCo.Events.Services
             return _event;
         }
 
+		public async Task<List<Event>> GetPastCancelledEvents()
+		{
+			var events = await GetAllEvents();
+			var pastAndCancelledEvents = events.Where(x=>x.IsCanceled || x.Date < DateTime.Today).ToList();
+			return pastAndCancelledEvents;
+		}
+
         public async Task<Event> GetUpcomingEvent()
         {
             var _event = await _context.Events
@@ -86,15 +93,14 @@ namespace ThAmCo.Events.Services
             try
             {
                 var _event = await GetEvent(eventId);
-                _context.Events.Remove(_event);
-                _context.SaveChanges();
+				_event.IsCanceled = true;
+				await UpdateEvent(_event);
             }
             catch
             {
-                Console.WriteLine("Event not cancelled");
+                
             }
 
-            Console.WriteLine("Event cancelled");
         }
         
         public async Task<List<Event>> GetAvailableEventsForGuest(Guest guest)
@@ -144,7 +150,7 @@ namespace ThAmCo.Events.Services
 		internal async Task<List<Event>> GetUpcomingEvents()
 		{
             var events = await GetAllEvents();
-            return new List<Event>(events.Where(x => x.Date >= DateTime.Today));
+            return new List<Event>(events.Where(x => x.Date >= DateTime.Today && !x.IsCanceled));
         }
 
 		internal async Task<List<Event>> GetPastEvents()

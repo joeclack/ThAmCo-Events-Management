@@ -2,58 +2,93 @@
 @model ThAmCo.Events.Pages.Guests.DetailsModel
 
 @{
-    ViewData["Title"] = "Guests Details";
+	ViewData["Title"] = "Guest Details";
 }
 
-<div class="mx-5 mt-5">
-    <div class="mb-5">
-        <h1 class="display-4">Guest Details</h1>
-        <p class="lead">View the details for this guest.</p>
-    </div>
+<div class="page-container">
+	<div class="card">
+		<div class="card-header">
+			<h1 class="card-title">@Model.Guest.FirstName @Model.Guest.LastName</h1>
+		</div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Guest Information</h4>
-            <dl class="row">
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Guest.FirstName)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.FirstName)</dd>
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Guest.LastName)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.LastName)</dd>
-                <dt class="col-sm-3 font-weight-bold">@Html.DisplayNameFor(model => model.Guest.Email)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Guest.Email)</dd>
-            </dl>
-        </div>
-    </div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-6">
+					<h3>Guest Information</h3>
+					<div class="list-item">
+						<span class="card-label">First Name</span>
+						<span class="card-value">@Model.Guest.FirstName</span>
+					</div>
+					<div class="list-item">
+						<span class="card-label">Last Name</span>
+						<span class="card-value">@Model.Guest.LastName</span>
+					</div>
+					<div class="list-item">
+						<span class="card-label">Email</span>
+						<span class="card-value">@Model.Guest.Email</span>
+					</div>
+				</div>
 
-    <div class="vstack gap-2 col-md-5 mb-2">
-        <h4 class="mb-1">Upcoming events</h4>
-    </div>
+				<div class="col-md-6">
+					<h3>Event Bookings</h3>
+					<div class="list-item">
+						<span class="card-label">Total Events</span>
+						<span class="card-value">@Model.Bookings.Count()</span>
+					</div>
 
-    <div class="hstack gap-2">
-        @foreach (var booking in Model.Bookings)
-        {
-            <div class="card w-25">
-                <div class="card-body">
-                    <h5 class="card-title">@booking.Event.Name</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">@booking.Event.Location</h6>
-                    <p class="card-text">Date: @booking.Event.Date.ToShortDateString()</p>
-                    <form asp-page-handler="ViewEvent">
-                        <input type="hidden" name="id" value="@booking.EventId" />
-                        <button type="submit" id="@booking.EventId" class="btn btn-primary">
-                            View
-                        </button>
-                    </form>
-                </div>
-            </div>
-        }
-    </div>
+					<h3 class="mt-3">Upcoming Events</h3>
+					@if (Model.Bookings.Any())
+					{
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Event Name</th>
+									<th>Location</th>
+									<th>Date</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var booking in Model.Bookings)
+								{
+									<tr>
+										<td>@booking.Event.Name</td>
+										<td>@booking.Event.Location</td>
+										<td>@booking.Event.Date.ToShortDateString()</td>
+										<td>
+											<div class="action-group">
+												<form asp-page-handler="ViewEvent" class="d-inline">
+													<input type="hidden" name="id" value="@booking.EventId" />
+													<button type="submit" id="@booking.EventId" class="btn-details">
+														View Event
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					}
+					else
+					{
+						<div class="alert warning-alert">
+							This guest is not booked for any upcoming events.
+						</div>
+					}
+				</div>
+			</div>
+		</div>
 
-    <div class="mt-4">
-        <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.Guest.GuestId">
-            <i class="bi bi-pencil-square"></i> Edit Guest
-        </a>
-        <a asp-page="./Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back to List
-        </a>
-    </div>
+		<div class="card-footer">
+			<div class="action-buttons">
+				<a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.Guest.GuestId">
+					Edit Guest
+				</a>
+				<a asp-page="./Index" class="btn-cancel">
+					Back to List
+				</a>
+			</div>
+		</div>
+	</div>
 </div>

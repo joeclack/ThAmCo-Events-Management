@@ -2,98 +2,104 @@
 @model ThAmCo.Events.Pages.Guests.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Guest";
 }
 
-<div class="mx-5 mt-5">
-    <div class="mb-5">
-        <h1 class="display-4">Edit Guest</h1>
-        <p class="lead">Modify the details of this guest.</p>
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Edit Guest</h1>
+        <p>Modify the details of this guest.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Guest Details</h4>
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Guest.GuestId" />
-                <div class="form-group">
-                    <label asp-for="Guest.FirstName" class="control-label"></label>
-                    <input asp-for="Guest.FirstName" class="form-control" />
-                    <span asp-validation-for="Guest.FirstName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Guest.LastName" class="control-label"></label>
-                    <input asp-for="Guest.LastName" class="form-control" />
-                    <span asp-validation-for="Guest.LastName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Guest.Email" class="control-label"></label>
-                    <input asp-for="Guest.Email" class="form-control" />
-                    <span asp-validation-for="Guest.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Save
-                    </button>
-                    <a asp-page="Index" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Back to List
-                    </a>
-                </div>
-            </form>
-        </div>
+    <!-- Guest Details Card -->
+    <div class="card">
+        <h4 class="card-title">Guest Details</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
+            <input type="hidden" asp-for="Guest.GuestId" />
+            
+            <div class="form-group">
+                <label asp-for="Guest.FirstName" class="card-label"></label>
+                <input asp-for="Guest.FirstName" class="form-select" />
+                <span asp-validation-for="Guest.FirstName" class="warning-alert"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Guest.LastName" class="card-label"></label>
+                <input asp-for="Guest.LastName" class="form-select" />
+                <span asp-validation-for="Guest.LastName" class="warning-alert"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Guest.Email" class="card-label"></label>
+                <input asp-for="Guest.Email" class="form-select" />
+                <span asp-validation-for="Guest.Email" class="warning-alert"></span>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn-submit">Save Changes</button>
+                <a asp-page="Index" class="btn-cancel">Back to List</a>
+            </div>
+        </form>
     </div>
     
-    <div class="w-100 mx-2">
-        <h5>Manage Events</h5>
+    <!-- Event Management Card -->
+    <div class="card">
+        <h4 class="card-title">Manage Events</h4>
 
         @if (!Model.AvailableEvents.Any())
         {
-            <div class="alert alert-info mt-2">No more events available to assign guest to.</div>
+            <div class="alert warning-alert">No more events available to assign guest to.</div>
         }
         else
         {
             <form asp-page-handler="CreateGuestBooking" method="post">
                 <input type="hidden" name="guestId" value="@Model.Guest.GuestId" />
 
-                <div class="form-group mt-2">
-                    <label for="eventList">Assign to Event</label>
-                    <div class="d-flex">
-                        <!-- Select Dropdown -->
-                        <select id="eventList" class="form-control me-2" name="eventId">
+                <div class="form-group">
+                    <label for="eventList" class="card-label">Assign to Event</label>
+                    <div class="d-flex gap-2">
+                        <select id="eventList" class="form-select" name="eventId">
                             <option value="">Select Event</option>
                             @foreach (var _event in Model.AvailableEvents)
                             {
                                 <option value="@_event.EventId">@_event.Name</option>
                             }
                         </select>
-
-                        <!-- Submit Button with same height as Select -->
-                        <button type="submit" class="btn btn-success h-100">
-                            <i class="bi bi-person-plus"></i> Assign To Event
-                        </button>
+                        <button type="submit" class="btn-submit mt-1">Assign To Event</button>
                     </div>
                 </div>
             </form>
-
         }
-        <ul class="list-group mt-4">
-            @foreach (var guestBooking in Model.Guest.GuestBookings)
-            {
-                <form asp-page-handler="CancelGuestBooking" method="post">
-                    <!-- Hidden inputs for EventId and GuestId -->
-                    <input type="hidden" name="eventId" value="@guestBooking.Event.EventId" />
-                    <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
 
-                <li class="list-group-item d-flex justify-content-between">
-                        @guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="bi bi-x-circle"></i> Cancel booking
-                    </button>
-                </li>
-                </form>
-            }
-        </ul>
+        @if (Model.Guest.GuestBookings.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Event Details</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var guestBooking in Model.Guest.GuestBookings)
+                    {
+                        <tr>
+                            <td>@guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()</td>
+                            <td>
+                                <form asp-page-handler="CancelGuestBooking" method="post" class="action-group">
+                                    <input type="hidden" name="eventId" value="@guestBooking.Event.EventId" />
+                                    <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
+                                    <a class="btn-details" asp-page="../Events/Details" asp-route-id="@guestBooking.Event.EventId">View Event</a>
+                                    <button type="submit" class="btn-delete">Cancel Booking</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>
 

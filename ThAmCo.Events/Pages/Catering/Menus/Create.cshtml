@@ -1,34 +1,34 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.Menus.CreateModel
 @{
+    ViewData["Title"] = "Create Menu";
 }
-<div class="mx-5 mt-5">
-    <div class="mb-5">
-        <h1 class="display-4">Create New Menu</h1>
-        <p class="lead">Fill in the details to create a new menu.</p>
+
+<div class="page-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Create New Menu</h1>
+        <p>Fill in the details to create a new menu.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Menu Information</h4>
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Card Container -->
+    <div class="card">
+        <h4 class="card-title">Menu Information</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
 
-                <div class="form-group">
-                    <label asp-for="Menu.MenuName" class="control-label">Menu Name</label>
-                    <input asp-for="Menu.MenuName" class="form-control" />
-                    <span asp-validation-for="Menu.MenuName" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Create Menu
-                    </button>
-                    <a class="btn btn-secondary" asp-page="Index">
-                        <i class="bi bi-arrow-left"></i> Back to List
-                    </a>
-                </div>
-            </form>
-        </div>
+            <div class="form-group">
+                <label asp-for="Menu.MenuName" class="card-label">Menu Name</label>
+                <input asp-for="Menu.MenuName" class="form-select" />
+                <span asp-validation-for="Menu.MenuName" class="warning-alert"></span>
+            </div>
+
+            <!-- Button Group -->
+            <div class="modal-footer">
+                <button type="submit" class="btn-submit">Create Menu</button>
+                <a asp-page="Index" class="btn-cancel">Back to List</a>
+            </div>
+        </form>
     </div>
 </div>
 

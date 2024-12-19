@@ -1,66 +1,108 @@
 ﻿@page
 @model ThAmCo.Events.Pages.Catering.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Catering Dashboard";
 }
 
-<div class="mx-5 my-2">
-    <div>
-        <h5 class="mb-2">Upcoming Food Bookings</h5>
+<div class="page-container">
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Catering Management</h1>
+    </header>
 
-        @if (!Model.UpcomingFoodBookings.Any())
-        {
-            <div class="alert alert-warning" role="alert">
-                No upcoming food bookings.
-            </div>
-            <a asp-page="/Catering/FoodBookings/Index" class="btn btn-primary">Manage Bookings</a>
-        }
-        else
-        {
-            <div class="list-group">
-                @foreach (var booking in Model.UpcomingFoodBookings.Take(3))
-                {
-                    <a asp-page="/Catering/FoodBookings/Details" asp-route-id="@booking.FoodBookingId" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="fw-bold badge bg-primary">@booking.EventName</h5>
-                            <span>@booking.FoodBookingDate.ToString("dd MMM yyyy")</span>
-                        </div>
-                        <div class="hstack gap-2">
-                            <span class="badge bg-primary">@booking.MenuName</span> 
-                            <span class="badge bg-primary">Guests @booking.NumberOfGuests</span>
-                        </div>
-                    </a>
-                }
-            </div>
-        }
+    <!-- Create New and Count Section -->
+    <section class="create-total-header">
+        <div>
+            <a asp-page="/Catering/FoodItems/Create" class="btn-submit">Create Food Item</a>
+            <a asp-page="/Catering/Menus/Create" class="btn-submit">Create Menu</a>
+        </div>
+        <span class="count-span">@Model.UpcomingFoodBookings.Count() upcoming bookings</span>
+    </section>
+
+    <!-- Upcoming Bookings Section -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Upcoming Food Bookings</h3>
+        </div>
+        <div class="card-body">
+            @if (!Model.UpcomingFoodBookings.Any())
+            {
+                <div class="alert warning-alert">
+                    No upcoming food bookings found.
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Menu</th>
+                            <th>Date</th>
+                            <th>Guests</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model.UpcomingFoodBookings)
+                        {
+                            <tr>
+                                <td>@booking.EventName</td>
+                                <td>@booking.MenuName</td>
+                                <td>@booking.FoodBookingDate.ToString("dd MMM yyyy")</td>
+                                <td>@booking.NumberOfGuests</td>
+                                <td class="action-buttons">
+                                    <a asp-page="/Catering/FoodBookings/Details" class="btn-details" asp-route-id="@booking.FoodBookingId">Details</a>
+                                    <a asp-page="/Catering/FoodBookings/Edit" class="btn-edit" asp-route-id="@booking.FoodBookingId">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
     </div>
 
-    <div class="mt-4">
-        <h5 class="mb-2">Past Food Bookings</h5>
-
-        @if (!Model.PastFoodBookings.Any())
-        {
-            <div class="alert alert-secondary" role="alert">
-                No past food bookings.
-            </div>
-        }
-        else
-        {
-            <div class="list-group">
-                @foreach (var booking in Model.PastFoodBookings)
-                {
-                    <a asp-page="/Catering/FoodBookings/Details" asp-route-id="@booking.FoodBookingId" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="fw-bold badge bg-success">@booking.EventName</h5>
-                            <span>@booking.FoodBookingDate.ToString("dd MMM yyyy")</span>
-                        </div>
-                        <div class="hstack gap-2">
-                            <span class="badge bg-success">@booking.MenuName</span>
-                            <span class="badge bg-success">Guests @booking.NumberOfGuests</span>
-                        </div>
-                    </a>
-                }
-            </div>
-        }
+    <!-- Past Bookings Section -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="card-title">Past Food Bookings</h3>
+        </div>
+        <div class="card-body">
+            @if (!Model.PastFoodBookings.Any())
+            {
+                <div class="alert info-alert">
+                    No past food bookings found.
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Menu</th>
+                            <th>Date</th>
+                            <th>Guests</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model.PastFoodBookings)
+                        {
+                            <tr>
+                                <td>@booking.EventName</td>
+                                <td>@booking.MenuName</td>
+                                <td>@booking.FoodBookingDate.ToString("dd MMM yyyy")</td>
+                                <td>@booking.NumberOfGuests</td>
+                                <td>
+                                    <a asp-page="/Catering/FoodBookings/Details" class="btn-details" asp-route-id="@booking.FoodBookingId">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
     </div>
 </div>

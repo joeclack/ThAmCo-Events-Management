@@ -1,75 +1,103 @@
 ﻿@page "{id:int}"
 @model ThAmCo.Events.Pages.Events.DetailsModel
-
 @{
     ViewData["Title"] = "Event Details";
 }
 
-<div class="container-fluid px-4 mt-4">
-    <div class="mb-5">
-        <h1 class="display-4">Event Details</h1>
-        <p class="lead">View the details for this event.</p>
-    </div>
+<div class="page-container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">@Model.Event.Name</h1>
+        </div>
 
-    <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h4 class="card-title mb-3">Event Information</h4>
-            <dl class="row">
-                <dt class="col-sm-3 font-weight-bold">Name</dt>
-                <dd class="col-sm-9">@Model.Event.Name</dd>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Event Information</h3>
+                    <div class="list-item">
+                        <span class="card-label">Date</span>
+                        <span class="card-value">@Model.Event.Date.ToString("dddd, dd MMMM yyyy")</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="card-label">Location</span>
+                        <span class="card-value">@Model.Event.Location</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="card-label">Event Type</span>
+                        <span class="card-value">@Model.Event.EventTypeId</span>
+                    </div>
+                </div>
 
-                <dt class="col-sm-3 font-weight-bold">Date</dt>
-                <dd class="col-sm-9">@Model.Event.Date.ToString("dd/MM/yyyy")</dd>
+                <div class="col-md-6">
+                    <h3>Reservation Details</h3>
+                    <div class="list-item">
+                        <span class="card-label">Reservation Ref</span>
+                        <span class="card-value">@Model.Reservation.Reference</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="card-label">Venue</span>
+                        <span class="card-value">@Model.Reservation.VenueCode</span>
+                    </div>
+                </div>
+            </div>
 
-                <dt class="col-sm-3 font-weight-bold">Location</dt>
-                <dd class="col-sm-9">@Model.Event.Location</dd>
+            <div class="row mt-1">
+                <div class="col-md-6">
+                    <h3>Attendees</h3>
+                    <div class="list-item">
+                        <span class="card-label">Guests</span>
+                        <span class="card-value">@Model.Event.GuestBookings.Count</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="card-label">Staff</span>
+                        <span class="card-value">@Model.Event.Staffings.Count</span>
+                    </div>
+                </div>
 
-                <dt class="col-sm-3 font-weight-bold">Type</dt>
-                <dd class="col-sm-9">@Model.Event.EventTypeId</dd>
+                <div class="col-md-6">
+                    <h3>Catering</h3>
+                    @if (Model.FoodBookingMenuInfo != null)
+                    {
+                        <div class="list-item">
+                            <span class="card-label">Menu</span>
+                            <span class="card-value">@Model.FoodBookingMenuInfo.MenuName</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert warning-alert">No food booking</div>
+                    }
+                </div>
+            </div>
 
-                <dt class="col-sm-3 font-weight-bold">Reservation Ref</dt>
-                <dd class="col-sm-9">@Model.Reservation.Reference</dd>
-
-                <dt class="col-sm-3 font-weight-bold">Venue</dt>
-                <dd class="col-sm-9">@Model.Reservation.VenueCode</dd>
-
-                <dt class="col-sm-3 font-weight-bold">Guests</dt>
-                <dd class="col-sm-9">@Model.Event.GuestBookings.Count</dd>
-
-                <dt class="col-sm-3 font-weight-bold">Staff</dt>
-                <dd class="col-sm-9">@Model.Event.Staffings.Count</dd>
-
-                @if (Model.FoodBookingMenuInfo != null)
-                {
-                    <dt class="col-sm-3 font-weight-bold">Menu</dt>
-                    <dd class="col-sm-9">@Model.FoodBookingMenuInfo.MenuName</dd>
-                }
-                else
-                {
-                    <dd class="col-sm-9">
-                        <strong class="badge bg-danger">No food booking found</strong>
-                    </dd>
-                }
-            </dl>
-
-            @if (Model.IsUnderStaffed)
+            @if (Model.IsUnderStaffed || !Model.FirstAiderPresent)
             {
-                <div class="alert alert-danger">@Model.UnderStaffAlertText</div>
-            }
-
-            @if (!Model.FirstAiderPresent)
-            {
-                <div class="alert alert-danger">Please add a staff member who is a first aider</div>
+                <div class="row mt-1">
+                    <div class="col-12">
+                        <h3>Alerts</h3>
+                        @if (Model.IsUnderStaffed)
+                        {
+                            <div class="alert error-alert">@Model.UnderStaffAlertText</div>
+                        }
+                        @if (!Model.FirstAiderPresent)
+                        {
+                            <div class="alert error-alert">Please add a staff member who is a first aider</div>
+                        }
+                    </div>
+                </div>
             }
         </div>
-    </div>
-    <div class=" mt-4">
-        <a asp-page="./Edit" class="btn btn-primary btn" asp-route-id="@Model.Event.EventId">
-            <i class="bi bi-pencil-square"></i> Edit Event
-        </a>
-        <a asp-page="./Index" class="btn btn-secondary btn">
-            <i class="bi bi-arrow-left-circle"></i> Back to List
-        </a>
+
+        <div class="card-footer">
+            <div class="action-buttons">
+                <a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.Event.EventId">
+                    Edit Event
+                </a>
+                <a asp-page="./Index" class="btn-cancel">
+                    Back to List
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
