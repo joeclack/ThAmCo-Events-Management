@@ -5,18 +5,22 @@
 }
 
 <div class="page-container">
-    <div class="create-total-header">
-        <h1 class="header">Staff Management</h1>
-        <a asp-page="Create" class="btn-submit">
+
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Staff Management</h1>
+    </header>
+
+    <!-- Create New Guest and Guests Count Section -->
+    <section class="create-total-header">
+        <button type="button" class="btn-create">
             Create New Staff
-        </a>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
+        </button>
+        @if (Model.StaffMembers.Any())
+        {
             <span class="count-span">@Model.StaffMembers.Count() staff</span>
-        </div>
-
+        }
+    </section>
         <div class="card-body">
             @if (Model.StaffMembers.Any())
             {

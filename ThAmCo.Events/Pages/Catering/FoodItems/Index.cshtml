@@ -12,7 +12,7 @@
 
     <!-- Create New Food Item and Count Section -->
     <section class="create-total-header">
-        <a asp-page="Create" class="btn-submit">Create New Food Item</a>
+        <a asp-page="Create" class="btn-create">Create New Food Item</a>
         @if (Model.FoodItems.Any())
         {
             <span class="count-span">@Model.FoodItems.Count() food items</span>
@@ -32,9 +32,9 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Unit Price</th>
+                    <th style="width: 10%">Name</th>
+                    <th class="full-width">Description</th>
+                    <th style="width: 10%">Unit Price</th>
                     <th>Actions</th>
                 </tr>
             </thead>

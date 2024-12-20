@@ -181,9 +181,7 @@ footer {
 
 /* Buttons - Global Styles */
 button,
-a[class^="btn"],
-.btn-cancel,
-.submit-btn {
+a[class^="btn"] {
     display: inline-block;
     padding: 8px 20px;
     font-size: 1rem;
@@ -196,60 +194,59 @@ a[class^="btn"],
 }
 
 /* Create Button */
-.btn-submit {
-    background-color: #007bff;
+.btn-create {
+    background: hsla(145, 63%, 49%, 1);
     color: white;
 }
 
-    .btn-create-event:hover,
-    .submit-btn:hover {
-        background-color: #0056b3;
+    .btn-create:hover {
+        background-color: #27AE60; /* Darker Emerald Green */
         transform: translateY(-2px);
     }
 
 /* Edit Button */
 .btn-edit {
-    background-color: #28a745;
+    background-color: #3498DB; /* Sky Blue */
     color: white;
 }
 
     .btn-edit:hover {
-        background-color: #218838;
+        background-color: #2980B9; /* Darker Sky Blue */
         transform: translateY(-2px);
     }
 
 /* Details Button */
 .btn-details {
-    background-color: #ffc107;
-    color: white;
+    background-color: #F1C40F; /* Golden Yellow */
+    color: white; /* Changed to white for better contrast */
 }
 
     .btn-details:hover {
-        background-color: #e0a800;
-        transform: translateY(-2px);
-    }
-
-/* Delete Button */
-.btn-delete {
-    background-color: #dc3545;
-    color: white;
-}
-
-    .btn-delete:hover {
-        background-color: #c82333;
+        background-color: #D4AC0D; /* Darker Golden Yellow */
         transform: translateY(-2px);
     }
 
 /* Cancel Button */
 .btn-cancel {
-    background-color: #ccc;
-    color: #333;
+    background: hsla(29, 91%, 66%, 1);
+    color: white;
 }
 
     .btn-cancel:hover {
-        background-color: #999;
+        background-color: #7F8C8D; /* Darker Steel Gray */
         transform: translateY(-2px);
     }
+
+.btn-delete {
+    background: hsla(0, 91%, 66%, 1);
+    color: white;
+}
+
+    .btn-cancel:hover {
+        background-color: #7F8C8D; /* Darker Steel Gray */
+        transform: translateY(-2px);
+    }
+
 
 /* Modal Styles */
 .modal {

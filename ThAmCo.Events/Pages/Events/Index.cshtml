@@ -14,14 +14,13 @@
 
 	<!-- Create New Event and Events Count Section -->
 	<section class="create-total-header">
-		<button type="button" class="btn-submit" id="openCreateModal">
+		<button type="button" class="btn-create" id="openCreateModal">
 			Create New Event
 		</button>
 		@if (Model.Events.Any())
 		{
 			<span class="count-span">@Model.Events.Count() events</span>
 		}
-
 	</section>
 
 	<!-- No Events Warning Section -->
@@ -68,7 +67,7 @@
 									<a class="btn-edit" asp-page="./Edit" asp-route-id="@item.EventId">Edit</a>
 									<a class="btn-details" asp-page="./Details" asp-route-id="@item.EventId">Details</a>
 									<input type="hidden" name="eventId" value="@item.EventId" />
-									<button type="submit" class="btn-delete">Cancel</button>
+									<button type="submit" class="btn-cancel">Cancel</button>
 								</form>
 							</td>
 						</tr>
@@ -160,7 +159,7 @@
 					<a class="btn-info" asp-page="Create">Continue without reservation</a>
 					<a class="btn-cancel" id="cancelCreateModal">Cancel</a>
 					<div class="modal-footer">
-						<button type="submit" class="btn-submit">Next</button>
+						<button type="submit" class="btn-create">Next</button>
 					</div>
 				</div>
 			</form>

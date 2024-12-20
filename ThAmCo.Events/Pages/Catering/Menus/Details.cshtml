@@ -43,10 +43,10 @@
                             <div class="list-group">
                                 @foreach (var foodItem in Model.Menu.MenuFoodItems)
                                 {
-                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <form class="list-item d-flex justify-content-between align-items-center">
                                         <span>@foodItem.FoodItemName</span>
                                         <a asp-page="../FoodItems/Details" asp-route-id="@foodItem.FoodItemId" class="btn-details">Details</a>
-                                    </div>
+                                    </form>
                                 }
                             </div>
                         </div>

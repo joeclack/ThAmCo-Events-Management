@@ -59,7 +59,7 @@
             @if (isEventEditable)
             {
                 <div class="modal-footer">
-                    <button type="submit" class="btn-submit">Save Changes</button>
+                    <button type="submit" class="btn-create">Save Changes</button>
                     <a asp-page="Index" class="btn-cancel">Back to List</a>
                 </div>
             }
@@ -80,7 +80,7 @@
                 else
                 {
                     <div>
-                        <button type="button" id="openCreateReservationModal" class="btn-submit">
+                        <button type="button" id="openCreateReservationModal" class="btn-create">
                             Create Reservation
                         </button>
                     </div>
@@ -132,7 +132,7 @@
             @if (Model.FoodBooking == null)
             {
                 <div>
-                    <button type="button" class="btn-submit" id="openBookMenuModal">
+                    <button type="button" class="btn-create" id="openBookMenuModal">
                         Book Food
                     </button>
                 </div>
@@ -190,7 +190,7 @@
                                 }
                             </select>
                         </div>
-                        <button type="submit" class="btn-submit">Assign To Event</button>
+                        <button type="submit" class="btn-create">Assign To Event</button>
                     </form>
                 }
                  @if(Model.Event.Staffings.Any()){
@@ -251,7 +251,7 @@
                                 }
                             </select>
                         </div>
-                        <button type="submit" class="btn-submit">Assign To Event</button>
+                        <button type="submit" class="btn-create">Assign To Event</button>
                     </form>
                 }
                 @if(Model.Event.GuestBookings.Any()){
@@ -322,7 +322,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancelCreateReservationModal" class="btn-cancel">Cancel</button>
-                <button type="submit" class="btn-submit">Reserve</button>
+                <button type="submit" class="btn-create">Reserve</button>
             </div>
         </form>
     </div>
@@ -349,7 +349,7 @@
             </div>
             <div class="modal-footer">
                 <a class="btn-cancel" id="cancelBookMenuModal">Cancel</a>
-                <button type="submit" class="btn-submit">Book</button>
+                <button type="submit" class="btn-create">Book</button>
             </div>
         </form>
     </div>
