@@ -6,13 +6,11 @@
 }
 
 <div class="page-container">
-    <!-- Header Section -->
     <div class="header">
         <h1>Create New Staff Member</h1>
         <p>Fill in the details to create a new staff member.</p>
     </div>
 
-    <!-- Card Container -->
     <div class="card">
         <h4 class="card-title">Staff Information</h4>
         <form method="post">
@@ -44,7 +42,6 @@
                 <span asp-validation-for="Staff.IsFirstAider" class="warning-alert"></span>
             </div>
 
-            <!-- Button Group -->
             <div class="modal-footer">
                 <button type="submit" class="btn-create">Create Staff</button>
                 <a asp-page="Index" class="btn-cancel">Back to List</a>

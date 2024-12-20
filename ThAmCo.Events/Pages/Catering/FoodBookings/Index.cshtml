@@ -5,12 +5,10 @@
 }
 
 <div class="page-container">
-    <!-- Header Section -->
     <header class="header">
         <h1>Catering Management</h1>
     </header>
 
-    <!-- Create New and Count Section -->
     <section class="create-total-header">
         <div>
             <a asp-page="/Catering/FoodItems/Create" class="btn-create">Create Food Item</a>
@@ -19,7 +17,6 @@
         <span class="count-span">@Model.UpcomingFoodBookings.Count() upcoming bookings</span>
     </section>
 
-    <!-- Upcoming Bookings Section -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Upcoming Food Bookings</h3>
@@ -67,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Past Bookings Section -->
     <div class="card mt-4">
         <div class="card-header">
             <h3 class="card-title">Past Food Bookings</h3>

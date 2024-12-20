@@ -2,7 +2,6 @@
 {
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
-	using System.Runtime.InteropServices;
 	using ThAmCo.Events.DTOs;
 	using ThAmCo.Events.Models;
 	using ThAmCo.Events.Services;
@@ -44,10 +43,10 @@
 		/// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/></param>
 		public IndexModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
 		{
-			_context = context;
-			_eventService = serviceProvider.GetRequiredService<EventService>();
-			_staffService = serviceProvider.GetRequiredService<StaffService>();
-			_guestService = serviceProvider.GetRequiredService<GuestService>();
+			_context         = context;
+			_eventService    = serviceProvider.GetRequiredService<EventService>();
+			_staffService    = serviceProvider.GetRequiredService<StaffService>();
+			_guestService    = serviceProvider.GetRequiredService<GuestService>();
 			_cateringService = serviceProvider.GetRequiredService<CateringService>();
 		}
 
@@ -55,9 +54,16 @@
 		/// Gets or sets the Events
 		/// </summary>
 		public IList<Event> Events { get; set; } = default!;
-		public IList<Event> CancelledEvents { get; set; } = default!;
-		public IList<Event> PastAndCancelledEvents { get; set; } = default!;
 
+		/// <summary>
+		/// Gets or sets the CancelledEvents
+		/// </summary>
+		public IList<Event> CancelledEvents { get; set; } = default!;
+
+		/// <summary>
+		/// Gets or sets the PastAndCancelledEvents
+		/// </summary>
+		public IList<Event> PastAndCancelledEvents { get; set; } = default!;
 
 		/// <summary>
 		/// Gets or sets the EventTypes
@@ -75,19 +81,9 @@
 		/// <returns>The <see cref="Task"/></returns>
 		public async Task OnGetAsync()
 		{
-			Events = await _eventService.GetUpcomingEvents();
-			EventTypes = await _eventService.GetEventTypes();
+			Events                 = await _eventService.GetUpcomingEvents();
+			EventTypes             = await _eventService.GetEventTypes();
 			PastAndCancelledEvents = await _eventService.GetPastCancelledEvents();
-		}
-
-		/// <summary>
-		/// The OnPostCreateEventFromEventType
-		/// </summary>
-		/// <param name="eventTypeId">The eventTypeId<see cref="string"/></param>
-		/// <returns>The <see cref="Task{IActionResult}"/></returns>
-		public async Task<IActionResult> OnPostCreateEventFromEventType(string eventTypeId)
-		{
-			return RedirectToPage($"./Create", new { id = eventTypeId });
 		}
 
 		/// <summary>
@@ -106,7 +102,7 @@
 
 			if (_event.FoodBookingId != -1)
 			{
-				var foodbooking = await _cateringService.GetFoodBooking(_event.FoodBookingId);
+				var foodbooking  = await _cateringService.GetFoodBooking(_event.FoodBookingId);
 				if (foodbooking != null)
 				{
 					await _cateringService.DeleteFoodBooking(foodbooking.FoodBookingId);
@@ -114,7 +110,7 @@
 			}
 			if (_event.ReservationId != string.Empty)
 			{
-				var reservation = await _eventService.GetReservation(_event.ReservationId);
+				var reservation  = await _eventService.GetReservation(_event.ReservationId);
 				if (reservation != null)
 				{
 					await _eventService.DeleteReservation(reservation.Reference);

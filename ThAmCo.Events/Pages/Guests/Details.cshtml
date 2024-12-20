@@ -91,4 +91,62 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+				<div class="full-width">
+					<h3>Past Bookings</h3>
+					<div class="list-item">
+						<span class="card-label">Total Events</span>
+						<span class="card-value">@Model.PastBookings.Count()</span>
+					</div>
+
+					@if (Model.PastBookings.Any())
+					{
+						<table class="table">
+							<thead>
+								<tr>
+									<th style="width: 5%; text-align: center">Attendance</th>
+									<th style="width: 10%">Event Name</th>
+									<th style="width: 10%">Location</th>
+									<th class="full-width">Date</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var booking in Model.PastBookings)
+								{
+									<tr>
+										<td style="text-align: center">
+											<input checked="@booking.Event.GuestBookings.FirstOrDefault(gb=>gb.GuestId == Model.Guest.GuestId).DidAttend" type="checkbox"  />
+										</td>
+										<td>@booking.Event.Name</td>
+										<td>@booking.Event.Location</td>
+										<td>@booking.Event.Date.ToShortDateString()</td>
+										<td>
+											<div class="action-group">
+												<form asp-page-handler="ViewEvent" class="d-inline">
+													<input type="hidden" name="id" value="@booking.EventId" />
+													<button type="submit" id="@booking.EventId" class="btn-details">
+														View Event
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					}
+					else
+					{
+						<div class="alert warning-alert">
+							This guest has not had any previous event bookings
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+
 </div>

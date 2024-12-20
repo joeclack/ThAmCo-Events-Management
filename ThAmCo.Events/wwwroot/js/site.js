@@ -33,4 +33,53 @@ document.addEventListener('DOMContentLoaded', function () {
     openCreateReservationModal.addEventListener('click', () => createReservationModal.classList.add('show'));
     closeCreateReservationModal.addEventListener('click', () => createReservationModal.classList.remove('show'));
     cancelCreateReservationModal.addEventListener('click', () => createReservationModal.classList.remove('show'));
+}); 
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Mobile Navigation
+    const openMobileNavButton = document.getElementById('openMobileNavButton');
+    const closeMobileNavButton = document.getElementById('closeMobileNavButton');
+    const navLinks = document.getElementById('nav-links');
+
+    function toggleMobileNav() {
+        navLinks.classList.toggle('active');
+        openMobileNavButton.style.display = navLinks.classList.contains('active') ? 'none' : 'inline-block';
+        closeMobileNavButton.style.display = navLinks.classList.contains('active') ? 'inline-block' : 'none';
+    }
+
+    openMobileNavButton.addEventListener('click', toggleMobileNav);
+    closeMobileNavButton.addEventListener('click', toggleMobileNav);
+
+    // Handle dropdown on mobile
+    const cateringDropdown = document.getElementById('cateringDropdown');
+    const dropdownMenuLinks = document.querySelector('.dropdown-menu-links');
+
+    if (window.innerWidth <= 768) {
+        cateringDropdown.addEventListener('click', function (e) {
+            e.preventDefault();
+            dropdownMenuLinks.style.display =
+                dropdownMenuLinks.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.navbar') && navLinks.classList.contains('active')) {
+            toggleMobileNav();
+        }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 768) {
+            navLinks.classList.remove('active');
+            openMobileNavButton.style.display = 'none';
+            closeMobileNavButton.style.display = 'none';
+            dropdownMenuLinks.style.display = '';
+        } else {
+            openMobileNavButton.style.display = 'inline-block';
+        }
+    });
+
+
 });

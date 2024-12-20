@@ -6,13 +6,11 @@
 }
 
 <div class="page-container">
-    <!-- Header Section -->
     <div class="header">
         <h1>Edit Staff</h1>
         <p>Modify the details of this staff member.</p>
     </div>
 
-    <!-- Staff Details Card -->
     <div class="card">
         <h4 class="card-title">Staff Details</h4>
         <form method="post">
@@ -52,7 +50,6 @@
         </form>
     </div>
 
-    <!-- Event Management Card -->
     <div class="card">
         <h4 class="card-title">Manage Events</h4>
 
@@ -81,13 +78,13 @@
             </form>
         }
 
-        @if (Model.Staff.Staffings.Any())
+        @if (Model.Staff.Staffings.Where(s => s.Event.Date >= DateTime.Today && !s.Event.IsCanceled).Any())
         {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Event Details</th>
-                        <th>Actions</th>
+                        <th style="width: 100%">Event Details</th>
+                        <th style="width: auto">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,11 +93,11 @@
                         <tr>
                             <td>@staffing.Event.Name - @staffing.Event.Date.ToShortDateString()</td>
                             <td>
-                                <form asp-page-handler="CancelStaffing" method="post" class="action-group">
+                                <form asp-page-handler="CancelStaffing" method="post" class="action-buttons">
                                     <input type="hidden" name="eventId" value="@staffing.Event.EventId" />
                                     <input type="hidden" name="staffId" value="@staffing.Staff.StaffId" />
-                                    <a class="btn-details" asp-page="../Events/Details" asp-route-id="@staffing.Event.EventId">View Event</a>
-                                    <button type="submit" class="btn-delete">Cancel Staffing</button>
+                                    <a class="btn-details" asp-page="../Events/Details" asp-route-id="@staffing.Event.EventId">View</a>
+                                    <button type="submit" class="btn-delete">Cancel</button>
                                 </form>
                             </td>
                         </tr>

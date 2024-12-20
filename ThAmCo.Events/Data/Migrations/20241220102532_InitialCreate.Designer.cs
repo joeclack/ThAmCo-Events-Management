@@ -11,8 +11,8 @@ using ThAmCo.Events.Data;
 namespace ThAmCo.Events.Data.Migrations
 {
     [DbContext(typeof(EventsDbContext))]
-    [Migration("20241217100104_AddMoreSeedData")]
-    partial class AddMoreSeedData
+    [Migration("20241220102532_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -252,7 +252,7 @@ namespace ThAmCo.Events.Data.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsCancled")
+                    b.Property<bool>("DidAttend")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("GuestId", "EventId");
@@ -481,7 +481,7 @@ namespace ThAmCo.Events.Data.Migrations
                     b.Property<int>("StaffId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsCancled")
+                    b.Property<bool>("DidAttend")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("EventId", "StaffId");

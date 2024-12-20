@@ -1,77 +1,104 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using ThAmCo.Events.Data;
-using ThAmCo.Events.DTOs;
-using ThAmCo.Events.Models;
-using ThAmCo.Events.Services;
-
-namespace ThAmCo.Events.Pages.Events
+﻿namespace ThAmCo.Events.Pages.Events
 {
-    public class CreateModel : PageModel
-    {
-        private readonly ThAmCo.Events.Data.EventsDbContext _context;
-        private EventService _eventService;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.RazorPages;
+	using System;
+	using System.Collections.Generic;
+	using System.Threading.Tasks;
+	using ThAmCo.Events.DTOs;
+	using ThAmCo.Events.Models;
+	using ThAmCo.Events.Services;
+
+	/// <summary>
+	/// Defines the <see cref="CreateModel" />
+	/// </summary>
+	public class CreateModel : PageModel
+	{
+		/// <summary>
+		/// Defines the _context
+		/// </summary>
+		private readonly ThAmCo.Events.Data.EventsDbContext _context;
+
+		/// <summary>
+		/// Defines the _eventService
+		/// </summary>
+		private EventService _eventService;
+
+		/// <summary>
+		/// Gets or sets the EventTypes
+		/// </summary>
 		public List<EventTypeDTO> EventTypes { get; set; } = [];
+
+		/// <summary>
+		/// Gets or sets the AllAvailableVenues
+		/// </summary>
 		public List<VenueDTO> AllAvailableVenues { get; set; } = [];
-        [BindProperty]
-        public VenueDTO SelectedVenue { get; set; } = new();
+
+		/// <summary>
+		/// Gets or sets the VenueCode
+		/// </summary>
 		[BindProperty]
-		public string SelectedVenueIdentifier { get; set;  }
+		public string VenueCode { get; set; } = string.Empty;
 
-		private void FindVenueFromIdentifier()
-		{
-			var parts = SelectedVenueIdentifier.Split('|');
-			var selectedCode = parts[0];
-			DateTime.TryParse(parts[1], out var selectedDate);
-			
-			SelectedVenue = AllAvailableVenues.FirstOrDefault(v => v.Code == parts[0] && v.Date == selectedDate);
-		}
+		/// <summary>
+		/// Gets or sets the SelectedVenueIdentifier
+		/// </summary>
+		[BindProperty]
+		public string SelectedVenueIdentifier { get; set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CreateModel"/> class.
+		/// </summary>
+		/// <param name="context">The context<see cref="ThAmCo.Events.Data.EventsDbContext"/></param>
+		/// <param name="provider">The provider<see cref="IServiceProvider"/></param>
 		public CreateModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider provider)
-        {
-            _context = context;
-            _eventService = provider.GetRequiredService<EventService>();
-        }
-
-		public async Task<IActionResult> OnGetAsync(string? id)
 		{
-            if (id != null)
-            {
-                Event.EventTypeId = id;
-    			AllAvailableVenues = await _eventService.GetAllAvailableVenues(id);
-            }
-			return Page();
+			_context      = context;
+			_eventService = provider.GetRequiredService<EventService>();
 		}
 
-		[BindProperty]
-        public Event Event { get; set; } = new();
+		/// <summary>
+		/// The OnGetAsync
+		/// </summary>
+		/// <param name="eventType">The eventType<see cref="string"/></param>
+		/// <param name="code">The code<see cref="string"/></param>
+		/// <param name="date">The date<see cref="string"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public async Task OnGetAsync(string eventType, string code, string date)
+		{
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(string eventType)
-        {
-            if(eventType != null)
-            {
-			    AllAvailableVenues = await _eventService.GetAllAvailableVenues(eventType);
-			    FindVenueFromIdentifier();
-			
-			    Event.EventTypeId = eventType;
-			    Event.Date = SelectedVenue.Date;
-                ReservationPostDTO resDTO = new ReservationPostDTO()
-                {
-                    EventDate = SelectedVenue.Date,
-                    StaffId = "0",
-                    VenueCode = SelectedVenue.Code
-                };
-                var result = await _eventService.CreateReservation(resDTO);
-                Event.ReservationId = result;
-            }
-            await _eventService.CreateEvent(Event);
+			if (eventType != null)
+			{
+				DateTime.TryParse(date, out var result);
+				Event.EventTypeId = eventType;
+				VenueCode         = code;
+				Event.Date        = result;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the Event
+		/// </summary>
+		[BindProperty]
+		public Event Event { get; set; } = new();
+
+		/// <summary>
+		/// The OnPostAsync
+		/// </summary>
+		/// <returns>The <see cref="Task{IActionResult}"/></returns>
+		public async Task<IActionResult> OnPostAsync()
+		{
+			ReservationPostDTO resDTO = new ReservationPostDTO()
+			{
+				EventDate = Event.Date,
+				StaffId   = "0",
+				VenueCode = VenueCode
+			};
+			var result          = await _eventService.CreateReservation(resDTO);
+			Event.ReservationId = result;
+
+			await _eventService.CreateEvent(Event);
 			return RedirectToPage("./Index");
-        }
-    }
+		}
+	}
 }

@@ -6,13 +6,12 @@
 }
 
 <div class="page-container">
-    <!-- Header Section -->
+    
     <div class="header">
         <h1>Edit Guest</h1>
         <p>Modify the details of this guest.</p>
     </div>
 
-    <!-- Guest Details Card -->
     <div class="card">
         <h4 class="card-title">Guest Details</h4>
         <form method="post">
@@ -44,7 +43,6 @@
         </form>
     </div>
     
-    <!-- Event Management Card -->
     <div class="card">
         <h4 class="card-title">Manage Events</h4>
 
@@ -73,13 +71,13 @@
             </form>
         }
 
-        @if (Model.Guest.GuestBookings.Any())
+        @if (Model.Guest.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled).Any())
         {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Event Details</th>
-                        <th>Actions</th>
+                        <th style="width: 100%">Event Details</th>
+                        <th style="width: auto">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,11 +86,11 @@
                         <tr>
                             <td>@guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()</td>
                             <td>
-                                <form asp-page-handler="CancelGuestBooking" method="post" class="action-group">
+                                <form asp-page-handler="CancelGuestBooking" method="post" class="action-actions">
                                     <input type="hidden" name="eventId" value="@guestBooking.Event.EventId" />
                                     <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
-                                    <a class="btn-details" asp-page="../Events/Details" asp-route-id="@guestBooking.Event.EventId">View Event</a>
-                                    <button type="submit" class="btn-delete">Cancel Booking</button>
+                                    <a class="btn-details" asp-page="../Events/Details" asp-route-id="@guestBooking.Event.EventId">View</a>
+                                    <button type="submit" class="btn-delete">Cancel</button>
                                 </form>
                             </td>
                         </tr>

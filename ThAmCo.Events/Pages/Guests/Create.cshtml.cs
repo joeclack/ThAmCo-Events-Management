@@ -1,45 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using ThAmCo.Events.Data;
-using ThAmCo.Events.Models;
-using ThAmCo.Events.Services;
-
-namespace ThAmCo.Events.Pages.Guests
+﻿namespace ThAmCo.Events.Pages.Guests
 {
-    public class CreateModel : PageModel
-    {
-        private readonly ThAmCo.Events.Data.EventsDbContext _context;
-        private GuestService _guestService;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.RazorPages;
+	using System;
+	using System.Threading.Tasks;
+	using ThAmCo.Events.Models;
+	using ThAmCo.Events.Services;
 
-        public CreateModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
-        {
-            _context = context;
-            _guestService = serviceProvider.GetRequiredService<GuestService>();
-        }
+	/// <summary>
+	/// Defines the <see cref="CreateModel" />
+	/// </summary>
+	public class CreateModel : PageModel
+	{
+		/// <summary>
+		/// Defines the _context
+		/// </summary>
+		private readonly ThAmCo.Events.Data.EventsDbContext _context;
 
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
+		/// <summary>
+		/// Defines the _guestService
+		/// </summary>
+		private GuestService _guestService;
 
-        [BindProperty]
-        public Guest Guest { get; set; } = default!;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CreateModel"/> class.
+		/// </summary>
+		/// <param name="context">The context<see cref="ThAmCo.Events.Data.EventsDbContext"/></param>
+		/// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/></param>
+		public CreateModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
+		{
+			_context      = context;
+			_guestService = serviceProvider.GetRequiredService<GuestService>();
+		}
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-            await _guestService.CreateGuest(Guest);
+		/// <summary>
+		/// The OnGet
+		/// </summary>
+		/// <returns>The <see cref="IActionResult"/></returns>
+		public IActionResult OnGet()
+		{
+			return Page();
+		}
 
-            return RedirectToPage("./Index");
-        }
-    }
+		/// <summary>
+		/// Gets or sets the Guest
+		/// </summary>
+		[BindProperty]
+		public Guest Guest { get; set; } = default!;
+
+		/// <summary>
+		/// The OnPostAsync
+		/// </summary>
+		/// <returns>The <see cref="Task{IActionResult}"/></returns>
+		public async Task<IActionResult> OnPostAsync()
+		{
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
+			await _guestService.CreateGuest(Guest);
+
+			return RedirectToPage("./Index");
+		}
+	}
 }

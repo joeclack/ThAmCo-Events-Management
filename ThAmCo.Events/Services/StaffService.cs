@@ -1,42 +1,65 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using ThAmCo.Events.Models;
-
-namespace ThAmCo.Events.Services
+﻿namespace ThAmCo.Events.Services
 {
-    public class StaffService
-    {
-        private readonly ThAmCo.Events.Data.EventsDbContext _context;
+	using Microsoft.EntityFrameworkCore;
+	using ThAmCo.Events.Models;
 
-        public StaffService(ThAmCo.Events.Data.EventsDbContext context)
-        {
-            _context = context;
-        }
-        public async Task<List<Staff>> GetAllStaff()
-        {
-            var staffMembers = await _context.Staff
-                .Include(s => s.Staffings)
-                .ThenInclude(s => s.Event)
-                .ToListAsync();
+	/// <summary>
+	/// Defines the <see cref="StaffService" />
+	/// </summary>
+	public class StaffService
+	{
+		/// <summary>
+		/// Defines the _context
+		/// </summary>
+		private readonly ThAmCo.Events.Data.EventsDbContext _context;
 
-            return staffMembers;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StaffService"/> class.
+		/// </summary>
+		/// <param name="context">The context<see cref="ThAmCo.Events.Data.EventsDbContext"/></param>
+		public StaffService(ThAmCo.Events.Data.EventsDbContext context)
+		{
+			_context = context;
+		}
 
-        public async Task<Staff> GetStaffMember(int? staffId)
-        {
-            var staffMember = await _context.Staff
-                .Include(e => e.Staffings)
-                .ThenInclude(s => s.Event)
-                .FirstOrDefaultAsync(s => s.StaffId == staffId);
-            
+		/// <summary>
+		/// The GetAllStaff
+		/// </summary>
+		/// <returns>The <see cref="Task{List{Staff}}"/></returns>
+		public async Task<List<Staff>> GetAllStaff()
+		{
+			var staffMembers = await _context.Staff
+				.Include(s => s.Staffings)
+				.ThenInclude(s => s.Event)
+				.ToListAsync();
 
-            return staffMember;
-        }
+			return staffMembers;
+		}
 
+		/// <summary>
+		/// The GetStaffMember
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int?"/></param>
+		/// <returns>The <see cref="Task{Staff}"/></returns>
+		public async Task<Staff> GetStaffMember(int? staffId)
+		{
+			var staffMember = await _context.Staff
+				.Include(e => e.Staffings)
+				.ThenInclude(s => s.Event)
+				.FirstOrDefaultAsync(s => s.StaffId == staffId);
+
+			return staffMember;
+		}
+
+		/// <summary>
+		/// The GetAvailableStaff
+		/// </summary>
+		/// <param name="_event">The _event<see cref="Event"/></param>
+		/// <returns>The <see cref="Task{List{Staff}}"/></returns>
 		public async Task<List<Staff>> GetAvailableStaff(Event _event)
 		{
 			List<Staff> AvailableStaff = [];
-			var staff = await GetAllStaff();
+			var staff                  = await GetAllStaff();
 
 			foreach (var s in staff)
 			{
@@ -67,96 +90,133 @@ namespace ThAmCo.Events.Services
 			return AvailableStaff;
 		}
 
-
+		/// <summary>
+		/// The DeleteStaffMember
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <returns>The <see cref="Task"/></returns>
 		public async Task DeleteStaffMember(int staffId)
-        {
-            try
-            {
-                var staffMember = await GetStaffMember(staffId);
-                _context.Staff.Remove(staffMember);
-                _context.SaveChanges();
-            }
-            catch
-            {
-                Console.WriteLine("Staff not deleted");
-            }
+		{
+			var staffMember = await GetStaffMember(staffId);
+			_context.Staff.Remove(staffMember);
+			_context.SaveChanges();
+		}
 
-            Console.WriteLine("Staff deleted");
-        }
+		/// <summary>
+		/// The GetStaffMemberEvents
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <returns>The <see cref="Task{List{Event}}"/></returns>
+		internal async Task<List<Event>> GetStaffMemberEvents(int staffId)
+		{
+			var staffMember    = await GetStaffMember(staffId);
+			List<Event> events = staffMember.Staffings.Select(x => x.Event).ToList();
+			return events;
+		}
 
-        internal async Task<List<Event>> GetStaffMemberEvents(int staffId)
-        {
-            var staffMember = await GetStaffMember(staffId);
-            List<Event> events = staffMember.Staffings.Select(x=>x.Event).ToList();
-            return events;
-        }
+		/// <summary>
+		/// The CreateStaffing
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <param name="@event">The event<see cref="Event"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public async Task CreateStaffing(int staffId, Event @event)
+		{
+			if (staffId == 0)
+			{
+				return;
+			}
+			var staff = await GetStaffMember(staffId);
 
-        public async Task CreateStaffing(int staffId, Event @event)
-        {
-            if (staffId == 0)
-            {
-                return;
-            }
-            var staff = await GetStaffMember(staffId);
+			if (staff == null)
+			{
+				return;
+			}
+			
+			staff.Staffings.Add(new Staffing() { Staff = staff, Event = @event });
+			_context.SaveChanges();
+		}
 
-            if(staff == null)
-            {
-                return;
-            }
-            try
-            {
-                staff.Staffings.Add(new Staffing() { Staff = staff, Event = @event });
-                _context.SaveChanges();
-            } catch
-            {
-                Console.WriteLine("StaffMember not added to event staffing");
-            }
+		/// <summary>
+		/// The CancelStaffing
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <param name="eventId">The eventId<see cref="int"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public async Task CancelStaffing(int staffId, int eventId)
+		{
+			var staffMember = await GetStaffMember(staffId);
+			var staffing    = await GetStaffing(staffId, eventId);
 
-            Console.WriteLine("StaffMember added to event staffing");
-        }
-        
-        public async Task CancelStaffing(int staffId, int eventId)
-        {
-            var staffMember  = await GetStaffMember(staffId);
-            var staffing = await GetStaffing(staffId, eventId);
-            try
-            {
-                staffMember.Staffings.Remove(staffing);
-                _context.SaveChanges();
-            }
-            catch
-            {
-            }
-        }
+			staffMember.Staffings.Remove(staffing);
+			_context.SaveChanges();
+		}
 
-        private async Task<Staffing> GetStaffing(int staffId, int eventId)
-        {
-            var staffings = await GetStaffings(staffId, eventId);
-            return staffings.Where(x => x.EventId == eventId).FirstOrDefault();
-        }
+		/// <summary>
+		/// The GetStaffing
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <param name="eventId">The eventId<see cref="int"/></param>
+		/// <returns>The <see cref="Task{Staffing}"/></returns>
+		private async Task<Staffing> GetStaffing(int staffId, int eventId)
+		{
+			var staffings = await GetStaffings(staffId, eventId);
+			return staffings.Where(x => x.EventId == eventId).FirstOrDefault();
+		}
 
-        private async Task<List<Staffing>> GetStaffings(int staffId, int eventId)
-        {
-            var staffMember = await GetStaffMember(staffId);
-            List<Staffing> staffing = staffMember.Staffings.OrderBy(x=>x.Event.Date).ToList();
-            return staffing;
-        }
+		/// <summary>
+		/// The GetStaffings
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <param name="eventId">The eventId<see cref="int"/></param>
+		/// <returns>The <see cref="Task{List{Staffing}}"/></returns>
+		private async Task<List<Staffing>> GetStaffings(int staffId, int eventId)
+		{
+			var staffMember         = await GetStaffMember(staffId);
+			List<Staffing> staffing = staffMember.Staffings.Where(s => s.Event.Date >= DateTime.Today && !s.Event.IsCanceled).OrderBy(x => x.Event.Date).ToList();
+			return staffing;
+		}
 
-        public async Task CreateStaff(Staff staff)
-        {
-            _context.Staff.Add(staff);
-            await _context.SaveChangesAsync();
-        }
+		/// <summary>
+		/// The GetPastStaffings
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <param name="eventId">The eventId<see cref="int"/></param>
+		/// <returns>The <see cref="Task{List{Staffing}}"/></returns>
+		private async Task<List<Staffing>> GetPastStaffings(int staffId, int eventId)
+		{
+			var staffMember         = await GetStaffMember(staffId);
+			List<Staffing> staffing = staffMember.Staffings.Where(s => s.Event.Date < DateTime.Today || s.Event.IsCanceled).OrderBy(x => x.Event.Date).ToList();
+			return staffing;
+		}
 
-        public async Task UpdateStaffAttendance(int staffId, int eventId, bool didAttend)
-        {
-            var staffing = await GetStaffing(staffId, eventId);
-            
-            if (staffing != null)
-            {
-                staffing.DidAttend = didAttend;
-                await _context.SaveChangesAsync();
-            }
-        }
-    }
+		/// <summary>
+		/// The CreateStaff
+		/// </summary>
+		/// <param name="staff">The staff<see cref="Staff"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public async Task CreateStaff(Staff staff)
+		{
+			_context.Staff.Add(staff);
+			await _context.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// The UpdateStaffAttendance
+		/// </summary>
+		/// <param name="staffId">The staffId<see cref="int"/></param>
+		/// <param name="eventId">The eventId<see cref="int"/></param>
+		/// <param name="didAttend">The didAttend<see cref="bool"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public async Task UpdateStaffAttendance(int staffId, int eventId, bool didAttend)
+		{
+			var staffing = await GetStaffing(staffId, eventId);
+
+			if (staffing != null)
+			{
+				staffing.DidAttend = didAttend;
+				await _context.SaveChangesAsync();
+			}
+		}
+	}
 }

@@ -136,7 +136,7 @@ namespace ThAmCo.Venues.Data
                 }.ToList();
                 venues.ForEach(v =>
                 {
-                    var more = Enumerable.Range(0, 90)
+                    var more = Enumerable.Range(0, 400)
                         .Select(i => new Availability
                         {
                             VenueCode = v.Venue,

@@ -4,45 +4,56 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - ThAmCo.Events</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/ThAmCo.Events.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <a class="logo" asp-area="" asp-page="/Index">ThAmCo</a>
-                <ul class="nav-links">
-                    <li><a asp-area="" class="nav-link" asp-page="/Events/Index">Events</a></li>
-                    <li><a asp-area="" class="nav-link" asp-page="/Guests/Index">Guests</a></li>
-                    <li><a asp-area="" class="nav-link" asp-page="/Staff/Index">Staff</a></li>
-                    <li class="dropdown">
-                        <a href="#" id="cateringDropdown" role="button" aria-expanded="false">
-                            Catering
-                        </a>
-                        <ul class="dropdown-menu-links">
-                            <li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/Menus/Index">Menus</a></li>
-                            <li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodItems/Index">Food Items</a></li>
-                            <li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodBookings/Index">Bookings</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+	<header>
+		<nav class="navbar">
+			<div class="nav-container">
+				<a class="logo" asp-area="" asp-page="/Index">ThAmCo</a>
+				<button class="open-hamburger" id="openMobileNavButton">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+						<path stroke="#fff" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14" />
+					</svg>
+				</button>
+				<button class="close-hamburger" id="closeMobileNavButton">
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+						<path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
+					</svg>
 
-    <main role="main">
-        @RenderBody()
-    </main>
+				</button>
+				<ul class="nav-links" id="nav-links">
+					<li><a asp-area="" class="nav-link" asp-page="/Events/Index">Events</a></li>
+					<li><a asp-area="" class="nav-link" asp-page="/Guests/Index">Guests</a></li>
+					<li><a asp-area="" class="nav-link" asp-page="/Staff/Index">Staff</a></li>
+					<li class="dropdown">
+						<a href="#" id="cateringDropdown" role="button" aria-expanded="false">
+							Catering
+						</a>
+						<ul class="dropdown-menu-links">
+							<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/Menus/Index">Menus</a></li>
+							<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodItems/Index">Food Items</a></li>
+							<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodBookings/Index">Bookings</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</header>
 
-    <footer>
-        <div class="footer-container">
-            &copy; 2024 - ThAmCo Events
-        </div>
-    </footer>
+	<main role="main">
+		@RenderBody()
+	</main>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+	<footer>
+		<div class="footer-container">
+			&copy; 2024 - ThAmCo Events
+		</div>
+	</footer>
+
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

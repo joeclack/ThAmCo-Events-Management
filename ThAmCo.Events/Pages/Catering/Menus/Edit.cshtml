@@ -5,13 +5,11 @@
 }
 
 <div class="page-container">
-    <!-- Header Section -->
     <div class="header">
         <h1>Edit Menu</h1>
         <p>Modify the details of this menu.</p>
     </div>
 
-    <!-- Card Container -->
     <div class="card">
         <h4 class="card-title">Menu Details</h4>
         <form method="post">
@@ -24,14 +22,12 @@
                 <span asp-validation-for="Menu.MenuName" class="warning-alert"></span>
             </div>
 
-            <!-- Button Group -->
             <div class="modal-footer">
                 <button type="submit" class="btn-create">Save Changes</button>
                 <a asp-page="Index" class="btn-cancel">Back to List</a>
             </div>
         </form>
 
-        <!-- Food Items Section -->
         <div class="mt-4">
             <h5 class="card-subtitle">Manage Food Items</h5>
 

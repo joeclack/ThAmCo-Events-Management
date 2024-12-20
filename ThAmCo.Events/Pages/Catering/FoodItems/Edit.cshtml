@@ -5,13 +5,11 @@
 }
 
 <div class="page-container">
-    <!-- Header Section -->
     <div class="header">
         <h1>Edit Food Item</h1>
         <p>Modify the details of this food item.</p>
     </div>
 
-    <!-- Card Container -->
     <div class="card">
         <h4 class="card-title">Food Item Details</h4>
         <form method="post">
@@ -36,7 +34,6 @@
                 <span asp-validation-for="FoodItem.UnitPrice" class="warning-alert"></span>
             </div>
 
-            <!-- Button Group -->
             <div class="modal-footer">
                 <button type="submit" class="btn-create">Save Changes</button>
                 <a asp-page="Index" class="btn-cancel">Back to List</a>
