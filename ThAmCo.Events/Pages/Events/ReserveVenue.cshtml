@@ -1,10 +1,12 @@
 ﻿@page
-@model ThAmCo.Events.Pages.IndexModel
-@{
-	ViewData["Title"] = "Event Dashboard";
-}
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
 
-@* <div class="page-container">
+@attribute [Authorize]
+@model ThAmCo.Events.Pages.Events.ReserveVenueModel
+@{
+}
+<div class="page-container">
 	<header class="header">
 		<h1>Start by reserving a venue</h1>
 	</header>
@@ -112,4 +114,4 @@
 			}
 		});
 	});
-</script> *@
+</script>

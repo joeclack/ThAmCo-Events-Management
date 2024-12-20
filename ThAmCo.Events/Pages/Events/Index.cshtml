@@ -1,4 +1,9 @@
 ﻿@page
+
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+
+@attribute [Authorize]
 @model ThAmCo.Events.Pages.Events.IndexModel
 <link rel="stylesheet" href="../Pages/Events/Index.cshtml.css" />
 @{

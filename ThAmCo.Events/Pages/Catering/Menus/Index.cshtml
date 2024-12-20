@@ -1,4 +1,8 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+
+@attribute [Authorize]
 @model MenusModel
 @{
     ViewData["Title"] = "Menu List";

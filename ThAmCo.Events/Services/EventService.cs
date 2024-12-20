@@ -327,7 +327,7 @@
 			var response                                          = await _httpClient.GetAsync($"{VenuesServiceBaseUrl}{AvailabilityEndPoint}" +
 													  $"?eventType={type}" +
 													  $"&beginDate={start}" +
-													  $"&endDate  ={end}");
+													  $"&endDate={end}");
 			if (response.IsSuccessStatusCode)
 			{
 				var jsonResponse = await response.Content.ReadAsStringAsync();

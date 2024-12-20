@@ -1,4 +1,8 @@
 ﻿@page "{id:int}"
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+
+@attribute [Authorize]
 @model ThAmCo.Events.Pages.Events.DetailsModel
 @{
     ViewData["Title"] = "Event Details";

@@ -1,8 +1,9 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+
+@attribute [Authorize]
 @model ThAmCo.Events.Pages.Events.CreateModel
-<link rel="stylesheet" href="../Pages/Events/Create.cshtml.css" />
-
-
 @{
     ViewData["Title"] = "Create";
 }

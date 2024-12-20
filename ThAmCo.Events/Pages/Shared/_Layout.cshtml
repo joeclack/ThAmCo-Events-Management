@@ -24,23 +24,33 @@
 
 				</button>
 				<ul class="nav-links" id="nav-links">
-					<li><a asp-area="" class="nav-link" asp-page="/Events/Index">Events</a></li>
-					<li><a asp-area="" class="nav-link" asp-page="/Guests/Index">Guests</a></li>
-					<li><a asp-area="" class="nav-link" asp-page="/Staff/Index">Staff</a></li>
-					<li class="dropdown">
-						<a href="#" id="cateringDropdown" role="button" aria-expanded="false">
-							Catering
-						</a>
-						<ul class="dropdown-menu-links">
-							<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/Menus/Index">Menus</a></li>
-							<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodItems/Index">Food Items</a></li>
-							<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodBookings/Index">Bookings</a></li>
-						</ul>
-					</li>
+					@if (User.Identity.IsAuthenticated)
+					{
+						<li><a asp-area="" class="nav-link" asp-page="/Events/Index">Events</a></li>
+						<li><a asp-area="" class="nav-link" asp-page="/Guests/Index">Guests</a></li>
+						<li><a asp-area="" class="nav-link" asp-page="/Staff/Index">Staff</a></li>
+						<li class="dropdown">
+							<a href="#" id="cateringDropdown" role="button" aria-expanded="false">
+								Catering
+							</a>
+							<ul class="dropdown-menu-links">
+								<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/Menus/Index">Menus</a></li>
+								<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodItems/Index">Food Items</a></li>
+								<li><a asp-area="" class="dropdown-menu-link" asp-page="/Catering/FoodBookings/Index">Bookings</a></li>
+							</ul>
+						</li>
+
+						<li><a class="nav-link" asp-controller="Account" asp-action="Profile">Hello @User.Identity.Name!</a></li>
+						<li><a class="nav-link" asp-action="Logout" asp-controller="Account" id="qsLogoutBtn">Logout</a></li>
+					} else 
+					{
+						<li><a class="nav-link" asp-action="Login" asp-controller="Account" id="qsLoginBtn">Login</a></li>
+					}
 				</ul>
 			</div>
 		</nav>
 	</header>
+	<partial name="_CookieConsentPartial" />
 
 	<main role="main">
 		@RenderBody()
