@@ -15,9 +15,9 @@
 	</header>
 
 	<section class="create-total-header">
-		<button type="button" class="btn-create">
+		<a type="button" asp-page="/Guests/Create" class="btn-create">
 			Create New Guest
-		</button>
+		</a>
 		@if (Model.Guests.Any())
 		{
 			<span class="count-span">@Model.Guests.Count() guests</span>
@@ -51,7 +51,7 @@
 							</td>
 							<td>
 								<div>
-									@if (item.GuestBookings.Any())
+									@if (item.GuestBookings.Where(x=>!x.Event.IsCanceled && x.Event.Date >= DateTime.Today).Any())
 									{
 										@foreach (var booking in item.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled))
 										{
@@ -98,5 +98,4 @@
 			</div>
 		}
 	</div>
-</div>
 </div>

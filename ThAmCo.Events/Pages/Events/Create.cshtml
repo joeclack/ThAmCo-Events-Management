@@ -14,7 +14,7 @@
         <p>Fill in the details to create a new event.</p>
     </div>
     
-    <div>
+    <div class="card">
         <h4 class="card-title">Event Information</h4>
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
@@ -40,6 +40,7 @@
             </div>
 
             <div class="modal-footer">
+                <input type="hidden" asp-for="Event.EventTypeId"/>
                 <a asp-page="Index" class="btn-cancel">Back to List</a>
                 <button type="submit" class="btn-create">Create Event</button>
             </div>

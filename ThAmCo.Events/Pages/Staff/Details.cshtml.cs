@@ -78,7 +78,7 @@
 				Staff          = staff;
 				var events     = await _staffService.GetStaffMemberEvents(id);
 				UpcomingEvents = events.Where(e => e.Date >= DateTime.Today && !e.IsCanceled).ToList();
-				PastEvents     = events.Where(e => e.Date < DateTime.Today || !e.IsCanceled).ToList();
+				PastEvents     = events.Where(e => e.Date < DateTime.Today || e.IsCanceled).ToList();
 			}
 			return Page();
 		}

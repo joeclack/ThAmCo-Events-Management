@@ -27,7 +27,6 @@ builder.Services.AddHttpClient<CateringService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -44,6 +43,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 	{
+		// endpoints.MapGet("/", context =>
+		// {
+		// 	context.Response.Redirect("/Events");
+		// 	return Task.CompletedTask;
+		// });
 		endpoints.MapDefaultControllerRoute();
 	});
 

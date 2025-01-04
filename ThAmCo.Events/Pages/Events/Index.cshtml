@@ -5,7 +5,7 @@
 
 @attribute [Authorize]
 @model ThAmCo.Events.Pages.Events.IndexModel
-<link rel="stylesheet" href="../Pages/Events/Index.cshtml.css" />
+
 @{
 	ViewData["Title"] = "Events List";
 }
@@ -17,7 +17,7 @@
 	</header>
 
 	<section class="create-total-header">
-		<a asp-page="../Index" class="btn-create" >
+		<a asp-page="/Events/ReserveVenue" class="btn-create" >
 			Create New Event
 		</a>
 		

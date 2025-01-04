@@ -23,28 +23,12 @@
 		/// Defines the _eventService
 		/// </summary>
 		private EventService _eventService;
-
-		/// <summary>
-		/// Gets or sets the EventTypes
-		/// </summary>
-		public List<EventTypeDTO> EventTypes { get; set; } = [];
-
-		/// <summary>
-		/// Gets or sets the AllAvailableVenues
-		/// </summary>
-		public List<VenueDTO> AllAvailableVenues { get; set; } = [];
-
+		
 		/// <summary>
 		/// Gets or sets the VenueCode
 		/// </summary>
 		[BindProperty]
 		public string VenueCode { get; set; } = string.Empty;
-
-		/// <summary>
-		/// Gets or sets the SelectedVenueIdentifier
-		/// </summary>
-		[BindProperty]
-		public string SelectedVenueIdentifier { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CreateModel"/> class.
@@ -64,7 +48,7 @@
 		/// <param name="code">The code<see cref="string"/></param>
 		/// <param name="date">The date<see cref="string"/></param>
 		/// <returns>The <see cref="Task"/></returns>
-		public async Task OnGetAsync(string eventType, string code, string date)
+		public async Task OnGetAsync(string eventType, string code, string date, string location)
 		{
 
 			if (eventType != null)
@@ -73,6 +57,7 @@
 				Event.EventTypeId = eventType;
 				VenueCode         = code;
 				Event.Date        = result;
+				Event.Location    = location;
 			}
 		}
 

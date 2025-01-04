@@ -69,12 +69,9 @@
                                         <td>@e.Date.ToShortDateString()</td>
                                         <td>
                                             <div class="action-group">
-                                                <form asp-page-handler="ViewEvent" class="d-inline">
-                                                    <input type="hidden" name="id" value="@e.EventId" />
-                                                    <button type="submit" id="@e.EventId" class="btn-details">
-                                                        View Event
-                                                    </button>
-                                                </form>
+                                                <a asp-page="../Events/Details" asp-route-id="@e.EventId" class="btn-details">
+                                                    View Event
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -105,10 +102,6 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            <h1 class="card-title">@Model.Staff.FirstName @Model.Staff.LastName</h1>
-        </div>
-
         <div class="card-body">
             <div class="row">
                 <div class="full-width">
@@ -139,12 +132,11 @@
                                         <td>@e.Date.ToShortDateString()</td>
                                         <td>
                                             <div class="action-group">
-                                                <form asp-page-handler="ViewEvent" class="d-inline">
-                                                    <input type="hidden" name="id" value="@e.EventId" />
-                                                    <button type="submit" id="@e.EventId" class="btn-details">
+                                                <div class="action-group">
+                                                    <a asp-page="../Events/Details" asp-route-id="@e.EventId" class="btn-details">
                                                         View Event
-                                                    </button>
-                                                </form>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

@@ -61,12 +61,11 @@
 										<td>@booking.Event.Date.ToShortDateString()</td>
 										<td>
 											<div class="action-group">
-												<form asp-page-handler="ViewEvent" class="d-inline">
-													<input type="hidden" name="id" value="@booking.EventId" />
-													<button type="submit" id="@booking.EventId" class="btn-details">
+												<div class="action-group">
+													<a asp-page="../Events/Details" asp-route-id="@booking.EventId" class="btn-details">
 														View Event
-													</button>
-												</form>
+													</a>
+												</div>
 											</div>
 										</td>
 									</tr>
@@ -130,12 +129,11 @@
 										<td>@booking.Event.Date.ToShortDateString()</td>
 										<td>
 											<div class="action-group">
-												<form asp-page-handler="ViewEvent" class="d-inline">
-													<input type="hidden" name="id" value="@booking.EventId" />
-													<button type="submit" id="@booking.EventId" class="btn-details">
+												<div class="action-group">
+													<a asp-page="../Events/Details" asp-route-id="@booking.EventId" class="btn-details">
 														View Event
-													</button>
-												</form>
+													</a>
+												</div>
 											</div>
 										</td>
 									</tr>
@@ -152,5 +150,5 @@
 				</div>
 			</div>
 		</div>
-
+	</div>
 </div>

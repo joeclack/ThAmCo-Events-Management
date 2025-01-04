@@ -1,15 +1,14 @@
 ﻿@page
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Mvc.RazorPages;
+@using ThAmCo.Events.Models
 
 @attribute [Authorize]
 @model ThAmCo.Events.Pages.Events.EditModel
 
-<link rel="stylesheet" href="../Pages/Events/Create.cshtml.css" />
-
 @{
 	ViewData["Title"] = "Edit Event";
-	bool isEventEditable = !Model.Event.IsCanceled && Model.Event.Date > DateTime.Now;
+	bool isEventEditable = !Model.Event.IsCanceled && Model.Event.Date >= DateTime.Now.Date;
 }
 
 <div class="page-container">
@@ -43,7 +42,7 @@
 				<input disabled asp-for="Event.EventTypeId" class="form-select" />
 			</div>
 
-			@if (isEventEditable)
+			@if (isEventEditable && Model.Event.ReservationId == string.Empty)
 			{
 				<div class="form-group">
 					<label class="card-label">Event Type</label>
@@ -217,7 +216,7 @@
 											<form asp-page-handler="UpdateStaffAttendance" method="post" class="attendance-form">
 												<input type="hidden" name="staffId" value="@staff.StaffId" />
 												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-												<input type="checkbox" name="didAttend" @(staff.DidAttend ? "checked" : "") onchange="this.form.submit()" />
+												@* <input type="checkbox" name="didAttend" @(staff.DidAttend ? "checked" : "") onchange="this.form.submit()" /> *@
 											</form>
 										</td>
 									}
@@ -283,7 +282,7 @@
 											<form asp-page-handler="UpdateGuestAttendance" method="post" class="attendance-form">
 												<input type="hidden" name="guestId" value="@guestBooking.GuestId" />
 												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-												<input type="checkbox" name="didAttend" checked="@guestBooking.DidAttend" onchange="this.form.submit()" />
+												@* <input type="checkbox" name="didAttend" checked="@guestBooking.DidAttend" onchange="this.form.submit()" /> *@
 											</form>
 										</td>
 									}

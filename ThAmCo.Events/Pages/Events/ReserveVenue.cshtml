@@ -75,8 +75,9 @@
 									<td>@venue.Capacity</td>
 									<td>@venue.CostPerHour.ToString("C")</td>
 									<td>
-										<a asp-page="Events/Create" asp-route-eventType="@Model.SelectedEventType"
+										<a asp-page="/Events/Create" asp-route-eventType="@Model.SelectedEventType"
 										   asp-route-code="@venue.Code"
+										   asp-route-location="@venue.Name"
 										   asp-route-date="@venue.Date" class="btn-create">Reserve</a>
 									</td>
 								</tr>

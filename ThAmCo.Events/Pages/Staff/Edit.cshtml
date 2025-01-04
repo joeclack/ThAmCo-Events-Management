@@ -92,7 +92,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var staffing in Model.Staff.Staffings)
+                    @foreach (var staffing in Model.Staff.Staffings.Where(x=>!x.Event.IsCanceled && x.Event.Date >= DateTime.Today))
                     {
                         <tr>
                             <td>@staffing.Event.Name - @staffing.Event.Date.ToShortDateString()</td>

@@ -1,18 +1,8 @@
-@font-face {
-	font-family: Heavitas;
-	src: url('Heavitas.ttf');
-}
-
-@font-face {
-	font-family: Coolvetica;
-	src: url('Coolvetica.otf');
-}
-
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: Coolvetica;
+	font-family: 'Coolvetica Condensed', sans-serif;
 	font-weight: 100;
 }
 
