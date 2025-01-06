@@ -18,8 +18,11 @@
             </div>
             <div class="col-md-6">
                 <div class="card-body">
-                    <h3 class="card-title">@Model.UserProfile.Name</h3>
                     <div class="profile-info">
+                        <div class="info-item">
+                            <span class="card-label">Name:</span>
+                            <span class="card-value">@Model.UserProfile.Name</span>
+                        </div>
                         <div class="info-item">
                             <span class="card-label">Email:</span>
                             <span class="card-value">@Model.UserProfile.EmailAddress</span>

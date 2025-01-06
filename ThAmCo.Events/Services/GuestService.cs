@@ -120,18 +120,29 @@
 		/// <returns>The <see cref="Task"/></returns>
 		public async Task DeleteGuest(int guestId)
 		{
-			try
+			var userToDelete = await GetGuest(guestId);
+			if (userToDelete != null)
 			{
-				var guest = await GetGuest(guestId);
-				_context.Guests.Remove(guest);
-				_context.SaveChanges();
-			}
-			catch
-			{
-				Console.WriteLine("Guest not deleted");
+				AnonymizeUser(userToDelete);
+				_context.Entry(userToDelete).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
 			}
 
-			Console.WriteLine("Guest deleted");
+		}
+
+		public static string Pseudonymise(string value)
+		{
+			return "Anonymised_" + value.GetHashCode();
+		}
+
+		public static void AnonymizeUser(Guest guest)
+		{
+			// Pseudonymise guest data
+			guest.FirstName = Pseudonymise(guest.FirstName);
+			guest.LastName = Pseudonymise(guest.LastName);
+			guest.Email = Pseudonymise(guest.Email);
+			guest.IsDeleted = true;
+
 		}
 
 		/// <summary>

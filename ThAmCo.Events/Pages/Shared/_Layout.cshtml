@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+
+
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
 	<meta charset="utf-8" />
@@ -40,7 +43,13 @@
 							</ul>
 						</li>
 
-						<li><a class="nav-link" asp-controller="Account" asp-action="Profile">Hello @User.Identity.Name!</a></li>
+						
+						var firstName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value 
+										?? "User"; // Fallback if no first name is available
+						
+
+						<li><a class="nav-link" asp-controller="Account" asp-action="Profile">Hello @firstName!</a></li>
+        
 						<li><a class="nav-link" asp-action="Logout" asp-controller="Account" id="qsLogoutBtn">Logout</a></li>
 					} else 
 					{

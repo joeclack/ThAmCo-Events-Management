@@ -11,6 +11,13 @@ namespace ThAmCo.Events.Controllers
 {
 	public class AccountController : Controller
 	{
+		private readonly IConfiguration _configuration;
+
+		public AccountController(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
+
 		public async Task Login(string returnUrl = "/")
 		{
 			var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
@@ -36,12 +43,18 @@ namespace ThAmCo.Events.Controllers
 		[Authorize]
 		public IActionResult Profile()
 		{
-			return View(new UserProfile()
+			string rolesClaimType = _configuration["Autho0:Domain"] + "/roles";
+			var profile = new UserProfile()
 			{
 				Name = User.Identity.Name,
 				EmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-				ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value
-			});
+				ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value,
+				UserRoles = User.Claims
+					.Where(c => c.Type == rolesClaimType)
+					.Select(c => c.Value)
+					.ToList()
+			};
+			return View(profile);
 		}
 
 

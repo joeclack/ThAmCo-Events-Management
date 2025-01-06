@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ThAmCo.Events.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,7 +41,7 @@ namespace ThAmCo.Events.Data.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
-                    IsAnonymised = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,7 +117,7 @@ namespace ThAmCo.Events.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Guests",
-                columns: new[] { "GuestId", "Email", "FirstName", "IsAnonymised", "LastName" },
+                columns: new[] { "GuestId", "Email", "FirstName", "IsDeleted", "LastName" },
                 values: new object[,]
                 {
                     { 1, "alice.green@example.com", "Alice", false, "Green" },

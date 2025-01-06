@@ -70,33 +70,4 @@
             </tbody>
         </table>
     </section>
-
-    <div class="modal" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
-        <div class="modal-content" role="document">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalTitle">Delete Menu</h5>
-                <button type="button" class="close-modal-btn" data-dismiss="modal" aria-label="Close">×</button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this menu? This action cannot be undone.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" data-dismiss="modal">Cancel</button>
-                <form asp-page-handler="DeleteMenu" method="post">
-                    <input type="hidden" name="menuId" id="deleteMenuId" />
-                    <button type="submit" class="btn-delete">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var menuId = button.data('id');
-            $('#deleteMenuId').val(menuId);
-        });
-    });
-</script>
-

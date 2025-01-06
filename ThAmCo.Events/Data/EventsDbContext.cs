@@ -70,30 +70,32 @@ namespace ThAmCo.Events.Data
                 .HasForeignKey(s => s.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-			// Seed data
+			modelBuilder.Entity<Guest>().HasQueryFilter(g => !g.IsDeleted);
 
-			modelBuilder.Entity<Guest>().HasData(
-	            new Guest { GuestId = 1, FirstName = "Alice", LastName = "Green", Email = "alice.green@example.com" },
-	            new Guest { GuestId = 2, FirstName = "Bob", LastName = "Smith", Email = "bob.smith@example.com" },
-	            new Guest { GuestId = 3, FirstName = "Carol", LastName = "Johnson", Email = "carol.johnson@example.com" },
-	            new Guest { GuestId = 4, FirstName = "David", LastName = "Brown", Email = "david.brown@example.com" },
-	            new Guest { GuestId = 5, FirstName = "Ella", LastName = "Davis", Email = "ella.davis@example.com" },
-	            new Guest { GuestId = 6, FirstName = "Frank", LastName = "Wilson", Email = "frank.wilson@example.com" },
-	            new Guest { GuestId = 7, FirstName = "Grace", LastName = "Martinez", Email = "grace.martinez@example.com" },
-	            new Guest { GuestId = 8, FirstName = "Henry", LastName = "Anderson", Email = "henry.anderson@example.com" },
-	            new Guest { GuestId = 9, FirstName = "Ivy", LastName = "Thomas", Email = "ivy.thomas@example.com" },
-	            new Guest { GuestId = 10, FirstName = "Jack", LastName = "Moore", Email = "jack.moore@example.com" },
+            // Seed data
 
-	            new Guest { GuestId = 11, FirstName = "Olivia", LastName = "Miller", Email = "olivia.miller@example.com" },
-	            new Guest { GuestId = 12, FirstName = "William", LastName = "Garcia", Email = "william.garcia@example.com" },
-	            new Guest { GuestId = 13, FirstName = "Noah", LastName = "Rodriguez", Email = "noah.rodriguez@example.com" },
-	            new Guest { GuestId = 14, FirstName = "Sophia", LastName = "Lee", Email = "sophia.lee@example.com" },
-	            new Guest { GuestId = 15, FirstName = "Jacob", LastName = "Nguyen", Email = "jacob.nguyen@example.com" },
-	            new Guest { GuestId = 16, FirstName = "Emma", LastName = "Clark", Email = "emma.clark@example.com" },
-	            new Guest { GuestId = 17, FirstName = "Ethan", LastName = "Hall", Email = "ethan.hall@example.com" },
-	            new Guest { GuestId = 18, FirstName = "Ava", LastName = "Walker", Email = "ava.walker@example.com" },
-	            new Guest { GuestId = 19, FirstName = "Liam", LastName = "Harris", Email = "liam.harris@example.com" },
-	            new Guest { GuestId = 20, FirstName = "Isabella", LastName = "Wright", Email = "isabella.wright@example.com" }
+            modelBuilder.Entity<Guest>().HasData(
+                new Guest { GuestId = 1, FirstName = "Alice", LastName = "Green", Email = "alice.green@example.com", IsDeleted = false },
+                new Guest { GuestId = 2, FirstName = "Bob", LastName = "Smith", Email = "bob.smith@example.com", IsDeleted = false },
+                new Guest { GuestId = 3, FirstName = "Carol", LastName = "Johnson", Email = "carol.johnson@example.com", IsDeleted = false },
+                new Guest { GuestId = 4, FirstName = "David", LastName = "Brown", Email = "david.brown@example.com", IsDeleted = false },
+                new Guest { GuestId = 5, FirstName = "Ella", LastName = "Davis", Email = "ella.davis@example.com", IsDeleted = false },
+                new Guest { GuestId = 6, FirstName = "Frank", LastName = "Wilson", Email = "frank.wilson@example.com", IsDeleted = false },
+                new Guest { GuestId = 7, FirstName = "Grace", LastName = "Martinez", Email = "grace.martinez@example.com", IsDeleted = false },
+                new Guest { GuestId = 8, FirstName = "Henry", LastName = "Anderson", Email = "henry.anderson@example.com", IsDeleted = false },
+                new Guest { GuestId = 9, FirstName = "Ivy", LastName = "Thomas", Email = "ivy.thomas@example.com", IsDeleted = false },
+                new Guest { GuestId = 10, FirstName = "Jack", LastName = "Moore", Email = "jack.moore@example.com", IsDeleted = false },
+
+                new Guest { GuestId = 11, FirstName = "Olivia", LastName = "Miller", Email = "olivia.miller@example.com", IsDeleted = false },
+                new Guest { GuestId = 12, FirstName = "William", LastName = "Garcia", Email = "william.garcia@example.com", IsDeleted = false },
+                new Guest { GuestId = 13, FirstName = "Noah", LastName = "Rodriguez", Email = "noah.rodriguez@example.com", IsDeleted = false },
+                new Guest { GuestId = 14, FirstName = "Sophia", LastName = "Lee", Email = "sophia.lee@example.com", IsDeleted = false },
+                new Guest { GuestId = 15, FirstName = "Jacob", LastName = "Nguyen", Email = "jacob.nguyen@example.com", IsDeleted = false },
+                new Guest { GuestId = 16, FirstName = "Emma", LastName = "Clark", Email = "emma.clark@example.com", IsDeleted = false },
+                new Guest { GuestId = 17, FirstName = "Ethan", LastName = "Hall", Email = "ethan.hall@example.com", IsDeleted = false },
+                new Guest { GuestId = 18, FirstName = "Ava", LastName = "Walker", Email = "ava.walker@example.com", IsDeleted = false },
+                new Guest { GuestId = 19, FirstName = "Liam", LastName = "Harris", Email = "liam.harris@example.com", IsDeleted = false },
+                new Guest { GuestId = 20, FirstName = "Isabella", LastName = "Wright", Email = "isabella.wright@example.com", IsDeleted = false }
             );
 
 			modelBuilder.Entity<Staff>().HasData(

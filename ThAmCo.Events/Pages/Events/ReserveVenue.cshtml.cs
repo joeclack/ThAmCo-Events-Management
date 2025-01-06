@@ -19,16 +19,6 @@ namespace ThAmCo.Events.Pages.Events
 		private readonly EventService _eventsService;
 
 		/// <summary>
-		/// Gets or sets the UpcomingEvents
-		/// </summary>
-		public List<Event> UpcomingEvents { get; set; } = [];
-
-		/// <summary>
-		/// Gets or sets the PastEvents
-		/// </summary>
-		public List<Event> PastEvents { get; set; } = [];
-
-		/// <summary>
 		/// Gets or sets the EventTypes
 		/// </summary>
 		public List<EventTypeDTO> EventTypes { get; set; }
@@ -76,8 +66,6 @@ namespace ThAmCo.Events.Pages.Events
 		public async Task OnGetAsync()
 		{
 			await LoadEventTypes();
-			UpcomingEvents = await _eventsService.GetUpcomingEvents();
-			PastEvents = await _eventsService.GetPastCancelledEvents();
 		}
 
 		/// <summary>
@@ -95,9 +83,6 @@ namespace ThAmCo.Events.Pages.Events
 					StartDate,
 					EndDate
 				);
-
-				UpcomingEvents = await _eventsService.GetUpcomingEvents();
-				PastEvents = await _eventsService.GetPastCancelledEvents();
 
 				return Page();
 			}

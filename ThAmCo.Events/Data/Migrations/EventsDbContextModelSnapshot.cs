@@ -67,7 +67,7 @@ namespace ThAmCo.Events.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsAnonymised")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
@@ -84,7 +84,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 1,
                             Email = "alice.green@example.com",
                             FirstName = "Alice",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Green"
                         },
                         new
@@ -92,7 +92,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 2,
                             Email = "bob.smith@example.com",
                             FirstName = "Bob",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Smith"
                         },
                         new
@@ -100,7 +100,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 3,
                             Email = "carol.johnson@example.com",
                             FirstName = "Carol",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Johnson"
                         },
                         new
@@ -108,7 +108,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 4,
                             Email = "david.brown@example.com",
                             FirstName = "David",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Brown"
                         },
                         new
@@ -116,7 +116,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 5,
                             Email = "ella.davis@example.com",
                             FirstName = "Ella",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Davis"
                         },
                         new
@@ -124,7 +124,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 6,
                             Email = "frank.wilson@example.com",
                             FirstName = "Frank",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Wilson"
                         },
                         new
@@ -132,7 +132,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 7,
                             Email = "grace.martinez@example.com",
                             FirstName = "Grace",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Martinez"
                         },
                         new
@@ -140,7 +140,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 8,
                             Email = "henry.anderson@example.com",
                             FirstName = "Henry",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Anderson"
                         },
                         new
@@ -148,7 +148,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 9,
                             Email = "ivy.thomas@example.com",
                             FirstName = "Ivy",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Thomas"
                         },
                         new
@@ -156,7 +156,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 10,
                             Email = "jack.moore@example.com",
                             FirstName = "Jack",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Moore"
                         },
                         new
@@ -164,7 +164,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 11,
                             Email = "olivia.miller@example.com",
                             FirstName = "Olivia",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Miller"
                         },
                         new
@@ -172,7 +172,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 12,
                             Email = "william.garcia@example.com",
                             FirstName = "William",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Garcia"
                         },
                         new
@@ -180,7 +180,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 13,
                             Email = "noah.rodriguez@example.com",
                             FirstName = "Noah",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Rodriguez"
                         },
                         new
@@ -188,7 +188,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 14,
                             Email = "sophia.lee@example.com",
                             FirstName = "Sophia",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Lee"
                         },
                         new
@@ -196,7 +196,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 15,
                             Email = "jacob.nguyen@example.com",
                             FirstName = "Jacob",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Nguyen"
                         },
                         new
@@ -204,7 +204,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 16,
                             Email = "emma.clark@example.com",
                             FirstName = "Emma",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Clark"
                         },
                         new
@@ -212,7 +212,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 17,
                             Email = "ethan.hall@example.com",
                             FirstName = "Ethan",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Hall"
                         },
                         new
@@ -220,7 +220,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 18,
                             Email = "ava.walker@example.com",
                             FirstName = "Ava",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Walker"
                         },
                         new
@@ -228,7 +228,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 19,
                             Email = "liam.harris@example.com",
                             FirstName = "Liam",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Harris"
                         },
                         new
@@ -236,7 +236,7 @@ namespace ThAmCo.Events.Data.Migrations
                             GuestId = 20,
                             Email = "isabella.wright@example.com",
                             FirstName = "Isabella",
-                            IsAnonymised = false,
+                            IsDeleted = false,
                             LastName = "Wright"
                         });
                 });

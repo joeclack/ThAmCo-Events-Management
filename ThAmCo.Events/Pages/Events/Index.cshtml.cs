@@ -83,7 +83,7 @@
 		{
 			Events                 = await _eventService.GetUpcomingEvents();
 			EventTypes             = await _eventService.GetEventTypes();
-			PastAndCancelledEvents = await _eventService.GetPastCancelledEvents();
+			PastAndCancelledEvents = await _eventService.GetPastCancelledEvents(Events);
 		}
 
 		/// <summary>

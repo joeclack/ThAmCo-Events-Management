@@ -96,9 +96,8 @@
 		/// The GetPastCancelledEvents
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
-		public async Task<List<Event>> GetPastCancelledEvents()
+		public async Task<List<Event>> GetPastCancelledEvents(IList<Event> events)
 		{
-			var events = await GetAllEvents();
 			var pastAndCancelledEvents = events.Where(x => x.IsCanceled || x.Date < DateTime.Today).ToList();
 			return pastAndCancelledEvents;
 		}
