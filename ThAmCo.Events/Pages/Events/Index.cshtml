@@ -7,194 +7,177 @@
 @model ThAmCo.Events.Pages.Events.IndexModel
 
 @{
-	ViewData["Title"] = "Events List";
+    ViewData["Title"] = "Events List";
 }
 
-<div class="page-container">
+<div class="container">
 
-	<header class="header">
-		<h1>Event Management</h1>
-	</header>
+    <header class="text-center my-4">
+        <h1>Event Management</h1>
+    </header>
 
-	<section class="create-total-header">
-		<a asp-page="/Events/ReserveVenue" class="btn-create">
-			Create New Event
-		</a>
+    <section class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-page="/Events/ReserveVenue" class="btn btn-primary">
+            Create New Event
+        </a>
+    </section>
 
-	</section>
+    @if (!Model.Events.Any())
+    {
+        <div role="alert" class="alert alert-warning">
+            <strong>No events found.</strong> Click "Create New Event" to add your first event.
+        </div>
+    }
+    else
+    {
+        <section class="card mb-4">
+            <div class="card-header">
+                <h5>Upcoming Events</h5>
+            </div>
+            <div class="card-body">
+                <span class="badge bg-secondary">@Model.Events.Count() events</span>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Events[0].Name)</th>
+                            <th>@Html.DisplayNameFor(model => model.Events[0].Date)</th>
+                            <th>@Html.DisplayNameFor(model => model.Events[0].Location)</th>
+                            <th>Tags</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Events)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Date.ToShortDateString()</td>
+                                <td>@item.Location</td>
+                                <td>
+                                    <div class="d-flex flex-wrap">
+                                        @if (item.FoodBookingId != -1)
+                                        {
+                                            <span class="badge bg-info mx-1">Food Booked</span>
+                                        }
+                                        @if (item.ReservationId != "")
+                                        {
+                                            <span class="badge bg-success mx-1">Venue Reserved</span>
+                                        }
+                                        <span class="badge bg-primary mx-1">@item.GuestBookings.Count() Guests</span>
+                                        <span class="badge bg-warning mx-1">@item.Staffings.Count() Staff</span>
+                                        @if (item.Staffings.Where(s => s.Staff.IsFirstAider).Any())
+                                        {
+                                            <span class="badge bg-danger mx-1">First Aider</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary mx-1">No First Aider</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <form method="post" class="d-inline" asp-page-handler="CancelEvent">
+                                        <a class="btn btn-outline-primary btn-sm" asp-page="./Edit" asp-route-id="@item.EventId">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <a class="btn btn-outline-info btn-sm" asp-page="./Details" asp-route-id="@item.EventId">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                        <input type="hidden" name="eventId" value="@item.EventId" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
 
-	@if (!Model.Events.Any())
-	{
-		<div role="alert" class="alert warning-alert">
-			<strong>No events found.</strong> Click "Create New Event" to add your first event.
-		</div>
-	}
-	else
-	{
-		<section class="card">
-			<div class="card-header"><h1>Upcoming Events</h1></div>
-			@if (Model.Events.Any())
-			{
-				<span class="count-span">@Model.Events.Count() events</span>
-			}
-			<table class="table">
-				<thead>
-					<tr>
-						<th style="width: 10%;">@Html.DisplayNameFor(model => model.Events[0].Name)</th>
-						<th style="width: 10%;">@Html.DisplayNameFor(model => model.Events[0].Date)</th>
-						<th style="width: 10%;">@Html.DisplayNameFor(model => model.Events[0].Location)</th>
-						<th style="width: 100%;">Tags</th>
-						<th style="width: min-content;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.Events)
-					{
-						<tr>
-							<td>@item.Name</td>
-							<td>@item.Date.ToShortDateString()</td>
-							<td>@item.Location</td>
-							<td>
-								<div class="event-tags">
-									@if (item.FoodBookingId != -1)
-									{
-										<span class="badge first-aider ml-2">Food Booked</span>
-									}
-									@if (item.ReservationId != "")
-									{
-										<span class="badge first-aider ml-2">Venue Reserved</span>
-									}
+    @if (Model.PastAndCancelledEvents.Any())
+    {
+        <section class="card mb-4">
+            <div class="card-header">
+                <h5>Past and Cancelled Events</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Events[0].Name)</th>
+                            <th>@Html.DisplayNameFor(model => model.Events[0].Date)</th>
+                            <th>@Html.DisplayNameFor(model => model.Events[0].Location)</th>
+                            <th>Attendees</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.PastAndCancelledEvents)
+                        {
+                            <tr>
+                                @if (item.IsCanceled)
+                                {
+                                    <td class="text-muted">@item.Name</td>
+                                    <td class="text-muted">@item.Date.ToShortDateString()</td>
+                                    <td class="text-muted">@item.Location</td>
+                                    <td>
+                                        <span class="badge bg-secondary">@item.GuestBookings.Count() Guests</span>
+                                        <span class="badge bg-info">@item.Staffings.Count() Staff</span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>@item.Name</td>
+                                    <td>@item.Date.ToShortDateString()</td>
+                                    <td>@item.Location</td>
+                                    <td>
+                                        <span class="badge bg-primary">@item.GuestBookings.Count() Guests</span>
+                                        <span class="badge bg-warning">@item.Staffings.Count() Staff</span>
+                                    </td>
+                                }
+                                <td>
+                                    <a class="btn btn-outline-primary btn-sm" asp-page="./Edit" asp-route-id="@item.EventId">Edit</a>
+                                    <a class="btn btn-outline-info btn-sm" asp-page="./Details" asp-route-id="@item.EventId">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    }
 
-									<span class="badge Manager ml-2">@item.GuestBookings.Count() Guests</span>
-									<span class="badge Host ml-2">@item.Staffings.Count() Staff</span>
-									@if (item.Staffings.Where(s => s.Staff.IsFirstAider).Any())
-									{
-
-										<span class="badge first-aider ml-2">First aider</span>
-									}
-									else
-									{
-										<span class="badge no-first-aider ml-2">No first aider</span>
-									}
-
-								</div>
-							</td>
-							<td class="person-row">
-								<form method="post" class="action-buttons" asp-page-handler="CancelEvent">
-									<a class="btn btn-edit" asp-page="./Edit" asp-route-id="@item.EventId">
-										<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-										</svg>
-									</a>
-
-									<a class="btn btn-details" asp-page="./Details" asp-route-id="@item.EventId">
-										<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-											<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-										</svg>
-									</a>
-									<input type="hidden" name="eventId" value="@item.EventId" />
-									<button type="submit" class="btn btn-delete">
-										<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-										</svg>
-									</button>
-								</form>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</section>
-	}
-
-
-	@if (Model.PastAndCancelledEvents.Any())
-	{
-		<section class="card mt-1">
-			<div class="card-header">
-				<h1>Past and Cancelled Events</h1>
-			</div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th style="width: 10%;">@Html.DisplayNameFor(model => model.Events[0].Name)</th>
-						<th style="width: 10%;">@Html.DisplayNameFor(model => model.Events[0].Date)</th>
-						<th style="width: 10%;">@Html.DisplayNameFor(model => model.Events[0].Location)</th>
-						<th class="full-width">Attendees</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.PastAndCancelledEvents)
-					{
-						<tr>
-
-							@if (item.IsCanceled)
-							{
-
-								<td class="cancelled">@item.Name</td>
-								<td class="cancelled">@item.Date.ToShortDateString()</td>
-								<td class="cancelled">@item.Location</td>
-								<td>
-									<span class="badge Manager ml-2">@item.GuestBookings.Count() Guests</span>
-									<span class="badge Host ml-2">@item.Staffings.Count() Staff</span>
-								</td>
-
-							}
-							else
-							{
-
-								<td>@item.Name</td>
-								<td>@item.Date.ToShortDateString()</td>
-								<td>@item.Location</td>
-								<td>
-									<span class="badge Manager ml-2">@item.GuestBookings.Count() Guests</span>
-									<span class="badge Host ml-2">@item.Staffings.Count() Staff</span>
-								</td>
-
-							}
-							<td class="person-row">
-								<form method="post" class="action-buttons" asp-page-handler="CancelEvent">
-									<a class="btn-edit" asp-page="./Edit" asp-route-id="@item.EventId">Edit</a>
-									<a class="btn-details" asp-page="./Details" asp-route-id="@item.EventId">Details</a>
-								</form>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</section>
-	}
-
-	<div id="createEventModal" class="modal" aria-hidden="true">
-		<div role="document" class="modal-content">
-			<div class="modal-header">
-				<h2>Create New Event</h2>
-				<button class="close-modal-btn" id="closeCreateModal"></button>
-			</div>
-			<form method="post" asp-page-handler="CreateEventFromEventType">
-				<div class="modal-body">
-					<div class="form-group">
-
-						<select class="form-select" id="eventType" name="eventTypeId" required>
-							<option value="">Select Event Type</option>
-							@foreach (var type in Model.EventTypes)
-							{
-								<option value="@type.Id">@type.Title</option>
-							}
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<a class="btn-info" asp-page="Create">Continue without reservation</a>
-					<a class="btn-cancel" id="cancelCreateModal">Cancel</a>
-					<div class="modal-footer">
-						<button type="submit" class="btn-create">Next</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div id="createEventModal" class="modal fade" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createEventModalLabel">Create New Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" asp-page-handler="CreateEventFromEventType">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="eventType" class="form-label">Event Type</label>
+                            <select class="form-select" id="eventType" name="eventTypeId" required>
+                                <option value="">Select Event Type</option>
+                                @foreach (var type in Model.EventTypes)
+                                {
+                                    <option value="@type.Id">@type.Title</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary" asp-page="Create">Continue without reservation</a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Next</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </div>

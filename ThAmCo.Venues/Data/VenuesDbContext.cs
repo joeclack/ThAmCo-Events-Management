@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
@@ -18,25 +19,21 @@ namespace ThAmCo.Venues.Data
         public DbSet<Reservation> Reservations { get; set; }
 
         private readonly IHostEnvironment _hostEnv;
-        private readonly string DbPath;
+		private readonly IConfiguration _configuration;
 
-        public VenuesDbContext(DbContextOptions<VenuesDbContext> options, IHostEnvironment env) : base(options)
+
+		public VenuesDbContext(DbContextOptions<VenuesDbContext> options, IHostEnvironment env, IConfiguration configuration) : base(options)
         {
             _hostEnv = env;
-
-            var folder = Environment.SpecialFolder.MyDocuments;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "ThAmCo.Venues.db");
-
+            _configuration = configuration;
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlite($"Data Source={DbPath}");
-        }
-
-
-        protected override void OnModelCreating(ModelBuilder builder)
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			base.OnConfiguring(optionsBuilder);
+			var connectionString = _configuration.GetConnectionString("DefaultConnection");
+			optionsBuilder.UseSqlServer(connectionString);
+		}
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 

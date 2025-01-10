@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using ThAmCo.Catering.Models;
@@ -16,24 +17,24 @@ public class CateringDbContext : DbContext
     public DbSet<FoodBooking> FoodBookings => Set<FoodBooking>();
 
     private readonly IHostEnvironment _hostEnv;
-    public string DbPath { get; }
+	private readonly IConfiguration _configuration;
 
-	public CateringDbContext(DbContextOptions<CateringDbContext> options, IHostEnvironment env) : base(options)
-    {
+
+	public CateringDbContext(DbContextOptions<CateringDbContext> options, IHostEnvironment env, IConfiguration configuration) : base(options)
+	{
         _hostEnv = env;
+		_configuration = configuration;
 
-        var folder = Environment.SpecialFolder.MyDocuments;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = Path.Join(path, "ThAmCo.Catering.db");
-    }
+	}
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlite($"Data Source={DbPath}");
-    }
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	{
+		base.OnConfiguring(optionsBuilder);
+		var connectionString = _configuration.GetConnectionString("DefaultConnection");
+		optionsBuilder.UseSqlServer(connectionString);
+	}
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
@@ -58,49 +59,49 @@ public class CateringDbContext : DbContext
             .HasForeignKey(fb => fb.MenuId)
             .OnDelete(DeleteBehavior.Cascade);
 
+		modelBuilder.Entity<FoodItem>().HasData(
+			new FoodItem { FoodItemId = 1, Name = "Classic Chicken Sandwich", Description = "Grilled chicken with lettuce, tomato, and mayo", UnitPrice = 5.99f },
+			new FoodItem { FoodItemId = 2, Name = "Fresh Veggie Wrap", Description = "Whole-wheat wrap with hummus and fresh veggies", UnitPrice = 4.49f },
+			new FoodItem { FoodItemId = 3, Name = "Caesar Salad", Description = "Romaine lettuce with Caesar dressing and croutons", UnitPrice = 3.99f },
+			new FoodItem { FoodItemId = 4, Name = "Grilled Steak", Description = "Juicy grilled steak seasoned perfectly", UnitPrice = 12.99f },
+			new FoodItem { FoodItemId = 5, Name = "Turkey Club Sandwich", Description = "Turkey, bacon, lettuce, tomato on toasted bread", UnitPrice = 6.49f },
+			new FoodItem { FoodItemId = 6, Name = "Ham and Cheese Sandwich", Description = "Ham, cheese, lettuce, and tomato on bread", UnitPrice = 5.19f },
+			new FoodItem { FoodItemId = 7, Name = "Grilled Cheese Sandwich", Description = "Melted cheddar cheese on toasted bread", UnitPrice = 4.99f },
+			new FoodItem { FoodItemId = 8, Name = "BLT Sandwich", Description = "Bacon, lettuce, and tomato on toasted bread", UnitPrice = 5.79f },
+			new FoodItem { FoodItemId = 9, Name = "Fish Tacos", Description = "Grilled fish tacos with slaw and spicy mayo", UnitPrice = 7.99f },
+			new FoodItem { FoodItemId = 10, Name = "Spaghetti Bolognese", Description = "Pasta with rich meat sauce", UnitPrice = 8.99f },
+			new FoodItem { FoodItemId = 11, Name = "Penne Arrabbiata", Description = "Penne pasta in spicy tomato sauce with garlic", UnitPrice = 7.49f },
+			new FoodItem { FoodItemId = 12, Name = "Mushroom Risotto", Description = "Creamy risotto with wild mushrooms", UnitPrice = 9.49f },
+			new FoodItem { FoodItemId = 13, Name = "Chicken Alfredo", Description = "Fettuccine with Alfredo sauce and grilled chicken", UnitPrice = 10.99f },
+			new FoodItem { FoodItemId = 14, Name = "Beef Burritos", Description = "Burritos filled with beef, rice, beans, and cheese", UnitPrice = 6.99f },
+			new FoodItem { FoodItemId = 15, Name = "Vegetarian Tacos", Description = "Veggies, beans, and avocado in tacos", UnitPrice = 5.49f },
+			new FoodItem { FoodItemId = 16, Name = "BBQ Chicken Pizza", Description = "Pizza with BBQ chicken and mozzarella", UnitPrice = 12.99f },
+			new FoodItem { FoodItemId = 17, Name = "Pepperoni Pizza", Description = "Classic pepperoni pizza with marinara", UnitPrice = 11.49f },
+			new FoodItem { FoodItemId = 18, Name = "Margherita Pizza", Description = "Pizza with fresh tomatoes, mozzarella, and basil", UnitPrice = 9.99f },
+			new FoodItem { FoodItemId = 19, Name = "Cheeseburger", Description = "Beef burger with cheddar, lettuce, and tomato", UnitPrice = 6.49f },
+			new FoodItem { FoodItemId = 20, Name = "Veggie Burger", Description = "Veggie patty with lettuce, tomato, and avocado", UnitPrice = 5.99f },
+			new FoodItem { FoodItemId = 21, Name = "Chicken Wings", Description = "Crispy wings with your choice of sauce", UnitPrice = 7.99f },
+			new FoodItem { FoodItemId = 22, Name = "Mozzarella Sticks", Description = "Golden mozzarella sticks with marinara", UnitPrice = 4.99f },
+			new FoodItem { FoodItemId = 23, Name = "Onion Rings", Description = "Crispy onion rings with dipping sauce", UnitPrice = 3.99f },
+			new FoodItem { FoodItemId = 24, Name = "Nachos", Description = "Tortilla chips with cheese, beans, and toppings", UnitPrice = 6.99f },
+			new FoodItem { FoodItemId = 25, Name = "Hummus and Pita Bread", Description = "Hummus served with warm pita bread", UnitPrice = 4.49f },
+			new FoodItem { FoodItemId = 26, Name = "Spaghetti and Meatballs", Description = "Spaghetti with meatballs and marinara sauce", UnitPrice = 8.99f },
+			new FoodItem { FoodItemId = 27, Name = "Lasagna", Description = "Layers of pasta, meat sauce, and cheese", UnitPrice = 9.99f },
+			new FoodItem { FoodItemId = 28, Name = "Chicken Parmesan", Description = "Breaded chicken with marinara sauce and cheese", UnitPrice = 10.99f },
+			new FoodItem { FoodItemId = 29, Name = "Steak", Description = "Grilled steak with your choice of sides", UnitPrice = 12.99f },
+			new FoodItem { FoodItemId = 30, Name = "Salmon", Description = "Grilled salmon with lemon and dill", UnitPrice = 11.99f },
+			new FoodItem { FoodItemId = 31, Name = "French Fries", Description = "Crispy french fries", UnitPrice = 2.99f },
+			new FoodItem { FoodItemId = 32, Name = "Mashed Potatoes", Description = "Creamy mashed potatoes", UnitPrice = 2.49f },
+			new FoodItem { FoodItemId = 33, Name = "Green Beans", Description = "Steamed green beans", UnitPrice = 1.99f },
+			new FoodItem { FoodItemId = 34, Name = "Corn", Description = "Buttered corn", UnitPrice = 1.99f },
+			new FoodItem { FoodItemId = 35, Name = "Salad", Description = "Fresh salad with dressing", UnitPrice = 2.99f },
+			new FoodItem { FoodItemId = 36, Name = "Ice Cream", Description = "Your choice of ice cream", UnitPrice = 2.99f },
+			new FoodItem { FoodItemId = 37, Name = "Cake", Description = "A slice of cake", UnitPrice = 3.99f },
+			new FoodItem { FoodItemId = 38, Name = "Brownies", Description = "Chocolate brownies", UnitPrice = 2.99f },
+			new FoodItem { FoodItemId = 39, Name = "Cookies", Description = "Your choice of cookie", UnitPrice = 1.99f },
+			new FoodItem { FoodItemId = 40, Name = "Fruit Salad", Description = "Fresh fruit salad", UnitPrice = 2.99f }
+		);
 
-        modelBuilder.Entity<FoodItem>().HasData(
-            new FoodItem { FoodItemId = 1, Name = "Classic Chicken Sandwich", Description = "Grilled chicken breast with lettuce, tomato, and mayo on a toasted bun", UnitPrice = 5.99f },
-            new FoodItem { FoodItemId = 2, Name = "Fresh Veggie Wrap", Description = "Whole-wheat wrap with hummus, fresh veggies, and a hint of vinaigrette", UnitPrice = 4.49f },
-            new FoodItem { FoodItemId = 3, Name = "Caesar Salad", Description = "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese", UnitPrice = 3.99f },
-            new FoodItem { FoodItemId = 4, Name = "Grilled Steak", Description = "Juicy grilled steak seasoned to perfection", UnitPrice = 12.99f },
-            new FoodItem { FoodItemId = 5, Name = "Turkey Club Sandwich", Description = "Turkey, bacon, lettuce, and tomato stacked on toasted bread", UnitPrice = 6.49f },
-            new FoodItem { FoodItemId = 6, Name = "Ham and Cheese Sandwich", Description = "Classic ham and cheese sandwich with fresh lettuce and tomato", UnitPrice = 5.19f },
-            new FoodItem { FoodItemId = 7, Name = "Grilled Cheese Sandwich", Description = "Melted cheddar cheese between crispy, toasted bread", UnitPrice = 4.99f },
-            new FoodItem { FoodItemId = 8, Name = "BLT Sandwich", Description = "Bacon, lettuce, and tomato on toasted whole-grain bread", UnitPrice = 5.79f },
-            new FoodItem { FoodItemId = 9, Name = "Fish Tacos", Description = "Two tacos with grilled fish, slaw, and a spicy mayo drizzle", UnitPrice = 7.99f },
-            new FoodItem { FoodItemId = 10, Name = "Spaghetti Bolognese", Description = "Classic Italian pasta with rich meat sauce", UnitPrice = 8.99f },
-            new FoodItem { FoodItemId = 11, Name = "Penne Arrabbiata", Description = "Penne pasta in a spicy tomato sauce with garlic and chili", UnitPrice = 7.49f },
-            new FoodItem { FoodItemId = 12, Name = "Mushroom Risotto", Description = "Creamy risotto with wild mushrooms and Parmesan", UnitPrice = 9.49f },
-            new FoodItem { FoodItemId = 13, Name = "Chicken Alfredo", Description = "Fettuccine pasta with creamy Alfredo sauce and grilled chicken", UnitPrice = 10.99f },
-            new FoodItem { FoodItemId = 14, Name = "Beef Burritos", Description = "Two burritos filled with beef, rice, beans, and cheese", UnitPrice = 6.99f },
-            new FoodItem { FoodItemId = 15, Name = "Vegetarian Tacos", Description = "Two tacos filled with seasoned veggies, beans, and avocado", UnitPrice = 5.49f },
-            new FoodItem { FoodItemId = 16, Name = "BBQ Chicken Pizza", Description = "Pizza topped with BBQ chicken, red onions, and mozzarella", UnitPrice = 12.99f },
-            new FoodItem { FoodItemId = 17, Name = "Pepperoni Pizza", Description = "Classic pepperoni pizza with marinara sauce and mozzarella", UnitPrice = 11.49f },
-            new FoodItem { FoodItemId = 18, Name = "Margherita Pizza", Description = "Pizza with fresh tomatoes, mozzarella, and basil", UnitPrice = 9.99f },
-            new FoodItem { FoodItemId = 19, Name = "Cheeseburger", Description = "Beef burger with melted cheddar, lettuce, and tomato on a brioche bun", UnitPrice = 6.49f },
-            new FoodItem { FoodItemId = 20, Name = "Veggie Burger", Description = "Grilled veggie patty with lettuce, tomato, and avocado on a whole-wheat bun", UnitPrice = 5.99f },
-			new FoodItem { FoodItemId = 21, Name = "Chicken Wings", Description = "Crispy chicken wings with your choice of sauce", UnitPrice = 7.99f },
-	        new FoodItem { FoodItemId = 22, Name = "Mozzarella Sticks", Description = "Golden-brown mozzarella sticks with marinara sauce", UnitPrice = 4.99f },
-	        new FoodItem { FoodItemId = 23, Name = "Onion Rings", Description = "Crispy onion rings with a tangy dipping sauce", UnitPrice = 3.99f },
-	        new FoodItem { FoodItemId = 24, Name = "Nachos", Description = "Crispy tortilla chips topped with cheese, beans, and your choice of toppings", UnitPrice = 6.99f },
-	        new FoodItem { FoodItemId = 25, Name = "Hummus and Pita Bread", Description = "Creamy hummus served with warm pita bread", UnitPrice = 4.49f },
-	        new FoodItem { FoodItemId = 26, Name = "Spaghetti and Meatballs", Description = "Classic spaghetti and meatballs with marinara sauce", UnitPrice = 8.99f },
-	        new FoodItem { FoodItemId = 27, Name = "Lasagna", Description = "Layers of pasta, meat sauce, and cheese", UnitPrice = 9.99f },
-	        new FoodItem { FoodItemId = 28, Name = "Chicken Parmesan", Description = "Breaded chicken cutlet topped with marinara sauce and cheese", UnitPrice = 10.99f },
-	        new FoodItem { FoodItemId = 29, Name = "Steak", Description = "Grilled steak with your choice of sides", UnitPrice = 12.99f },
-	        new FoodItem { FoodItemId = 30, Name = "Salmon", Description = "Grilled salmon with lemon and dill", UnitPrice = 11.99f },
-	        new FoodItem { FoodItemId = 31, Name = "French Fries", Description = "Crispy french fries", UnitPrice = 2.99f },
-	        new FoodItem { FoodItemId = 32, Name = "Mashed Potatoes", Description = "Creamy mashed potatoes", UnitPrice = 2.49f },
-	        new FoodItem { FoodItemId = 33, Name = "Green Beans", Description = "Steamed green beans", UnitPrice = 1.99f },
-	        new FoodItem { FoodItemId = 34, Name = "Corn", Description = "Buttered corn", UnitPrice = 1.99f },
-	        new FoodItem { FoodItemId = 35, Name = "Salad", Description = "Fresh salad with your choice of dressing", UnitPrice = 2.99f },
-	        new FoodItem { FoodItemId = 36, Name = "Ice Cream", Description = "Your choice of flavor", UnitPrice = 2.99f },
-	        new FoodItem { FoodItemId = 37, Name = "Cake", Description = "A slice of cake", UnitPrice = 3.99f },
-	        new FoodItem { FoodItemId = 38, Name = "Brownies", Description = "Chocolate brownies", UnitPrice = 2.99f },
-	        new FoodItem { FoodItemId = 39, Name = "Cookies", Description = "Your choice of cookie", UnitPrice = 1.99f },
-	        new FoodItem { FoodItemId = 40, Name = "Fruit Salad", Description = "Fresh fruit salad", UnitPrice = 2.99f }
-        );
 
 
 		modelBuilder.Entity<Menu>().HasData(

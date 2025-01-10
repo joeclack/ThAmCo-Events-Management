@@ -7,9 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 
-// Register database context with the framework
-builder.Services.AddDbContext<VenuesDbContext>();
-
+builder.Services.AddDbContext<VenuesDbContext>((serviceProvider, options) =>
+{
+	var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+	options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 

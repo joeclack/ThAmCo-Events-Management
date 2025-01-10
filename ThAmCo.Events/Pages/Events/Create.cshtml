@@ -8,43 +8,48 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="page-container">
-    <div class="header">
+<div class="container mt-5">
+    <div class="text-center mb-4">
         <h1>Create New Event</h1>
         <p>Fill in the details to create a new event.</p>
     </div>
-    
+
     <div class="card">
-        <h4 class="card-title">Event Information</h4>
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
+        <div class="card-header">
+            <h4 class="card-title">Event Information</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="VenueCode" class="card-label">Venue Code</label>
-                <input asp-for="VenueCode" readonly class="card-value" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Event.Date" class="card-label">Date</label>
-                <input asp-for="Event.Date" type="date" readonly class="card-value" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Event.Name" class="card-label">Event Name</label>
-                <input asp-for="Event.Name" class="form-select" />
-                <span asp-validation-for="Event.Name" class="warning-alert"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="VenueCode" class="form-label">Venue Code</label>
+                    <input asp-for="VenueCode" readonly class="form-control" />
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Event.Location" class="card-label">Event Location</label>
-                <input asp-for="Event.Location" class="form-select" />
-                <span asp-validation-for="Event.Location" class="warning-alert"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="Event.Date" class="form-label">Date</label>
+                    <input asp-for="Event.Date" type="date" readonly class="form-control" />
+                </div>
 
-            <div class="modal-footer">
-                <input type="hidden" asp-for="Event.EventTypeId"/>
-                <a asp-page="Index" class="btn-cancel">Back to List</a>
-                <button type="submit" class="btn-create">Create Event</button>
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label asp-for="Event.Name" class="form-label">Event Name</label>
+                    <input asp-for="Event.Name" class="form-control" />
+                    <span asp-validation-for="Event.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Event.Location" class="form-label">Event Location</label>
+                    <input asp-for="Event.Location" class="form-control" />
+                    <span asp-validation-for="Event.Location" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

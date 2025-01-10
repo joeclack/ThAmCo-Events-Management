@@ -13,24 +13,23 @@ namespace ThAmCo.Events.Data
         public DbSet<Staffing> Staffing => Set<Staffing>();
 
         private readonly IHostEnvironment _hostEnv;
-        public string DbPath { get; }
+		private readonly IConfiguration _configuration;
 
-        public EventsDbContext(DbContextOptions<EventsDbContext> options, IHostEnvironment env) : base(options)
-        {
-            _hostEnv = env;
+		public EventsDbContext(DbContextOptions<EventsDbContext> options, IHostEnvironment env, IConfiguration configuration)
+			: base(options)
+		{
+			_hostEnv = env;
+			_configuration = configuration;
+		}
 
-            var folder = Environment.SpecialFolder.MyDocuments;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "ThAmCo.Events.db");
-        }
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			base.OnConfiguring(optionsBuilder);
+			var connectionString = _configuration.GetConnectionString("DefaultConnection");
+			optionsBuilder.UseSqlServer(connectionString);
+		}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlite($"Data Source={DbPath}");
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 

@@ -6,113 +6,123 @@
 @model ThAmCo.Events.Pages.Events.ReserveVenueModel
 @{
 }
-<div class="page-container">
-	<header class="header">
-		<h1>Start by reserving a venue</h1>
-	</header>
+<div class="container">
 
-	<div class="card">
-		<form method="post" asp-page-handler="SearchVenues">
-			<div class="form-group">
-				<div class="form-group">
-					<label for="eventType" class="required">Event Type:</label>
-					<select class="form-select" asp-for="SelectedEventType" required>
-						<option value="">Select Event Type</option>
-						@foreach (var type in Model.EventTypes)
-						{
-							<option value="@type.Id">@type.Title</option>
-						}
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="startDate" class="required">From:</label>
-					<input type="date" id="startDate" name="startDate" class="form-select"
-						   value="@Model.StartDate.ToString("yyyy-MM-dd")" required
-						   min="@DateTime.Today.ToString("yyyy-MM-dd")" />
-				</div>
-				<div class="form-group">
-					<label for="endDate" class="required">To:</label>
-					<input type="date" id="endDate" name="endDate" class="form-select"
-						   value="@Model.EndDate.ToString("yyyy-MM-dd")" required
-						   min="@DateTime.Today.ToString("yyyy-MM-dd")" />
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn-create">
-						Search Available Venues
-					</button>
-				</div>
-			</div>
-		</form>
-	</div>
+    <header class="text-center my-4">
+        <h1>Start by Reserving a Venue</h1>
+    </header>
 
-	<div class="row mt-1">
-		<div class="card full-width">
-			<div class="create-total-header">
-				<h2>Available Venues</h2>
-				<span class="count-span">Total: @Model.AvailableVenues?.Count</span>
-			</div>
-			@if (Model.AvailableVenues?.Any() == true)
-			{
-				<div class="scrollable-content">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Description</th>
-								<th>Date</th>
-								<th>Capacity</th>
-								<th>Cost/Hour</th>
-								<th class="action-group-column">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var venue in Model.AvailableVenues)
-							{
-								<tr>
-									<td>@venue.Name</td>
-									<td>@venue.Description</td>
-									<td>@venue.Date.ToString("dd MMM yyyy")</td>
-									<td>@venue.Capacity</td>
-									<td>@venue.CostPerHour.ToString("C")</td>
-									<td>
-										<a asp-page="/Events/Create" asp-route-eventType="@Model.SelectedEventType"
-										   asp-route-code="@venue.Code"
-										   asp-route-location="@venue.Name"
-										   asp-route-date="@venue.Date" class="btn-create">Reserve</a>
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-			}
-			else
-			{
-				<div class="alert warning-alert">
-					No venues available for the selected criteria. Try different dates or event type.
-				</div>
-			}
-		</div>
-	</div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="post" asp-page-handler="SearchVenues">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="eventType" class="form-label required">Event Type:</label>
+                        <select class="form-select" asp-for="SelectedEventType" required>
+                            <option value="">Select Event Type</option>
+                            @foreach (var type in Model.EventTypes)
+                            {
+                                <option value="@type.Id">@type.Title</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="startDate" class="form-label required">From:</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control"
+                               value="@Model.StartDate.ToString("yyyy-MM-dd")" required
+                               min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="endDate" class="form-label required">To:</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control"
+                               value="@Model.EndDate.ToString("yyyy-MM-dd")" required
+                               min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Search Available Venues
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>Available Venues</h2>
+                    <span class="badge bg-secondary">Total: @Model.AvailableVenues?.Count</span>
+                </div>
+                <div class="card-body">
+                    @if (Model.AvailableVenues?.Any() == true)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Date</th>
+                                        <th>Capacity</th>
+                                        <th>Cost/Hour</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var venue in Model.AvailableVenues)
+                                    {
+                                        <tr>
+                                            <td>@venue.Name</td>
+                                            <td>@venue.Description</td>
+                                            <td>@venue.Date.ToString("dd MMM yyyy")</td>
+                                            <td>@venue.Capacity</td>
+                                            <td>@venue.CostPerHour.ToString("C")</td>
+                                            <td class="text-center">
+                                                <a asp-page="/Events/Create" asp-route-eventType="@Model.SelectedEventType"
+                                                   asp-route-code="@venue.Code" asp-route-location="@venue.Name"
+                                                   asp-route-date="@venue.Date" class="btn btn-success btn-sm">
+                                                    Reserve
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            No venues available for the selected criteria. Try different dates or event type.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const startDate = document.getElementById('startDate');
-		const endDate = document.getElementById('endDate');
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
 
-		startDate.addEventListener('change', function() {
-			endDate.min = this.value;
-			if (endDate.value && endDate.value < this.value) {
-				endDate.value = this.value;
-			}
-		});
+        startDate.addEventListener('change', function() {
+            endDate.min = this.value;
+            if (endDate.value && endDate.value < this.value) {
+                endDate.value = this.value;
+            }
+        });
 
-		endDate.addEventListener('change', function() {
-			if (startDate.value && this.value < startDate.value) {
-				this.value = startDate.value;
-			}
-		});
-	});
+        endDate.addEventListener('change', function() {
+            if (startDate.value && this.value < startDate.value) {
+                this.value = startDate.value;
+            }
+        });
+    });
 </script>

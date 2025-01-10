@@ -1,17 +1,22 @@
-using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Services;
 using ThAmCo.Events.Support;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAuth0WebAppAuthentication(options =>
-{
-	options.Domain = builder.Configuration["Auth0:Domain"];
-	options.ClientId = builder.Configuration["Auth0:ClientId"];
-});
-// Add services to the container.
+
 builder.Services.ConfigureSameSiteNoneCookies();
 
+builder.Services.AddDbContext<EventsDbContext>(options =>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>()
+	.AddEntityFrameworkStores<ApplicationDbContext>();
+///.AddDefaultTokenProviders(); /// remove this line
 builder.Services.AddRazorPages(options =>
 {
 	options.Conventions.AuthorizePage("/Events");
@@ -41,16 +46,8 @@ app.UseCookiePolicy();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(endpoints =>
-	{
-		// endpoints.MapGet("/", context =>
-		// {
-		// 	context.Response.Redirect("/Events");
-		// 	return Task.CompletedTask;
-		// });
-		endpoints.MapDefaultControllerRoute();
-	});
 
 app.MapRazorPages();
+
 app.Run();
 

@@ -8,7 +8,7 @@ namespace ThAmCo.Catering.Models
         public int FoodItemId { get; set; }
         [Required]
         public string Name { get; set; }
-        [MaxLength(50), Required]
+        [MaxLength(100), Required]
         public string Description { get; set; }
         [Required]
         public float UnitPrice { get; set; }

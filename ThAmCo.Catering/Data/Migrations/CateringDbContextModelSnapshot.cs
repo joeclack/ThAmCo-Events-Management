@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -14,25 +15,31 @@ namespace ThAmCo.Catering.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ThAmCo.Catering.Models.FoodBooking", b =>
                 {
                     b.Property<int>("FoodBookingId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FoodBookingId"));
 
                     b.Property<int?>("ClientReferenceId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FoodBookingDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("MenuId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("NumberOfGuests")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("FoodBookingId");
 
@@ -45,19 +52,21 @@ namespace ThAmCo.Catering.Data.Migrations
                 {
                     b.Property<int>("FoodItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FoodItemId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("UnitPrice")
-                        .HasColumnType("REAL");
+                        .HasColumnType("real");
 
                     b.HasKey("FoodItemId");
 
@@ -67,119 +76,119 @@ namespace ThAmCo.Catering.Data.Migrations
                         new
                         {
                             FoodItemId = 1,
-                            Description = "Grilled chicken breast with lettuce, tomato, and mayo on a toasted bun",
+                            Description = "Grilled chicken with lettuce, tomato, and mayo",
                             Name = "Classic Chicken Sandwich",
                             UnitPrice = 5.99f
                         },
                         new
                         {
                             FoodItemId = 2,
-                            Description = "Whole-wheat wrap with hummus, fresh veggies, and a hint of vinaigrette",
+                            Description = "Whole-wheat wrap with hummus and fresh veggies",
                             Name = "Fresh Veggie Wrap",
                             UnitPrice = 4.49f
                         },
                         new
                         {
                             FoodItemId = 3,
-                            Description = "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese",
+                            Description = "Romaine lettuce with Caesar dressing and croutons",
                             Name = "Caesar Salad",
                             UnitPrice = 3.99f
                         },
                         new
                         {
                             FoodItemId = 4,
-                            Description = "Juicy grilled steak seasoned to perfection",
+                            Description = "Juicy grilled steak seasoned perfectly",
                             Name = "Grilled Steak",
                             UnitPrice = 12.99f
                         },
                         new
                         {
                             FoodItemId = 5,
-                            Description = "Turkey, bacon, lettuce, and tomato stacked on toasted bread",
+                            Description = "Turkey, bacon, lettuce, tomato on toasted bread",
                             Name = "Turkey Club Sandwich",
                             UnitPrice = 6.49f
                         },
                         new
                         {
                             FoodItemId = 6,
-                            Description = "Classic ham and cheese sandwich with fresh lettuce and tomato",
+                            Description = "Ham, cheese, lettuce, and tomato on bread",
                             Name = "Ham and Cheese Sandwich",
                             UnitPrice = 5.19f
                         },
                         new
                         {
                             FoodItemId = 7,
-                            Description = "Melted cheddar cheese between crispy, toasted bread",
+                            Description = "Melted cheddar cheese on toasted bread",
                             Name = "Grilled Cheese Sandwich",
                             UnitPrice = 4.99f
                         },
                         new
                         {
                             FoodItemId = 8,
-                            Description = "Bacon, lettuce, and tomato on toasted whole-grain bread",
+                            Description = "Bacon, lettuce, and tomato on toasted bread",
                             Name = "BLT Sandwich",
                             UnitPrice = 5.79f
                         },
                         new
                         {
                             FoodItemId = 9,
-                            Description = "Two tacos with grilled fish, slaw, and a spicy mayo drizzle",
+                            Description = "Grilled fish tacos with slaw and spicy mayo",
                             Name = "Fish Tacos",
                             UnitPrice = 7.99f
                         },
                         new
                         {
                             FoodItemId = 10,
-                            Description = "Classic Italian pasta with rich meat sauce",
+                            Description = "Pasta with rich meat sauce",
                             Name = "Spaghetti Bolognese",
                             UnitPrice = 8.99f
                         },
                         new
                         {
                             FoodItemId = 11,
-                            Description = "Penne pasta in a spicy tomato sauce with garlic and chili",
+                            Description = "Penne pasta in spicy tomato sauce with garlic",
                             Name = "Penne Arrabbiata",
                             UnitPrice = 7.49f
                         },
                         new
                         {
                             FoodItemId = 12,
-                            Description = "Creamy risotto with wild mushrooms and Parmesan",
+                            Description = "Creamy risotto with wild mushrooms",
                             Name = "Mushroom Risotto",
                             UnitPrice = 9.49f
                         },
                         new
                         {
                             FoodItemId = 13,
-                            Description = "Fettuccine pasta with creamy Alfredo sauce and grilled chicken",
+                            Description = "Fettuccine with Alfredo sauce and grilled chicken",
                             Name = "Chicken Alfredo",
                             UnitPrice = 10.99f
                         },
                         new
                         {
                             FoodItemId = 14,
-                            Description = "Two burritos filled with beef, rice, beans, and cheese",
+                            Description = "Burritos filled with beef, rice, beans, and cheese",
                             Name = "Beef Burritos",
                             UnitPrice = 6.99f
                         },
                         new
                         {
                             FoodItemId = 15,
-                            Description = "Two tacos filled with seasoned veggies, beans, and avocado",
+                            Description = "Veggies, beans, and avocado in tacos",
                             Name = "Vegetarian Tacos",
                             UnitPrice = 5.49f
                         },
                         new
                         {
                             FoodItemId = 16,
-                            Description = "Pizza topped with BBQ chicken, red onions, and mozzarella",
+                            Description = "Pizza with BBQ chicken and mozzarella",
                             Name = "BBQ Chicken Pizza",
                             UnitPrice = 12.99f
                         },
                         new
                         {
                             FoodItemId = 17,
-                            Description = "Classic pepperoni pizza with marinara sauce and mozzarella",
+                            Description = "Classic pepperoni pizza with marinara",
                             Name = "Pepperoni Pizza",
                             UnitPrice = 11.49f
                         },
@@ -193,56 +202,56 @@ namespace ThAmCo.Catering.Data.Migrations
                         new
                         {
                             FoodItemId = 19,
-                            Description = "Beef burger with melted cheddar, lettuce, and tomato on a brioche bun",
+                            Description = "Beef burger with cheddar, lettuce, and tomato",
                             Name = "Cheeseburger",
                             UnitPrice = 6.49f
                         },
                         new
                         {
                             FoodItemId = 20,
-                            Description = "Grilled veggie patty with lettuce, tomato, and avocado on a whole-wheat bun",
+                            Description = "Veggie patty with lettuce, tomato, and avocado",
                             Name = "Veggie Burger",
                             UnitPrice = 5.99f
                         },
                         new
                         {
                             FoodItemId = 21,
-                            Description = "Crispy chicken wings with your choice of sauce",
+                            Description = "Crispy wings with your choice of sauce",
                             Name = "Chicken Wings",
                             UnitPrice = 7.99f
                         },
                         new
                         {
                             FoodItemId = 22,
-                            Description = "Golden-brown mozzarella sticks with marinara sauce",
+                            Description = "Golden mozzarella sticks with marinara",
                             Name = "Mozzarella Sticks",
                             UnitPrice = 4.99f
                         },
                         new
                         {
                             FoodItemId = 23,
-                            Description = "Crispy onion rings with a tangy dipping sauce",
+                            Description = "Crispy onion rings with dipping sauce",
                             Name = "Onion Rings",
                             UnitPrice = 3.99f
                         },
                         new
                         {
                             FoodItemId = 24,
-                            Description = "Crispy tortilla chips topped with cheese, beans, and your choice of toppings",
+                            Description = "Tortilla chips with cheese, beans, and toppings",
                             Name = "Nachos",
                             UnitPrice = 6.99f
                         },
                         new
                         {
                             FoodItemId = 25,
-                            Description = "Creamy hummus served with warm pita bread",
+                            Description = "Hummus served with warm pita bread",
                             Name = "Hummus and Pita Bread",
                             UnitPrice = 4.49f
                         },
                         new
                         {
                             FoodItemId = 26,
-                            Description = "Classic spaghetti and meatballs with marinara sauce",
+                            Description = "Spaghetti with meatballs and marinara sauce",
                             Name = "Spaghetti and Meatballs",
                             UnitPrice = 8.99f
                         },
@@ -256,7 +265,7 @@ namespace ThAmCo.Catering.Data.Migrations
                         new
                         {
                             FoodItemId = 28,
-                            Description = "Breaded chicken cutlet topped with marinara sauce and cheese",
+                            Description = "Breaded chicken with marinara sauce and cheese",
                             Name = "Chicken Parmesan",
                             UnitPrice = 10.99f
                         },
@@ -305,14 +314,14 @@ namespace ThAmCo.Catering.Data.Migrations
                         new
                         {
                             FoodItemId = 35,
-                            Description = "Fresh salad with your choice of dressing",
+                            Description = "Fresh salad with dressing",
                             Name = "Salad",
                             UnitPrice = 2.99f
                         },
                         new
                         {
                             FoodItemId = 36,
-                            Description = "Your choice of flavor",
+                            Description = "Your choice of ice cream",
                             Name = "Ice Cream",
                             UnitPrice = 2.99f
                         },
@@ -350,12 +359,14 @@ namespace ThAmCo.Catering.Data.Migrations
                 {
                     b.Property<int>("MenuId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MenuId"));
 
                     b.Property<string>("MenuName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("MenuId");
 
@@ -397,10 +408,10 @@ namespace ThAmCo.Catering.Data.Migrations
             modelBuilder.Entity("ThAmCo.Catering.Models.MenuFoodItem", b =>
                 {
                     b.Property<int>("MenuId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("FoodItemId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("MenuId", "FoodItemId");
 
