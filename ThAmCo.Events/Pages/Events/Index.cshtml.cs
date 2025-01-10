@@ -36,6 +36,7 @@
 		/// </summary>
 		private readonly ThAmCo.Events.Data.EventsDbContext _context;
 
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="IndexModel"/> class.
 		/// </summary>

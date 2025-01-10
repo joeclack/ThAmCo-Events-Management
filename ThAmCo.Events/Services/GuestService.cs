@@ -1,5 +1,6 @@
 ﻿namespace ThAmCo.Events.Services
 {
+	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.EntityFrameworkCore;
 	using ThAmCo.Events.Models;
 
@@ -60,6 +61,13 @@
 		{
 			var guest                   = await GetGuest(guestId);
 			List<GuestBooking> bookings = guest.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled).OrderBy(x => x.Event.Date).ToList();
+			return bookings;
+		}
+
+		internal async Task<List<GuestBooking>> GetAllGuestBookings(int guestId)
+		{
+			var guest = await GetGuest(guestId);
+			List<GuestBooking> bookings = guest.GuestBookings.ToList();
 			return bookings;
 		}
 
@@ -205,13 +213,15 @@
 		/// <returns>The <see cref="Task"/></returns>
 		public async Task UpdateGuestAttendance(int guestId, int eventId, bool didAttend)
 		{
-			var guestBooking = await GetBooking(guestId, eventId);
+			var bookings = await GetAllGuestBookings(guestId);
+			var booking = bookings.Where(x => x.EventId == eventId).FirstOrDefault();
 
-			if (guestBooking != null)
+			if (booking != null)
 			{
-				guestBooking.DidAttend = didAttend;
+				booking.DidAttend = didAttend;
 				await _context.SaveChangesAsync();
 			}
+			
 		}
 	}
 }

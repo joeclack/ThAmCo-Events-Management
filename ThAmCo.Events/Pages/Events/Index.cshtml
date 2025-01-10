@@ -17,10 +17,10 @@
 	</header>
 
 	<section class="create-total-header">
-		<a asp-page="/Events/ReserveVenue" class="btn-create" >
+		<a asp-page="/Events/ReserveVenue" class="btn-create">
 			Create New Event
 		</a>
-		
+
 	</section>
 
 	@if (!Model.Events.Any())
@@ -28,7 +28,8 @@
 		<div role="alert" class="alert warning-alert">
 			<strong>No events found.</strong> Click "Create New Event" to add your first event.
 		</div>
-	} else
+	}
+	else
 	{
 		<section class="card">
 			<div class="card-header"><h1>Upcoming Events</h1></div>
@@ -63,6 +64,19 @@
 									{
 										<span class="badge first-aider ml-2">Venue Reserved</span>
 									}
+
+									<span class="badge Manager ml-2">@item.GuestBookings.Count() Guests</span>
+									<span class="badge Host ml-2">@item.Staffings.Count() Staff</span>
+									@if (item.Staffings.Where(s => s.Staff.IsFirstAider).Any())
+									{
+
+										<span class="badge first-aider ml-2">First aider</span>
+									}
+									else
+									{
+										<span class="badge no-first-aider ml-2">No first aider</span>
+									}
+
 								</div>
 							</td>
 							<td class="person-row">
@@ -93,12 +107,14 @@
 			</table>
 		</section>
 	}
-	
+
 
 	@if (Model.PastAndCancelledEvents.Any())
 	{
 		<section class="card mt-1">
-			<div class="card-header"><h1>Past and Cancelled Events</h1></div>
+			<div class="card-header">
+				<h1>Past and Cancelled Events</h1>
+			</div>
 			<table class="table">
 				<thead>
 					<tr>

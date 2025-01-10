@@ -541,6 +541,11 @@ a[class^="btn"] {
 	color: white;
 }
 
+.badge.no-first-aider {
+	background-color: hsl(0, 100%, 50%);
+	color: white;
+}
+
 .badge.Manager {
 	background-color: #ef7878;
 	color: white;
