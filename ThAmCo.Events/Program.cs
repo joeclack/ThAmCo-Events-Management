@@ -14,9 +14,10 @@ builder.Services.AddDbContext<EventsDbContext>(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>()
-	.AddEntityFrameworkStores<ApplicationDbContext>();
-///.AddDefaultTokenProviders(); /// remove this line
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+	.AddEntityFrameworkStores<ApplicationDbContext>()
+	.AddDefaultTokenProviders();
+
 builder.Services.AddRazorPages(options =>
 {
 	options.Conventions.AuthorizePage("/Events");
@@ -48,6 +49,42 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+using(var scope = app.Services.CreateScope())
+{
+	var roleManager =
+		scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+	var roles = new[] { "Super", "Team Leader", "Manager" };
+
+	foreach(var role in roles)
+	{
+		if(!await roleManager.RoleExistsAsync(role))
+		{
+			await roleManager.CreateAsync(new IdentityRole(role));
+		}
+	}
+}
+
+using (var scope = app.Services.CreateScope())
+{
+	var userManager =
+		scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+	var email = "manager@manager.com";
+	var password  = "Test123!";
+
+	if (await userManager.FindByEmailAsync(email) == null)
+	{
+		var user = new IdentityUser();
+		user.UserName = email;
+		user.Email = email;
+
+		await userManager.CreateAsync(user, password);
+
+		await userManager.AddToRoleAsync(user, "Manager");
+	}
+}
 
 app.Run();
 

@@ -8,7 +8,7 @@
     ViewData["Title"] = "Event Details";
 }
 
-<div class="page-container">
+<div class="container">
     <div class="card">
         <div class="card-header">
             <h1 class="card-title">@Model.Event.Name</h1>
@@ -18,43 +18,43 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3>Event Information</h3>
-                    <div class="list-item">
-                        <span class="card-label">Date</span>
-                        <span class="card-value">@Model.Event.Date.ToString("dddd, dd MMMM yyyy")</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Date:</span>
+                        <span>@Model.Event.Date.ToString("dddd, dd MMMM yyyy")</span>
                     </div>
-                    <div class="list-item">
-                        <span class="card-label">Location</span>
-                        <span class="card-value">@Model.Event.Location</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Location:</span>
+                        <span>@Model.Event.Location</span>
                     </div>
-                    <div class="list-item">
-                        <span class="card-label">Event Type</span>
-                        <span class="card-value">@Model.Event.EventTypeId</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Event Type:</span>
+                        <span>@Model.Event.EventTypeId</span>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <h3>Reservation Details</h3>
-                    <div class="list-item">
-                        <span class="card-label">Reservation Ref</span>
-                        <span class="card-value">@Model.Reservation.Reference</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Reservation Ref:</span>
+                        <span>@Model.Reservation.Reference</span>
                     </div>
-                    <div class="list-item">
-                        <span class="card-label">Venue</span>
-                        <span class="card-value">@Model.Reservation.VenueCode</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Venue:</span>
+                        <span>@Model.Reservation.VenueCode</span>
                     </div>
                 </div>
             </div>
 
-            <div class="row mt-1">
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <h3>Attendees</h3>
-                    <div class="list-item">
-                        <span class="card-label">Guests</span>
-                        <span class="card-value">@Model.Event.GuestBookings.Count</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Guests:</span>
+                        <span>@Model.Event.GuestBookings.Count</span>
                     </div>
-                    <div class="list-item">
-                        <span class="card-label">Staff</span>
-                        <span class="card-value">@Model.Event.Staffings.Count</span>
+                    <div class="mb-2">
+                        <span class="fw-bold">Staff:</span>
+                        <span>@Model.Event.Staffings.Count</span>
                     </div>
                 </div>
 
@@ -62,30 +62,30 @@
                     <h3>Catering</h3>
                     @if (Model.FoodBookingMenuInfo != null)
                     {
-                        <div class="list-item">
-                            <span class="card-label">Menu</span>
-                            <span class="card-value">@Model.FoodBookingMenuInfo.MenuName</span>
+                        <div class="mb-2">
+                            <span class="fw-bold">Menu:</span>
+                            <span>@Model.FoodBookingMenuInfo.MenuName</span>
                         </div>
                     }
                     else
                     {
-                        <div class="alert warning-alert">No food booking</div>
+                        <div class="alert alert-warning">No food booking</div>
                     }
                 </div>
             </div>
 
             @if (Model.IsUnderStaffed || !Model.FirstAiderPresent)
             {
-                <div class="row mt-1">
+                <div class="row mt-3">
                     <div class="col-12">
                         <h3>Alerts</h3>
                         @if (Model.IsUnderStaffed)
                         {
-                            <div class="alert error-alert">@Model.UnderStaffAlertText</div>
+                            <div class="alert alert-danger">@Model.UnderStaffAlertText</div>
                         }
                         @if (!Model.FirstAiderPresent)
                         {
-                            <div class="alert error-alert">Please add a staff member who is a first aider</div>
+                            <div class="alert alert-danger">Please add a staff member who is a first aider</div>
                         }
                     </div>
                 </div>
@@ -93,18 +93,17 @@
         </div>
 
         <div class="card-footer">
-            <div class="action-buttons">
-                <a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.Event.EventId">
+            <div class="d-flex justify-content-start">
+                <a asp-page="./Edit" class="btn btn-primary me-2" asp-route-id="@Model.Event.EventId">
                     Edit Event
                 </a>
-                <a asp-page="./Index" class="btn-cancel">
+                <a asp-page="./Index" class="btn btn-secondary">
                     Back to List
                 </a>
             </div>
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

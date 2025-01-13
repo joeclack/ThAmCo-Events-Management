@@ -1,5 +1,6 @@
 ﻿namespace ThAmCo.Events.Pages.Events
 {
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
 	using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@
 	/// <summary>
 	/// Defines the <see cref="EditModel" />
 	/// </summary>
+
 	public class EditModel : PageModel
 	{
 		/// <summary>

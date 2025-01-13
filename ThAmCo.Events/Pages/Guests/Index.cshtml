@@ -5,97 +5,94 @@
 @attribute [Authorize]
 @model ThAmCo.Events.Pages.Guests.IndexModel
 @{
-	ViewData["Title"] = "Guests List";
+    ViewData["Title"] = "Guests List";
 }
 
-<div class="page-container">
+<div class="container">
 
-	<header class="header">
-		<h1>Guest Management</h1>
-	</header>
+    <header class="mb-4">
+        <h1 class="display-4">Guest Management</h1>
+    </header>
 
-	<section class="create-total-header">
-		<a type="button" asp-page="/Guests/Create" class="btn-create">
-			Create New Guest
-		</a>
-		@if (Model.Guests.Any())
-		{
-			<span class="count-span">@Model.Guests.Count() guests</span>
-		}
-	</section>
-	<div class="card-body">
-		@if (Model.Guests.Any())
-		{
-			<table class="table">
-				<thead>
-					<tr>
-						<th style="width: 5%;">Name</th>
-						<th style="width: 5%;">Email</th>
-						<th style="width: 100%;">Bookings</th>
-						<th style="width: min-content">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.Guests)
-					{
-						<tr>
-							<td>
-								<div>
-									<p>@item.FirstName @item.LastName</p>
-								</div>
-							</td>
-							<td>
-								<div>
-									<p>@item.Email</p>
-								</div>
-							</td>
-							<td>
-								<div>
-									@if (item.GuestBookings.Where(x=>!x.Event.IsCanceled && x.Event.Date >= DateTime.Today).Any())
-									{
-										@foreach (var booking in item.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled))
-										{
-											<span class="badge">@booking.Event.Name</span>
-										}
-									}
-									else
-									{
-										<span class="text-muted">No bookings</span>
-									}
-								</div>
-							</td>
-							<td class="person-row">
-								<form method="post" class="action-buttons" asp-page-handler="DeleteGuest">
-									<a class="btn btn-edit" asp-page="./Edit" asp-route-id="@item.GuestId">
-										<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-										</svg>
-									</a>
+    <section class="d-flex justify-content-between align-items-center mb-3">
+        <a type="button" asp-page="/Guests/Create" class="btn btn-primary">
+            Create New Guest
+        </a>
+        @if (Model.Guests.Any())
+        {
+            <span class="badge bg-secondary">@Model.Guests.Count() guests</span>
+        }
+    </section>
 
-									<a class="btn btn-details" asp-page="./Details" asp-route-id="@item.GuestId">
-										<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-											<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-										</svg>
-									</a>
-									<input type="hidden" name="guestId" value="@item.GuestId" />
-									<button type="submit" class="btn btn-delete">
-										<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-										</svg>
-									</button>
-								</form>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		}
-		else
-		{
-			<div class="alert info-alert">
-				No guests found. Click "Create New Guest" to add your first guest.
-			</div>
-		}
-	</div>
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Guests.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Name</th>
+                            <th style="width: 5%;">Email</th>
+                            <th style="width: 100%;">Bookings</th>
+                            <th style="width: min-content">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Guests)
+                        {
+                            <tr>
+                                <td>
+                                    <p>@item.FirstName @item.LastName</p>
+                                </td>
+                                <td>
+                                    <p>@item.Email</p>
+                                </td>
+                                <td>
+                                    @if (item.GuestBookings.Where(x => !x.Event.IsCanceled && x.Event.Date >= DateTime.Today).Any())
+                                    {
+                                        @foreach (var booking in item.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled))
+                                        {
+                                            <span class="badge bg-info me-2">@booking.Event.Name</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No bookings</span>
+                                    }
+                                </td>
+                                <td class="d-flex">
+                                    <form method="post" class="action-buttons" asp-page-handler="DeleteGuest">
+                                        <a class="btn btn-warning me-2" asp-page="./Edit" asp-route-id="@item.GuestId">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                            </svg>
+                                        </a>
+
+                                        <a class="btn btn-info me-2" asp-page="./Details" asp-route-id="@item.GuestId">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                                <path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+                                        </a>
+                                        <input type="hidden" name="guestId" value="@item.GuestId" />
+                                        <button type="submit" class="btn btn-danger">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No guests found. Click "Create New Guest" to add your first guest.
+                </div>
+            }
+        </div>
+    </div>
 </div>

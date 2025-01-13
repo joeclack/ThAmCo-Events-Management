@@ -8,30 +8,28 @@
     ViewData["Title"] = "Menu List";
 }
 
-<div class="page-container">
-    <header class="header">
-        <h1>Menu Management</h1>
+<div class="container mt-5">
+    <header class="mb-4">
+        <h1 class="display-4">Menu Management</h1>
     </header>
 
-    <section class="create-total-header">
-        <a asp-page="Create" class="btn-create">
-            Create New Menu
-        </a>
+    <section class="d-flex justify-content-between align-items-center mb-3">
+        <a asp-page="Create" class="btn btn-primary">Create New Menu</a>
         @if (Model.Menus.Any())
         {
-            <span class="count-span">@Model.Menus.Count() menus</span>
+            <span class="badge badge-info">@Model.Menus.Count() menus</span>
         }
     </section>
 
     @if (!Model.Menus.Any())
     {
-        <div role="alert" class="alert warning-alert">
+        <div role="alert" class="alert alert-warning">
             <strong>No menus found.</strong> Click "Create New Menu" to add your first menu.
         </div>
     }
 
     <section>
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th style="width: 100%;">Menu Name</th>
@@ -43,22 +41,22 @@
                 {
                     <tr>
                         <td>@item.MenuName</td>
-                        <td class="person-row">
-                            <form method="post" class="action-buttons" asp-page-handler="DeleteMenu">
-                                <a class="btn btn-edit" asp-page="./Edit" asp-route-id="@item.MenuId">
+                        <td class="text-right">
+                            <form method="post" class="d-inline" asp-page-handler="DeleteMenu">
+                                <a class="btn btn-warning btn-sm" asp-page="./Edit" asp-route-id="@item.MenuId">
                                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
                                     </svg>
                                 </a>
 
-                                <a class="btn btn-details" asp-page="./Details" asp-route-id="@item.MenuId">
+                                <a class="btn btn-info btn-sm" asp-page="./Details" asp-route-id="@item.MenuId">
                                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                         <path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
                                 </a>
                                 <input type="hidden" name="menuId" value="@item.MenuId" />
-                                <button type="submit" class="btn btn-delete">
+                                <button type="submit" class="btn btn-danger btn-sm">
                                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                     </svg>
@@ -71,25 +69,28 @@
         </table>
     </section>
 
-    <div class="modal" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
-        <div class="modal-content" role="document">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalTitle">Delete Menu</h5>
-                <button type="button" class="close-modal-btn" data-dismiss="modal" aria-label="Close">×</button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this menu? This action cannot be undone.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" data-dismiss="modal">Cancel</button>
-                <form asp-page-handler="DeleteMenu" method="post">
-                    <input type="hidden" name="menuId" id="deleteMenuId" />
-                    <button type="submit" class="btn-delete">Delete</button>
-                </form>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationModalTitle">Delete Menu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this menu? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form asp-page-handler="DeleteMenu" method="post">
+                        <input type="hidden" name="menuId" id="deleteMenuId" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
@@ -99,4 +100,3 @@
         });
     });
 </script>
-
