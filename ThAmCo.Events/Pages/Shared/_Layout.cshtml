@@ -17,7 +17,7 @@
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<i class="bi bi-list text-white"></i>
 				</button>
-				<div class="collapse navbar-collapse" id="navbarNav">
+				<div class="collapse navbar-collapse justify-content-between" id="navbarNav">
 					<ul class="navbar-nav">
 						@if (User.Identity.IsAuthenticated)
 						{
@@ -30,29 +30,34 @@
 							<li class="nav-item">
 								<a class="nav-link" asp-area="" asp-page="/Staff/Index">Staff</a>
 							</li>
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="cateringDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-									Catering
-								</a>
-								<ul class="dropdown-menu" aria-labelledby="cateringDropdown">
-									<li><a class="dropdown-item" asp-area="" asp-page="/Catering/Menus/Index">Menus</a></li>
-									<li><a class="dropdown-item" asp-area="" asp-page="/Catering/FoodItems/Index">Food Items</a></li>
-									<li><a class="dropdown-item" asp-area="" asp-page="/Catering/FoodBookings/Index">Bookings</a></li>
-								</ul>
+							<li class="nav-item">
+								<a class="nav-link" asp-area="" asp-page="/Catering/Menus/Index">Menus</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/Identity/Account/Manage/Index">Account</a>
+								<a class="nav-link" asp-area="" asp-page="/Catering/FoodItems/Index">Food Items</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" asp-area="" asp-page="/Catering/FoodBookings/Index">Food Bookings</a>
+							</li>
+						}
+
+
+					</ul>
+					<ul class="navbar-nav">
+						@if (User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item">
+								<a class="nav-link " href="/Identity/Account/Manage/Index">Account</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="/Identity/Account/Logout">Logout</a>
-							</li>
-						}
-						else
-						{
+						</li>
+						} else{
 							<li class="nav-item">
 								<a class="nav-link" href="/Identity/Account/Login">Login</a>
 							</li>
 						}
+
 					</ul>
 				</div>
 			</div>

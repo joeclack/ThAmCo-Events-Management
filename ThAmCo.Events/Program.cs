@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Services;
@@ -30,7 +32,10 @@ builder.Services.AddTransient<StaffService>();
 builder.Services.AddTransient<EventService>();
 builder.Services.AddTransient<GuestService>();
 builder.Services.AddHttpClient<CateringService>();
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

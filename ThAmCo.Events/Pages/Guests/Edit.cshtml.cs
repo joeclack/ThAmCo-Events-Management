@@ -1,5 +1,6 @@
 ﻿namespace ThAmCo.Events.Pages.Guests
 {
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
 	using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@
 	/// <summary>
 	/// Defines the <see cref="EditModel" />
 	/// </summary>
+	[Authorize(Roles = "Manager")]
 	public class EditModel : PageModel
 	{
 		/// <summary>

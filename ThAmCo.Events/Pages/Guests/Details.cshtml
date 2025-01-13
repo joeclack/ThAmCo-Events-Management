@@ -62,7 +62,7 @@
 										<td>
 											<div class="action-group">
 												<div class="action-group">
-													<a asp-page="../Events/Details" asp-route-id="@booking.EventId" class="btn-details">
+													<a asp-page="../Events/Details" asp-route-id="@booking.EventId" class="btn btn-info">
 														View Event
 													</a>
 												</div>
@@ -85,10 +85,10 @@
 
 		<div class="card-footer">
 			<div class="action-buttons">
-				<a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.Guest.GuestId">
+				<a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.Guest.GuestId">
 					Edit Guest
 				</a>
-				<a asp-page="./Index" class="btn-cancel">
+				<a asp-page="./Index" class="btn btn-secondary">
 					Back to List
 				</a>
 			</div>

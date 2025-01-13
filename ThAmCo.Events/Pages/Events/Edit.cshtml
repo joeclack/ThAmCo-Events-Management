@@ -3,9 +3,7 @@
 @using Microsoft.AspNetCore.Mvc.RazorPages;
 @using ThAmCo.Events.Models
 
-@attribute [Authorize(Roles = "Administrator")]
 @model ThAmCo.Events.Pages.Events.EditModel
-
 @{
 	ViewData["Title"] = "Edit Event";
 	bool isEventEditable = !Model.Event.IsCanceled && Model.Event.Date >= DateTime.Now.Date;
@@ -29,13 +27,13 @@
 
 			<div class="form-group">
 				<label asp-for="Event.Name" class="card-label">Event Name</label>
-				<input asp-for="Event.Name" class="form-select" disabled="@(!isEventEditable)" />
+				<input asp-for="Event.Name" required class="form-select" disabled="@(!isEventEditable)" />
 				<span asp-validation-for="Event.Name" class="warning-alert"></span>
 			</div>
 
 			<div class="form-group">
 				<label asp-for="Event.Location" class="card-label">Event Location</label>
-				<input asp-for="Event.Location" class="form-select" disabled="@(!isEventEditable)" />
+				<input asp-for="Event.Location" required class="form-select" disabled="@(!isEventEditable)" />
 				<span asp-validation-for="Event.Location" class="warning-alert"></span>
 			</div>
 
@@ -44,7 +42,7 @@
 				<input disabled asp-for="Event.EventTypeId" class="form-select" />
 			</div>
 
-			@if (isEventEditable && Model.Event.ReservationId == string.Empty)
+			@* @if (isEventEditable && Model.Event.ReservationId == string.Empty)
 			{
 				<div class="form-group">
 					<label class="card-label">Event Type</label>
@@ -56,13 +54,13 @@
 						}
 					</select>
 				</div>
-			}
+			} *@
 
 			@if (isEventEditable)
 			{
 				<div class="modal-footer">
-					<button type="submit" class="btn-create">Save Changes</button>
-					<a asp-page="Index" class="btn-cancel">Back to List</a>
+					<button type="submit" class="btn btn-success">Save Changes</button>
+					<a asp-page="Index" class="btn btn-secondary">Back to List</a>
 				</div>
 			}
 		</form>
@@ -90,20 +88,21 @@
 								}
 							</select>
 						</div>
-						<button type="submit" class="btn-create">Assign To Event</button>
+						<button type="submit" class="btn btn-success">Assign To Event</button>
 					</form>
 				}
+				
 				@if (Model.Event.Staffings.Any())
 				{
 					<table class="table">
 						<thead>
 							<tr>
 								<th>Staff Name</th>
-								@if (!isEventEditable)
-								{
+								@* @if (!isEventEditable) *@
+								@* { *@
 
-									<th>Attended</th>
-								}
+								@* 	<th>Attended</th> *@
+								@* } *@
 								<th>Actions</th>
 							</tr>
 						</thead>
@@ -113,24 +112,35 @@
 								<tr>
 									<td>@staff.Staff.FirstName @staff.Staff.LastName</td>
 
-									@if (!isEventEditable)
-									{
-										<td>
-											<form asp-page-handler="UpdateStaffAttendance" method="post" class="attendance-form">
-												<input type="hidden" name="staffId" value="@staff.StaffId" />
-												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-												<input type="checkbox" name="didAttend" @(staff.DidAttend ? "checked" : "") onchange="this.form.submit()" />
-											</form>
-										</td>
-									}
+									@* @if (!isEventEditable) *@
+									@* { *@
+									@* 	<td> *@
+									@* 		<form asp-page-handler="UpdateStaffAttendance" method="post" class="attendance-form"> *@
+									@* 			<input type="hidden" name="staffId" value="@staff.StaffId" /> *@
+									@* 			<input type="hidden" name="eventId" value="@Model.Event.EventId" /> *@
+									@* 			<input type="checkbox" name="didAttend" @(staff.DidAttend ? "checked" : "") onchange="this.form.submit()" /> *@
+									@* 		</form> *@
+									@* 	</td> *@
+									@* } *@
 									<td class="action-buttons">
-										<a class="btn-details" asp-page="../Staff/Details" asp-route-id="@staff.StaffId">Details</a>
+										<a class="btn btn-info" asp-page="../Staff/Details" asp-route-id="@staff.StaffId">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+												<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+												<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+											</svg>
+										</a>
 										@if (isEventEditable)
 										{
-											<form asp-page-handler="RemoveStaffing" method="post">
+											<form method="post" class="d-flex" asp-page-handler="RemoveStaffing">
 												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
 												<input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
-												<button type="submit" class="btn-delete">Remove</button>
+												
+
+												<button type="submit" class=" btn btn-danger">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+														<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+													</svg>
+												</button>
 											</form>
 										}
 									</td>
@@ -157,7 +167,7 @@
 								}
 							</select>
 						</div>
-						<button type="submit" class="btn-create">Assign To Event</button>
+						<button type="submit" class="btn btn-success">Assign To Event</button>
 					</form>
 				}
 				@if (Model.Event.GuestBookings.Any())
@@ -193,13 +203,22 @@
 										</td>
 									}
 									<td class="action-buttons">
-										<a class="btn-details" asp-page="../Guests/Details" asp-route-id="@guestBooking.GuestId">Details</a>
+										<a class="btn btn-info" asp-page="../Guests/Details" asp-route-id="@guestBooking.GuestId">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+												<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+												<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+											</svg>
+										</a>
 										@if (isEventEditable)
 										{
-											<form asp-page-handler="CancelGuestBooking" method="post">
+											<form method="post" class="d-flex" asp-page-handler="CancelGuestBooking">
 												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
 												<input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
-												<button type="submit" class="btn-delete">Cancel Booking</button>
+												<button type="submit" class=" btn btn-danger">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+														<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+													</svg>
+												</button>
 											</form>
 										}
 									</td>
@@ -224,7 +243,7 @@
 				else
 				{
 					<div>
-						<button type="button" id="openCreateReservationModal" class="btn-create">
+						<button type="button" id="openCreateReservationModal" class="btn btn-success">
 							Create Reservation
 						</button>
 					</div>
@@ -261,7 +280,7 @@
 				<form asp-page-handler="DeleteReservation" method="post">
 					<input type="hidden" name="reservationId" asp-for="Event.ReservationId" />
 					<input type="hidden" asp-for="Event.EventId" name="eventId" />
-					<button type="submit" class="btn-delete">Delete</button>
+					<button type="submit" class="btn btn-danger">Delete</button>
 				</form>
 			}
 		</div>
@@ -274,7 +293,7 @@
 			@if (Model.FoodBooking == null)
 			{
 				<div>
-					<button type="button" class="btn-create" id="openBookMenuModal">
+					<button type="button" class="btn btn-success" id="openBookMenuModal">
 						Book Food
 					</button>
 				</div>
@@ -294,24 +313,39 @@
 							}
 						</select>
 					</div>
-					<button type="submit" class="btn-edit">
+					<button type="submit" class="btn btn-secondary">
 						Update Food Booking
 					</button>
-					<a asp-page="../Catering/Menus/Details" asp-route-id="@Model.FoodBooking.MenuId" class="btn-details">
+					<a asp-page="../Catering/Menus/Details" asp-route-id="@Model.FoodBooking.MenuId" class="btn btn-info">
 						View Menu
 					</a>
 				</form>
 				<form asp-page-handler="CancelFoodBooking" method="post" class="mt-1">
 					<input type="hidden" name="foodBookingId" asp-for="Event.FoodBookingId" />
 					<input type="hidden" asp-for="Event.EventId" name="eventId" />
-					<button type="submit" class="btn-delete">
+					<button type="submit" class="btn btn-danger">
 						Delete
 					</button>
 				</form>
 			}
 		</div>
 	}
+
+	@if(User.IsInRole("Team Leader") || User.IsInRole("Manager")){
+
+		<div class="card">
+			<h4 class="card-title">Permanently delete event</h4>
+			<span class="alert alert-danger">This action cannot be undone</span>
+			<form asp-page-handler="PermDeleteEvent" method="post" class="mt-1">
+				<input type="hidden" asp-for="Event.EventId" name="eventId" />
+				<button type="submit" class="btn btn-danger">
+					Delete
+				</button>
+			</form>
+		</div>
+	}
 </div>
+
 
 <div id="createReservationModal" class="modal" aria-hidden="true">
 	<div class="modal-content">
@@ -333,14 +367,14 @@
 				</select>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="cancelCreateReservationModal" class="btn-cancel">Cancel</button>
-				<button type="submit" class="btn-create">Reserve</button>
+				<button type="button" id="cancelCreateReservationModal" class="btn btn btn-secondary">Cancel</button>
+				<button type="submit" class="btn btn-success">Reserve</button>
 			</div>
 		</form>
 	</div>
 </div>
 
-<div class="modal" id="bookMenuModal" aria-hidden="true">
+<div class="modal " id="bookMenuModal" aria-hidden="true">
 	<div class="modal-content">
 		<div class="modal-header">
 			<h2>Choose Menu</h2>
@@ -360,8 +394,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a class="btn-cancel" id="cancelBookMenuModal">Cancel</a>
-				<button type="submit" class="btn-create">Book</button>
+				<a class="btn btn btn-secondary" id="cancelBookMenuModal">Cancel</a>
+				<button type="submit" class="btn btn-success">Book</button>
 			</div>
 		</form>
 	</div>

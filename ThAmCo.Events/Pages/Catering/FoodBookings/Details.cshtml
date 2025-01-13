@@ -21,7 +21,7 @@
 				<p>The requested booking could not be found.</p>
 			</div>
 			<div class="modal-footer">
-				<a asp-page="./Index" class="btn-cancel">Back to List</a>
+				<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
 			</div>
 		}
 		else
@@ -73,10 +73,10 @@
 
 			<div class="card-footer">
 				<div class="action-buttons">
-					<a asp-page="./Edit" class="btn-edit" asp-route-id="@Model.FoodBooking.FoodBookingId">
+					<a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.FoodBooking.FoodBookingId">
 						Edit Booking
 					</a>
-					<a asp-page="./Index" class="btn-cancel">Back to List</a>
+					<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
 				</div>
 			</div>
 		}

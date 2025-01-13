@@ -8,7 +8,7 @@
     ViewData["Title"] = "Event Details";
 }
 
-<div class="container">
+<div class="page-container">
     <div class="card">
         <div class="card-header">
             <h1 class="card-title">@Model.Event.Name</h1>
@@ -93,8 +93,8 @@
         </div>
 
         <div class="card-footer">
-            <div class="d-flex justify-content-start">
-                <a asp-page="./Edit" class="btn btn-primary me-2" asp-route-id="@Model.Event.EventId">
+            <div class="d-flex">
+                <a asp-page="./Edit" class="btn btn-primary mx-2" asp-route-id="@Model.Event.EventId">
                     Edit Event
                 </a>
                 <a asp-page="./Index" class="btn btn-secondary">

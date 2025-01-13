@@ -92,6 +92,8 @@
 			return _event;
 		}
 
+
+
 		/// <summary>
 		/// The GetPastCancelledEvents
 		/// </summary>
@@ -134,6 +136,13 @@
 			staffMember.Staffings.Remove(staffing);
 			_context.SaveChanges();
 
+		}
+
+		public async Task PermDeleteEvent(int eventId)
+		{
+			var _event = await GetEvent(eventId);
+			_context.Events.Remove(_event);
+			await _context.SaveChangesAsync();
 		}
 
 		/// <summary>

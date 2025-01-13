@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ThAmCo.Events.DTOs;
@@ -6,11 +7,13 @@ using ThAmCo.Events.Services;
 
 namespace ThAmCo.Events.Pages.Events
 {
-    public class ReserveVenueModel : PageModel
+	[Authorize(Roles = "Manager")]
+	public class ReserveVenueModel : PageModel
     {
 		/// <summary>
 		/// Defines the _logger
 		/// </summary>
+		
 		private readonly ILogger<IndexModel> _logger;
 
 		/// <summary>
@@ -95,9 +98,6 @@ namespace ThAmCo.Events.Pages.Events
 					StartDate,
 					EndDate
 				);
-
-				UpcomingEvents = await _eventsService.GetUpcomingEvents();
-				PastEvents = await _eventsService.GetPastCancelledEvents();
 
 				return Page();
 			}

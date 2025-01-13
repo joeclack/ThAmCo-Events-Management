@@ -12,7 +12,8 @@
 	/// <summary>
 	/// Defines the <see cref="EditModel" />
 	/// </summary>
-
+	[Authorize(Roles = "Manager")]
+	
 	public class EditModel : PageModel
 	{
 		/// <summary>
@@ -115,11 +116,11 @@
 		/// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/></param>
 		public EditModel(ThAmCo.Events.Data.EventsDbContext context, IServiceProvider serviceProvider)
 		{
-			_context         = context;
-			_eventService    = serviceProvider.GetRequiredService<EventService>();
-			_staffService    = serviceProvider.GetRequiredService<StaffService>();
-			_guestService    = serviceProvider.GetRequiredService<GuestService>();
-			_cateringService = serviceProvider.GetRequiredService<CateringService>();
+			_context				= context;
+			_eventService      = serviceProvider.GetRequiredService<EventService>();
+			_staffService			= serviceProvider.GetRequiredService<StaffService>();
+			_guestService		= serviceProvider.GetRequiredService<GuestService>();
+			_cateringService	= serviceProvider.GetRequiredService<CateringService>();
 		}
 
 		/// <summary>
@@ -360,6 +361,12 @@
 		{
 			await _guestService.UpdateGuestAttendance(guestId, eventId, didAttend);
 			return Redirect($"../Events/Edit?id={eventId}");
+		}
+
+		public async Task<IActionResult> OnPostPermDeleteEvent(int eventId)
+		{
+			await _eventService.PermDeleteEvent(eventId);
+			return Redirect($"../Events");
 		}
 
 		/// <summary>

@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Net;
 using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Data
 {
-    public class EventsDbContext : DbContext
+	public class EventsDbContext : DbContext
     {
         public DbSet<Event> Events => Set<Event>();
         public DbSet<Guest> Guests => Set<Guest>();

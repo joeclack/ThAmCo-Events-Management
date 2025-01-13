@@ -15,8 +15,8 @@
 
     <section class="create-total-header">
         <div>
-            <a asp-page="/Catering/FoodItems/Create" class="btn-create">Create Food Item</a>
-            <a asp-page="/Catering/Menus/Create" class="btn-create">Create Menu</a>
+            <a asp-page="/Catering/FoodItems/Create" class="btn btn-success">Create Food Item</a>
+            <a asp-page="/Catering/Menus/Create" class="btn btn-success">Create Menu</a>
         </div>
         <span class="count-span">@Model.UpcomingFoodBookings.Count() upcoming bookings</span>
     </section>
@@ -54,7 +54,7 @@
                                 <td>@booking.NumberOfGuests</td>
                                 <td class="action-buttons">
                                     <a asp-page="/Catering/FoodBookings/Details" class="btn-details" asp-route-id="@booking.FoodBookingId">Details</a>
-                                    <a asp-page="/Catering/FoodBookings/Edit" class="btn-edit" asp-route-id="@booking.FoodBookingId">Edit</a>
+                                    <a asp-page="/Catering/FoodBookings/Edit" class="btn btn-primary" asp-route-id="@booking.FoodBookingId">Edit</a>
                                 </td>
                             </tr>
                         }

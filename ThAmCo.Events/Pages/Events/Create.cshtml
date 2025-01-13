@@ -34,15 +34,16 @@
 
                 <div class="mb-3">
                     <label asp-for="Event.Name" class="form-label">Event Name</label>
-                    <input asp-for="Event.Name" class="form-control" />
+                    <input asp-for="Event.Name" class="form-control" required />
                     <span asp-validation-for="Event.Name" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Event.Location" class="form-label">Event Location</label>
-                    <input asp-for="Event.Location" class="form-control" />
+                    <input asp-for="Event.Location" class="form-control" required />
                     <span asp-validation-for="Event.Location" class="text-danger"></span>
                 </div>
+                <input asp-for="Event.EventTypeId" hidden  />
 
                 <div class="d-flex justify-content-between">
                     <a asp-page="Index" class="btn btn-secondary">Back to List</a>

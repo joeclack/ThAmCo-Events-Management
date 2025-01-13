@@ -1,5 +1,6 @@
 namespace ThAmCo.Events.Pages.Catering.FoodItems
 {
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
 	using ThAmCo.Events.DTOs;
@@ -8,6 +9,7 @@ namespace ThAmCo.Events.Pages.Catering.FoodItems
 	/// <summary>
 	/// Defines the <see cref="EditModel" />
 	/// </summary>
+	[Authorize(Roles = "Manager")]
 	public class EditModel : PageModel
 	{
 		/// <summary>

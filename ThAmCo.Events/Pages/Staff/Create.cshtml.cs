@@ -1,5 +1,6 @@
 ﻿namespace ThAmCo.Events.Pages.Staff
 {
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
 	using System;
@@ -9,6 +10,7 @@
 	/// <summary>
 	/// Defines the <see cref="CreateModel" />
 	/// </summary>
+	[Authorize(Roles = "Manager")]
 	public class CreateModel : PageModel
 	{
 		/// <summary>

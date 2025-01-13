@@ -6,107 +6,116 @@
 @model ThAmCo.Events.Pages.Guests.EditModel
 
 @{
-    ViewData["Title"] = "Edit Guest";
+	ViewData["Title"] = "Edit Guest";
 }
 
 <div class="page-container">
-    
-    <div class="header">
-        <h1>Edit Guest</h1>
-        <p>Modify the details of this guest.</p>
-    </div>
 
-    <div class="card">
-        <h4 class="card-title">Guest Details</h4>
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
-            <input type="hidden" asp-for="Guest.GuestId" />
-            
-            <div class="form-group">
-                <label asp-for="Guest.FirstName" class="card-label"></label>
-                <input asp-for="Guest.FirstName" class="form-select" />
-                <span asp-validation-for="Guest.FirstName" class="warning-alert"></span>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="Guest.LastName" class="card-label"></label>
-                <input asp-for="Guest.LastName" class="form-select" />
-                <span asp-validation-for="Guest.LastName" class="warning-alert"></span>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="Guest.Email" class="card-label"></label>
-                <input asp-for="Guest.Email" class="form-select" />
-                <span asp-validation-for="Guest.Email" class="warning-alert"></span>
-            </div>
-            
-            <div class="modal-footer">
-                <button type="submit" class="btn-create">Save Changes</button>
-                <a asp-page="Index" class="btn-cancel">Back to List</a>
-            </div>
-        </form>
-    </div>
-    
-    <div class="card">
-        <h4 class="card-title">Manage Events</h4>
+	<div class="header">
+		<h1>Edit Guest</h1>
+		<p>Modify the details of this guest.</p>
+	</div>
 
-        @if (!Model.AvailableEvents.Any())
-        {
-            <div class="alert warning-alert">No more events available to assign guest to.</div>
-        }
-        else
-        {
-            <form asp-page-handler="CreateGuestBooking" method="post">
-                <input type="hidden" name="guestId" value="@Model.Guest.GuestId" />
+	<div class="card">
+		<h4 class="card-title">Guest Details</h4>
+		<form method="post">
+			<div asp-validation-summary="ModelOnly" class="alert error-alert"></div>
+			<input type="hidden" asp-for="Guest.GuestId" />
 
-                <div class="form-group">
-                    <label for="eventList" class="card-label">Assign to Event</label>
-                    <div class="d-flex gap-2">
-                        <select id="eventList" class="form-select" name="eventId">
-                            <option value="">Select Event</option>
-                            @foreach (var _event in Model.AvailableEvents)
-                            {
-                                <option value="@_event.EventId">@_event.Name</option>
-                            }
-                        </select>
-                        <button type="submit" class="btn-create mt-1">Assign To Event</button>
-                    </div>
-                </div>
-            </form>
-        }
+			<div class="form-group">
+				<label asp-for="Guest.FirstName" class="card-label"></label>
+				<input asp-for="Guest.FirstName" class="form-select" />
+				<span asp-validation-for="Guest.FirstName" class="warning-alert"></span>
+			</div>
 
-        @if (Model.Guest.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled).Any())
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width: 100%">Event Details</th>
-                        <th style="width: auto">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var guestBooking in Model.Guest.GuestBookings.Where(x=>!x.Event.IsCanceled && x.Event.Date >= DateTime.Today))
-                    {
-                        <tr>
-                            <td>@guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()</td>
-                            <td>
-                                <form asp-page-handler="CancelGuestBooking" method="post" class="action-actions">
-                                    <input type="hidden" name="eventId" value="@guestBooking.Event.EventId" />
-                                    <input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
-                                    <a class="btn-details" asp-page="../Events/Details" asp-route-id="@guestBooking.Event.EventId">View</a>
-                                    <button type="submit" class="btn-delete">Cancel</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
+			<div class="form-group">
+				<label asp-for="Guest.LastName" class="card-label"></label>
+				<input asp-for="Guest.LastName" class="form-select" />
+				<span asp-validation-for="Guest.LastName" class="warning-alert"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Guest.Email" class="card-label"></label>
+				<input asp-for="Guest.Email" class="form-select" />
+				<span asp-validation-for="Guest.Email" class="warning-alert"></span>
+			</div>
+
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-success">Save Changes</button>
+				<a asp-page="Index" class="btn btn-secondary">Back to List</a>
+			</div>
+		</form>
+	</div>
+
+	<div class="card">
+		<h4 class="card-title">Manage Events</h4>
+
+		@if (!Model.AvailableEvents.Any())
+		{
+			<div class="alert warning-alert">No more events available to assign guest to.</div>
+		}
+		else
+		{
+			<form asp-page-handler="CreateGuestBooking" class="form-group" method="post">
+				<input type="hidden" name="guestId" value="@Model.Guest.GuestId" />
+				<div class="form-group">
+					<select id="eventList" class="form-select" name="eventId">
+						<option value="">Select Event</option>
+						@foreach (var _event in Model.AvailableEvents)
+						{
+							<option value="@_event.EventId">@_event.Name</option>
+						}
+					</select>
+				</div>
+					<button type="submit" class="btn btn-success">Assign To Event</button>
+			</form>
+
+		}
+
+		@if (Model.Guest.GuestBookings.Where(gb => gb.Event.Date >= DateTime.Today && !gb.Event.IsCanceled).Any())
+		{
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="width: 100%">Event Details</th>
+						<th style="width: auto">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var guestBooking in Model.Guest.GuestBookings.Where(x => !x.Event.IsCanceled && x.Event.Date >= DateTime.Today))
+					{
+						<tr>
+							<td>@guestBooking.Event.Name - @guestBooking.Event.Date.ToShortDateString()</td>
+							<td>
+
+								<form method="post" class="d-flex" asp-page-handler="CancelGuestBooking">
+									<input type="hidden" name="eventId" value="@guestBooking.Event.EventId" />
+									<input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
+
+									<a class="btn btn-info mx-1" asp-page="./Details" asp-route-id="@guestBooking.Event.EventId">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+											<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+											<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+										</svg>
+									</a>
+
+									<button type="submit" class="mx-1 btn btn-danger">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+											<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+										</svg>
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+	</div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }
