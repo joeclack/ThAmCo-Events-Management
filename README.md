@@ -1,21 +1,147 @@
-ThreeAmigos Corp is an event management company that arranges and oversees a range of
-functions, including conferences, parties and weddings for its clients. As well as logistics,
-ThreeAmigos Corp organises the catering and staffing for events.
+README for ThAmCo Events Web Application
 
-You have been given the responsibility of constructing a new intranet-based prototype system for
-the events management team. The internal system will be used by ThreeAmigos Corp staff to
-perform the key operations:
+Project Overview
 
-  1. Manage event details;
-  2. Assign staff to events;
-  3. Attach guests to events;
-  4. Assign food orders to events.
+This project involves the development of an intranet-based event management system for ThAmCo (Three Amigos Corp), an event management company. The system enables staff to manage event details, guests, food orders, and staffing. The application is developed using ASP.NET Core and EntityFramework Core, adhering to the functional and technical requirements outlined in the module specification.
 
-A system architecture and data model have been agreed upon by all stakeholders. It has been
-decided that an existing web service will be used for reserving event venues.
-It has also been decided that catering will be created as an independent web service because of the
-potential for selling on as a third-party service to other companies.
-The system architecture and data model are documented below.
+System Architecture
 
-![image](https://github.com/user-attachments/assets/ecee4053-26ff-4207-bd83-2691c642cc17)
-![image](https://github.com/user-attachments/assets/62f8b91a-3b6a-4ff8-935a-470443d9564e)
+The system is divided into three core components:
+
+ThAmCo.Events Web Application
+
+Enables management of customers, staff, and events.
+
+Developed using ASP.NET Core RAZOR PAGES.
+
+ThAmCo.Venues Web Service
+
+Provides venue querying and booking capabilities.
+
+Pre-built component; modifications are not permitted.
+
+ThAmCo.Catering Web Service
+
+Manages food orders, menus, and food bookings for events.
+
+Developed as an ASP.NET API web service.
+
+The application integrates these components to deliver a cohesive event management solution.
+
+Functional Requirements
+
+MUST Requirements
+
+ThAmCo.Catering Web Service:
+
+Create, edit, delete, and list food items.
+
+Create, edit, delete, and list food menus.
+
+Add or remove food items from menus.
+
+Book, edit, and cancel food for events, returning a FoodBookingId upon successful booking.
+
+ThAmCo.Events Web Application:
+
+Create, list, and edit guests.
+
+Create events with essential details (title, date, and type).
+
+Edit event details, excluding date and type.
+
+Book guests for events and list guests with attendance tracking.
+
+View detailed guest information, including associated events and attendance.
+
+SHOULD Requirements
+
+Cancel guest bookings for upcoming events.
+
+Reserve or free venues for events using the ThAmCo.Venues service.
+
+Display a summary of events, including guest and venue information.
+
+Manage staff details and assign staffing to events.
+
+Show warnings for events without a first aider.
+
+WOULD Requirements
+
+Display detailed event information, including venues, staff, and guests.
+
+Permanently anonymize guest data upon request.
+
+Filter and display available venues by event type and date range.
+
+Ensure staffing compliance (e.g., at least one staff member per 10 guests).
+
+Development Notes
+
+Frameworks and Tools:
+
+ASP.NET Core 6.0 for web and API services.
+
+EntityFramework Core for data management.
+
+MSSQL for database backend.
+
+Customizations:
+
+Extend and customize UI/UX beyond scaffolded templates.
+
+Implement security measures to restrict sensitive operations (e.g., staffing adjustments).
+
+Code Design:
+
+Follow layered architecture with separation of concerns (presentation, business logic, data access).
+
+Utilize design patterns and refactor code for clarity and maintainability.
+
+Data Model
+
+The data model is designed to support key operations:
+
+ThAmCo.Events:
+
+Entities: Event, Guest, Staff.
+
+Relationships: One-to-many between events and guests; events and staff.
+
+ThAmCo.Catering:
+
+Entities: Menu, FoodItem, FoodBooking.
+
+Relationships: Many-to-many between menus and food items; one-to-many between events and food bookings.
+
+Testing and Documentation
+
+Develop a comprehensive test plan covering all functional requirements.
+
+Include code comments and alternative solutions in a README or inline documentation.
+
+Capture test results and document whether each functional requirement is met.
+
+Security Considerations
+
+Implement role-based access control for sensitive operations.
+
+Plan for data protection, including anonymization features.
+
+Secure communication between services using HTTPS.
+
+Setup Instructions
+
+Clone the repository.
+
+Ensure you have SQL Server installed on your machine.
+
+Configure the database connection strings in the appsettings.json file with the following connection string for a local instance:
+
+"ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ThAmCo;Trusted_Connection=True;MultipleActiveResultSets=true"
+}
+
+Run database migrations using EntityFramework Core.
+
+Build and run the solution in Visual Studio.
