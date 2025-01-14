@@ -108,6 +108,9 @@ The data model is designed to support key operations:
 1. Clone the repository.
 2. Ensure you have **SQL Server** installed on your machine.
 3. Configure the database connection strings in the **appsettings.json** file with the following connection string for a local instance:
+4. You will have to configure mulitple startup projects
+   - Right click solution -> Configure startup projects -> Select Multiple startup projects and then set the actions to "Start" for each project.
+   - Save then run the newly created profile
 
 ```json
 "ConnectionStrings": {
