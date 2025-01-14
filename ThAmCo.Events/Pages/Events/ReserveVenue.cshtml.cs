@@ -7,7 +7,7 @@ using ThAmCo.Events.Services;
 
 namespace ThAmCo.Events.Pages.Events
 {
-	[Authorize(Roles = "Manager")]
+	
 	public class ReserveVenueModel : PageModel
     {
 		/// <summary>

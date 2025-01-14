@@ -11,7 +11,7 @@
 	/// <summary>
 	/// Defines the <see cref="CreateModel" />
 	/// </summary>
-	[Authorize(Roles = "Manager")]
+	
 	public class CreateModel : PageModel
 	{
 		/// <summary>

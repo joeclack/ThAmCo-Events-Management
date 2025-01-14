@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
+	.AddDefaultUI()
 	.AddDefaultTokenProviders();
 
 builder.Services.AddRazorPages(options =>
@@ -36,6 +39,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -60,7 +64,7 @@ using(var scope = app.Services.CreateScope())
 	var roleManager =
 		scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-	var roles = new[] { "Super", "Team Leader", "Manager" };
+	var roles = new[] { "Super", "Team Leader", "Manager", "User" };
 
 	foreach(var role in roles)
 	{
@@ -73,21 +77,48 @@ using(var scope = app.Services.CreateScope())
 
 using (var scope = app.Services.CreateScope())
 {
-	var userManager =
-		scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+	var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+	var password = "Test123!";
 
-	var email = "manager@manager.com";
-	var password  = "Test123!";
-
-	if (await userManager.FindByEmailAsync(email) == null)
+	var basic = new IdentityUser
 	{
-		var user = new IdentityUser();
-		user.UserName = email;
-		user.Email = email;
+		UserName = "user@user.com",
+		Email = "user@user.com"
+	};
 
-		await userManager.CreateAsync(user, password);
+	var manager = new IdentityUser
+	{
+		UserName = "manager@manager.com",
+		Email = "manager@manager.com"
+	};
 
-		await userManager.AddToRoleAsync(user, "Manager");
+	var teamLeader = new IdentityUser
+	{
+		UserName = "teamLeader@teamLeader.com",
+		Email = "teamLeader@teamLeader.com"
+	};
+
+	var super = new IdentityUser
+	{
+		UserName = "super@super.com",
+		Email = "super@super.com"
+	};
+
+	var users = new Dictionary<IdentityUser, string>
+	{
+		{ basic, "User" },
+		{ manager, "Manager" },
+		{ teamLeader, "Team Leader" },
+		{ super, "Super" }
+	};
+
+	foreach (var user in users)
+	{
+		if (await userManager.FindByEmailAsync(user.Key.Email) == null)
+		{
+			await userManager.CreateAsync(user.Key, password);
+			await userManager.AddToRoleAsync(user.Key, user.Value);
+		}
 	}
 }
 

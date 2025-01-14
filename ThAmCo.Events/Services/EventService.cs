@@ -6,37 +6,30 @@
 	using ThAmCo.Events.Models;
 
 	/// <summary>
-	/// Defines the <see cref="EventService" />
+	/// A service that provides methods to interact with the Event data
 	/// </summary>
 	public class EventService
 	{
-		/// <summary>
-		/// Defines the _context
-		/// </summary>
 		private readonly ThAmCo.Events.Data.EventsDbContext _context;
-
-		/// <summary>
-		/// Defines the _httpClient
-		/// </summary>
 		private readonly HttpClient _httpClient;
 
 		/// <summary>
-		/// Defines the VenuesServiceBaseUrl
+		/// Defines the Venues API Base Url
 		/// </summary>
 		const string VenuesServiceBaseUrl = "https://localhost:7088/api";
 
 		/// <summary>
-		/// Defines the EventTypesEndPoint
+		/// Defines the EventTypes EndPoint
 		/// </summary>
 		const string EventTypesEndPoint = "/EventTypes";
 
 		/// <summary>
-		/// Defines the AvailabilityEndPoint
+		/// Defines the Availability EndPoint
 		/// </summary>
 		const string AvailabilityEndPoint = "/Availability";
 
 		/// <summary>
-		/// Defines the ReservationEndPoint
+		/// Defines the Reservation EndPoint
 		/// </summary>
 		const string ReservationEndPoint = "/Reservations";
 
@@ -48,11 +41,6 @@
 			PropertyNameCaseInsensitive = true
 		};
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EventService"/> class.
-		/// </summary>
-		/// <param name="httpClient">The httpClient<see cref="HttpClient"/></param>
-		/// <param name="context">The context<see cref="ThAmCo.Events.Data.EventsDbContext"/></param>
 		public EventService(HttpClient httpClient, ThAmCo.Events.Data.EventsDbContext context)
 		{
 			_context = context;
@@ -60,7 +48,7 @@
 		}
 
 		/// <summary>
-		/// The GetAllEvents
+		/// Retrieves all events with its staffings and guest bookings
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
 		public async Task<List<Event>> GetAllEvents()
@@ -76,7 +64,7 @@
 		}
 
 		/// <summary>
-		/// The GetEvent
+		/// Retrieves request event
 		/// </summary>
 		/// <param name="eventId">The eventId<see cref="int?"/></param>
 		/// <returns>The <see cref="Task{Event}"/></returns>
@@ -95,7 +83,7 @@
 
 
 		/// <summary>
-		/// The GetPastCancelledEvents
+		/// Gets events that are either cancelled or in the past
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
 		public async Task<List<Event>> GetPastCancelledEvents()
@@ -106,38 +94,10 @@
 		}
 
 		/// <summary>
-		/// The GetUpcomingEvent
+		/// Permanently deletes an event. This is not a soft delete
 		/// </summary>
-		/// <returns>The <see cref="Task{Event}"/></returns>
-		public async Task<Event> GetUpcomingEvent()
-		{
-			var _event = await _context.Events
-				.Include(e => e.Staffings)
-				.ThenInclude(s => s.Staff)
-				.Include(e => e.GuestBookings)
-				.ThenInclude(g => g.Guest)
-				.OrderBy(e => e.Date)
-				.FirstOrDefaultAsync(x => x.Date >= DateTime.Today);
-
-			return _event;
-		}
-
-		/// <summary>
-		/// The RemoveStaffFromEventStaffing
-		/// </summary>
-		/// <param name="staffMember">The staffMember<see cref="Staff"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
-		public async Task RemoveStaffFromEventStaffing(Staff staffMember, int eventId)
-		{
-			var _event   = await GetEvent(eventId);
-			var staffing = _event.Staffings.FirstOrDefault(s => s.StaffId == staffMember.StaffId);
-
-			staffMember.Staffings.Remove(staffing);
-			_context.SaveChanges();
-
-		}
-
 		public async Task PermDeleteEvent(int eventId)
 		{
 			var _event = await GetEvent(eventId);
@@ -146,7 +106,7 @@
 		}
 
 		/// <summary>
-		/// The CancelEvent
+		/// Soft deletes the event by setting the IsCancelled bool
 		/// </summary>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -158,7 +118,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableEventsForGuest
+		/// Retrieves events that a guest can be booked onto
 		/// </summary>
 		/// <param name="guest">The guest<see cref="Guest"/></param>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
@@ -175,7 +135,7 @@
 		}
 
 		/// <summary>
-		/// The CreateEvent
+		/// Creates a new event
 		/// </summary>
 		/// <param name="@event">The event<see cref="Event"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -186,7 +146,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableEventsForStaffMember
+		/// Retrieves events that a staff member can be assigned to
 		/// </summary>
 		/// <param name="staff">The staff<see cref="Staff"/></param>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
@@ -203,7 +163,7 @@
 		}
 
 		/// <summary>
-		/// The UpdateEvent
+		/// Updates event details
 		/// </summary>
 		/// <param name="@event">The event<see cref="Event"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -222,7 +182,7 @@
 		}
 
 		/// <summary>
-		/// The GetUpcomingEvents
+		/// Retrieves future events
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
 		internal async Task<List<Event>> GetUpcomingEvents()
@@ -232,7 +192,7 @@
 		}
 
 		/// <summary>
-		/// The GetPastEvents
+		/// Retrieves past events
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
 		internal async Task<List<Event>> GetPastEvents()
@@ -242,7 +202,7 @@
 		}
 
 		/// <summary>
-		/// The GetEventTypes
+		/// Retrieves event types from the Venues API
 		/// </summary>
 		/// <returns>The <see cref="Task{List{EventTypeDTO}}"/></returns>
 		public async Task<List<EventTypeDTO>> GetEventTypes()
@@ -264,7 +224,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableVenuesForEventDate
+		/// Retrieves available venues for an event that has already been created
 		/// </summary>
 		/// <param name="@event">The event<see cref="Event"/></param>
 		/// <returns>The <see cref="Task{List{VenueDTO}}"/></returns>
@@ -293,7 +253,7 @@
 		}
 
 		/// <summary>
-		/// The GetAllAvailableVenues
+		/// Retrieves all available venues for event type
 		/// </summary>
 		/// <param name="eventType">The eventType<see cref="string"/></param>
 		/// <returns>The <see cref="Task{List{VenueDTO}}"/></returns>
@@ -322,7 +282,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableVenuesTimePeriod
+		/// Retrieves available venues for event type within the date range supplied
 		/// </summary>
 		/// <param name="eventType">The eventType<see cref="string"/></param>
 		/// <param name="startDate">The startDate<see cref="DateTime"/></param>
@@ -353,7 +313,7 @@
 		}
 
 		/// <summary>
-		/// The CreateReservation
+		/// Creates a reservation
 		/// </summary>
 		/// <param name="reservationPostDTO">The reservationPostDTO<see cref="ReservationPostDTO"/></param>
 		/// <returns>The <see cref="Task{string}"/></returns>
@@ -369,7 +329,7 @@
 		}
 
 		/// <summary>
-		/// The GetReservation
+		/// Retrieves requested reservation 
 		/// </summary>
 		/// <param name="reference">The reference<see cref="string"/></param>
 		/// <returns>The <see cref="Task{ReservationGetDTO}"/></returns>
@@ -386,7 +346,7 @@
 		}
 
 		/// <summary>
-		/// The DeleteReservation
+		/// Deletes reservation, freeing up the venue
 		/// </summary>
 		/// <param name="reservationId">The reservationId<see cref="string"/></param>
 		/// <returns>The <see cref="Task"/></returns>

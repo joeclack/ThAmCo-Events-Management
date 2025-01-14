@@ -5,26 +5,19 @@
 	using ThAmCo.Events.Models;
 
 	/// <summary>
-	/// Defines the <see cref="GuestService" />
+	/// A service that provides methods to interact with Guest data
 	/// </summary>
 	public class GuestService
 	{
-		/// <summary>
-		/// Defines the _context
-		/// </summary>
 		private readonly ThAmCo.Events.Data.EventsDbContext _context;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="GuestService"/> class.
-		/// </summary>
-		/// <param name="context">The context<see cref="ThAmCo.Events.Data.EventsDbContext"/></param>
 		public GuestService(ThAmCo.Events.Data.EventsDbContext context)
 		{
 			_context = context;
 		}
 
 		/// <summary>
-		/// The GetAllGuests
+		/// Retieves all guests and their bookings
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Guest}}"/></returns>
 		public async Task<List<Guest>> GetAllGuests()
@@ -32,13 +25,14 @@
 			var guests = await _context.Guests
 				.Include(s => s.GuestBookings)
 				.ThenInclude(gb => gb.Event)
+				.Where(x=>x.IsAnonymised == false)
 				.ToListAsync();
 
 			return guests;
 		}
 
 		/// <summary>
-		/// The GetGuest
+		/// Retrieves requested Guest
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int?"/></param>
 		/// <returns>The <see cref="Task{Guest}"/></returns>
@@ -53,7 +47,7 @@
 		}
 
 		/// <summary>
-		/// The GetBookings
+		/// Retrieves bookings associated with the guest that are not cancelled and are upcoming
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <returns>The <see cref="Task{List{GuestBooking}}"/></returns>
@@ -64,6 +58,11 @@
 			return bookings;
 		}
 
+		/// <summary>
+		/// Retrieves all guest bookings no matter the date or IsCancelled
+		/// </summary>
+		/// <param name="guestId">The guestId<see cref="int"/></param>
+		/// <returns>The <see cref="Task{List{GuestBooking}}"/></returns>
 		internal async Task<List<GuestBooking>> GetAllGuestBookings(int guestId)
 		{
 			var guest = await GetGuest(guestId);
@@ -72,7 +71,7 @@
 		}
 
 		/// <summary>
-		/// The GetPastBookings
+		/// Retrieves past guest bookings
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <returns>The <see cref="Task{List{GuestBooking}}"/></returns>
@@ -84,7 +83,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableGuests
+		/// Retrieves available guests to book onto an event
 		/// </summary>
 		/// <param name="_event">The _event<see cref="Event"/></param>
 		/// <returns>The <see cref="Task{List{Guest}}"/></returns>
@@ -122,28 +121,48 @@
 		}
 
 		/// <summary>
-		/// The DeleteGuest
+		/// Soft deletes requested guest 
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
-		public async Task DeleteGuest(int guestId)
+		public async Task SoftDeleteGuest(int guestId)
 		{
-			try
+			var userToDelete = await GetGuest(guestId);
+			if (userToDelete != null)
 			{
-				var guest = await GetGuest(guestId);
-				_context.Guests.Remove(guest);
-				_context.SaveChanges();
-			}
-			catch
-			{
-				Console.WriteLine("Guest not deleted");
+				AnonymiseUser(userToDelete);
+				_context.Entry(userToDelete).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
 			}
 
-			Console.WriteLine("Guest deleted");
 		}
 
 		/// <summary>
-		/// The CancelGuestBooking
+		/// Anonymises data by hashing the string
+		/// </summary>
+		/// <param name="value">The guestId<see cref="string"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public static string Pseudonymise(string value)
+		{
+			return "Anonymised_" + value.GetHashCode();
+		}
+
+		/// <summary>
+		/// Anonymises guest personal data and sets IsAnonymised to true
+		/// </summary>
+		/// <param name="value">The guestId<see cref="string"/></param>
+		/// <returns>The <see cref="Task"/></returns>
+		public static void AnonymiseUser(Guest guest)
+		{
+			// Pseudonymise guest data
+			guest.FirstName = Pseudonymise(guest.FirstName);
+			guest.LastName = Pseudonymise(guest.LastName);
+			guest.Email = Pseudonymise(guest.Email);
+			guest.IsAnonymised = true;
+		}
+
+		/// <summary>
+		/// Removes the guest booking freeing that guest from that event
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
@@ -157,7 +176,7 @@
 		}
 
 		/// <summary>
-		/// The GetBooking
+		/// Retrieves guest booking for event
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
@@ -169,7 +188,7 @@
 		}
 
 		/// <summary>
-		/// The CreateBooking
+		/// Creates new guest booking
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <param name="@event">The event<see cref="Event"/></param>
@@ -194,7 +213,7 @@
 		}
 
 		/// <summary>
-		/// The CreateGuest
+		/// Creates a new guest 
 		/// </summary>
 		/// <param name="guest">The guest<see cref="Guest"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -205,7 +224,7 @@
 		}
 
 		/// <summary>
-		/// The UpdateGuestAttendance
+		/// Updates guest booking attendance for previous event
 		/// </summary>
 		/// <param name="guestId">The guestId<see cref="int"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>

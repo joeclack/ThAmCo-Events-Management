@@ -5,43 +5,37 @@
 	using ThAmCo.Events.DTOs;
 
 	/// <summary>
-	/// Defines the <see cref="CateringService" />
+	/// A service that provides methods to interact with the Catering API
 	/// </summary>
 	public class CateringService
 	{
 		/// <summary>
-		/// Defines the ServiceBaseUrl
+		/// Defines the Catering Service BaseUrl
 		/// </summary>
 		const string ServiceBaseUrl = "https://localhost:7012/api";
 
 		/// <summary>
-		/// Defines the MenuEndPoint
+		/// Defines the Menu EndPoint
 		/// </summary>
 		const string MenuEndPoint = "/menus";
 
 		/// <summary>
-		/// Defines the FoodItemsEndPoint
+		/// Defines the FoodItems EndPoint
 		/// </summary>
 		const string FoodItemsEndPoint = "/fooditems";
 
 		/// <summary>
-		/// Defines the FoodBookingsEndPoint
+		/// Defines the FoodBookings EndPoint
 		/// </summary>
 		const string FoodBookingsEndPoint = "/foodbookings";
 
 		/// <summary>
-		/// Defines the MenuFoodItemsEndpoint
+		/// Defines the MenuFoodItems Endpoint
 		/// </summary>
 		const string MenuFoodItemsEndpoint = "/menufooditems";
 
-		/// <summary>
-		/// Defines the _httpClient
-		/// </summary>
 		private readonly HttpClient _httpClient;
 
-		/// <summary>
-		/// Defines the _eventService
-		/// </summary>
 		private readonly EventService _eventService;
 
 		/// <summary>
@@ -52,11 +46,6 @@
 			PropertyNameCaseInsensitive = true
 		};
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CateringService"/> class.
-		/// </summary>
-		/// <param name="httpClient">The httpClient<see cref="HttpClient"/></param>
-		/// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/></param>
 		public CateringService(HttpClient httpClient, IServiceProvider serviceProvider)
 		{
 			_httpClient   = httpClient;
@@ -64,7 +53,7 @@
 		}
 
 		/// <summary>
-		/// The GetMenus
+		/// Retrieves all menus 
 		/// </summary>
 		/// <returns>The <see cref="Task{List{MenuGetDTO}}"/></returns>
 		public async Task<List<MenuGetDTO>> GetMenus()
@@ -83,7 +72,7 @@
 		}
 
 		/// <summary>
-		/// The GetMenu
+		/// Retrieves requested menu 
 		/// </summary>
 		/// <param name="id">The id<see cref="int"/></param>
 		/// <returns>The <see cref="Task{MenuGetDTO}"/></returns>
@@ -103,7 +92,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableFoodItems
+		/// Retrieves food items that are not already on the menu 
 		/// </summary>
 		/// <param name="menu">The menu<see cref="MenuGetDTO"/></param>
 		/// <returns>The <see cref="Task{List{FoodItemGetDTO}}"/></returns>
@@ -122,7 +111,7 @@
 		}
 
 		/// <summary>
-		/// The GetFoodItems
+		/// Retrieves all food items 
 		/// </summary>
 		/// <returns>The <see cref="Task{List{FoodItemGetDTO}}"/></returns>
 		public async Task<List<FoodItemGetDTO>> GetFoodItems()
@@ -141,7 +130,7 @@
 		}
 
 		/// <summary>
-		/// The CreateMenuFoodItem
+		/// Adds food item to the menu 
 		/// </summary>
 		/// <param name="foodItemId">The foodItemId<see cref="int"/></param>
 		/// <param name="menuId">The menuId<see cref="int"/></param>
@@ -153,7 +142,7 @@
 		}
 
 		/// <summary>
-		/// The DeleteMenuFoodItem
+		/// Removes food item from menu
 		/// </summary>
 		/// <param name="foodItemId">The foodItemId<see cref="int"/></param>
 		/// <param name="menuId">The menuId<see cref="int"/></param>
@@ -164,7 +153,7 @@
 		}
 
 		/// <summary>
-		/// The UpdateMenu
+		/// Updates menu info
 		/// </summary>
 		/// <param name="menu">The menu<see cref="MenuGetDTO"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -176,7 +165,7 @@
 		}
 
 		/// <summary>
-		/// The CreateMenu
+		/// Creates new menu
 		/// </summary>
 		/// <param name="menu">The menu<see cref="MenuPostDTO"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -188,7 +177,7 @@
 		}
 
 		/// <summary>
-		/// The FetchMenuInfoForBooking
+		/// Gets just menu name and ID for food booking
 		/// </summary>
 		/// <param name="foodBookingId">The foodBookingId<see cref="int"/></param>
 		/// <returns>The <see cref="Task{MenuInfoDTO}"/></returns>
@@ -205,7 +194,7 @@
 		}
 
 		/// <summary>
-		/// The GetMenuInfo
+		/// Gets menu without menu food items to display in lists for when choosing a menu 
 		/// </summary>
 		/// <param name="menuId">The menuId<see cref="int"/></param>
 		/// <returns>The <see cref="Task{MenuInfoDTO}"/></returns>
@@ -220,7 +209,7 @@
 		}
 
 		/// <summary>
-		/// The DeleteMenu
+		/// Deletes the menu
 		/// </summary>
 		/// <param name="menuId">The menuId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -230,7 +219,7 @@
 		}
 
 		/// <summary>
-		/// The GetFoodItem
+		/// Gets requested food item
 		/// </summary>
 		/// <param name="id">The id<see cref="int"/></param>
 		/// <returns>The <see cref="Task{FoodItemGetDTO}"/></returns>
@@ -250,7 +239,7 @@
 		}
 
 		/// <summary>
-		/// The CreateFoodItem
+		/// Creates new food item
 		/// </summary>
 		/// <param name="foodItem">The foodItem<see cref="FoodItemGetDTO"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -262,7 +251,7 @@
 		}
 
 		/// <summary>
-		/// The UpdateFoodItem
+		/// Updates food item details
 		/// </summary>
 		/// <param name="foodItem">The foodItem<see cref="FoodItemGetDTO"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -274,7 +263,7 @@
 		}
 
 		/// <summary>
-		/// The DeleteFoodItem
+		/// Deletes food item
 		/// </summary>
 		/// <param name="foodItemId">The foodItemId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -284,7 +273,7 @@
 		}
 
 		/// <summary>
-		/// The GetFoodBookings
+		/// Retrieves all food bookings and gets event name that is linked to food booking
 		/// </summary>
 		/// <returns>The <see cref="Task{List{FoodBookingDTO}}"/></returns>
 		public async Task<List<FoodBookingDTO>> GetFoodBookings()
@@ -315,7 +304,7 @@
 		}
 
 		/// <summary>
-		/// The GetFoodBooking
+		/// Retrieves requested food booking
 		/// </summary>
 		/// <param name="id">The id<see cref="int"/></param>
 		/// <returns>The <see cref="Task{FoodBookingDTO}"/></returns>
@@ -339,7 +328,7 @@
 		}
 
 		/// <summary>
-		/// The UpdateFoodBooking
+		/// Updates food booking details
 		/// </summary>
 		/// <param name="foodBooking">The foodBooking<see cref="FoodBookingDTO"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -351,7 +340,7 @@
 		}
 
 		/// <summary>
-		/// The DeleteFoodBooking
+		/// Deletes food booking
 		/// </summary>
 		/// <param name="foodBookingId">The foodBookingId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -368,7 +357,7 @@
 		}
 
 		/// <summary>
-		/// The CreateFoodBooking
+		/// Creates new food booking
 		/// </summary>
 		/// <param name="foodBooking">The foodBooking<see cref="FoodBookingDTO"/></param>
 		/// <returns>The <see cref="Task{int}"/></returns>
@@ -385,7 +374,7 @@
 		}
 
 		/// <summary>
-		/// The GetUpcomingFoodBookings
+		/// Retrieves upcoming food bookings. This includes all bookings with today's date or in the future
 		/// </summary>
 		/// <returns>The <see cref="Task{List{FoodBookingDTO}}"/></returns>
 		internal async Task<List<FoodBookingDTO>> GetUpcomingFoodBookings()
@@ -400,7 +389,7 @@
 		}
 
 		/// <summary>
-		/// The GetPastFoodBookings
+		/// Retrieves past food bookings
 		/// </summary>
 		/// <returns>The <see cref="Task{List{FoodBookingDTO}}"/></returns>
 		internal async Task<List<FoodBookingDTO>> GetPastFoodBookings()

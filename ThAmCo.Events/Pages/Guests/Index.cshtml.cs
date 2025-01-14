@@ -67,7 +67,7 @@
 		/// <returns>The <see cref="Task{IActionResult}"/></returns>
 		public async Task<IActionResult> OnPostDeleteGuest(int guestId)
 		{
-			await _guestService.DeleteGuest(guestId);
+			await _guestService.SoftDeleteGuest(guestId);
 			return Redirect($"../Guests");
 		}
 	}

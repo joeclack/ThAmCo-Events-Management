@@ -44,23 +44,6 @@ main {
 	text-decoration: none;
 }
 
-.nav-links {
-	list-style: none;
-	display: flex;
-	gap: 20px;
-}
-
-.nav-link {
-	text-decoration: none;
-	color: #fff;
-	font-size: 18px;
-	transition: color 0.3s ease;
-}
-
-	.nav-link:hover {
-		color: #f8d7da;
-	}
-
 .dropdown {
 	position: relative;
 }

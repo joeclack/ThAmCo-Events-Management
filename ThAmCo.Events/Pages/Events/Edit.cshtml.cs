@@ -12,7 +12,7 @@
 	/// <summary>
 	/// Defines the <see cref="EditModel" />
 	/// </summary>
-	[Authorize(Roles = "Manager")]
+	
 	
 	public class EditModel : PageModel
 	{
@@ -367,19 +367,6 @@
 		{
 			await _eventService.PermDeleteEvent(eventId);
 			return Redirect($"../Events");
-		}
-
-		/// <summary>
-		/// The OnPostUpdateStaffAttendance
-		/// </summary>
-		/// <param name="staffId">The staffId<see cref="int"/></param>
-		/// <param name="eventId">The eventId<see cref="int"/></param>
-		/// <param name="didAttend">The didAttend<see cref="bool"/></param>
-		/// <returns>The <see cref="Task{IActionResult}"/></returns>
-		public async Task<IActionResult> OnPostUpdateStaffAttendance(int staffId, int eventId, bool didAttend)
-		{
-			await _staffService.UpdateStaffAttendance(staffId, eventId, didAttend);
-			return Redirect($"../Events/Edit?id={eventId}");
 		}
 
 		/// <summary>

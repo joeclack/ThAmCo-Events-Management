@@ -4,26 +4,19 @@
 	using ThAmCo.Events.Models;
 
 	/// <summary>
-	/// Defines the <see cref="StaffService" />
+	/// A service that provides methods to interact with the Staff data
 	/// </summary>
 	public class StaffService
 	{
-		/// <summary>
-		/// Defines the _context
-		/// </summary>
 		private readonly ThAmCo.Events.Data.EventsDbContext _context;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StaffService"/> class.
-		/// </summary>
-		/// <param name="context">The context<see cref="ThAmCo.Events.Data.EventsDbContext"/></param>
 		public StaffService(ThAmCo.Events.Data.EventsDbContext context)
 		{
 			_context = context;
 		}
 
 		/// <summary>
-		/// The GetAllStaff
+		/// Retrieves all staff members and their staffings
 		/// </summary>
 		/// <returns>The <see cref="Task{List{Staff}}"/></returns>
 		public async Task<List<Staff>> GetAllStaff()
@@ -37,7 +30,7 @@
 		}
 
 		/// <summary>
-		/// The GetStaffMember
+		/// Retrieves requested staff member
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int?"/></param>
 		/// <returns>The <see cref="Task{Staff}"/></returns>
@@ -52,7 +45,7 @@
 		}
 
 		/// <summary>
-		/// The GetAvailableStaff
+		/// Retrieves staff memebrs that are not assigned to an event on the event's date 
 		/// </summary>
 		/// <param name="_event">The _event<see cref="Event"/></param>
 		/// <returns>The <see cref="Task{List{Staff}}"/></returns>
@@ -91,7 +84,7 @@
 		}
 
 		/// <summary>
-		/// The DeleteStaffMember
+		/// Deletes the staff member
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -103,7 +96,7 @@
 		}
 
 		/// <summary>
-		/// The GetStaffMemberEvents
+		/// Retrieves events the requested staff member is assigned too
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int"/></param>
 		/// <returns>The <see cref="Task{List{Event}}"/></returns>
@@ -115,7 +108,7 @@
 		}
 
 		/// <summary>
-		/// The CreateStaffing
+		/// Creates a new staffing for the event
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int"/></param>
 		/// <param name="@event">The event<see cref="Event"/></param>
@@ -138,7 +131,7 @@
 		}
 
 		/// <summary>
-		/// The CancelStaffing
+		/// Deletes the staffing and frees up the staff member
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
@@ -153,7 +146,7 @@
 		}
 
 		/// <summary>
-		/// The GetStaffing
+		/// Retrieves staffings for requested event
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
@@ -165,7 +158,7 @@
 		}
 
 		/// <summary>
-		/// The GetStaffings
+		/// Retrieves future staffings for event
 		/// </summary>
 		/// <param name="staffId">The staffId<see cref="int"/></param>
 		/// <param name="eventId">The eventId<see cref="int"/></param>
@@ -178,20 +171,7 @@
 		}
 
 		/// <summary>
-		/// The GetPastStaffings
-		/// </summary>
-		/// <param name="staffId">The staffId<see cref="int"/></param>
-		/// <param name="eventId">The eventId<see cref="int"/></param>
-		/// <returns>The <see cref="Task{List{Staffing}}"/></returns>
-		private async Task<List<Staffing>> GetPastStaffings(int staffId, int eventId)
-		{
-			var staffMember         = await GetStaffMember(staffId);
-			List<Staffing> staffing = staffMember.Staffings.Where(s => s.Event.Date < DateTime.Today || s.Event.IsCanceled).OrderBy(x => x.Event.Date).ToList();
-			return staffing;
-		}
-
-		/// <summary>
-		/// The CreateStaff
+		/// Creates a new staff member
 		/// </summary>
 		/// <param name="staff">The staff<see cref="Staff"/></param>
 		/// <returns>The <see cref="Task"/></returns>
@@ -201,22 +181,5 @@
 			await _context.SaveChangesAsync();
 		}
 
-		/// <summary>
-		/// The UpdateStaffAttendance
-		/// </summary>
-		/// <param name="staffId">The staffId<see cref="int"/></param>
-		/// <param name="eventId">The eventId<see cref="int"/></param>
-		/// <param name="didAttend">The didAttend<see cref="bool"/></param>
-		/// <returns>The <see cref="Task"/></returns>
-		public async Task UpdateStaffAttendance(int staffId, int eventId, bool didAttend)
-		{
-			var staffing = await GetStaffing(staffId, eventId);
-
-			if (staffing != null)
-			{
-				staffing.DidAttend = didAttend;
-				await _context.SaveChangesAsync();
-			}
-		}
 	}
 }

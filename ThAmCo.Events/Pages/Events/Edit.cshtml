@@ -66,169 +66,159 @@
 		</form>
 	</div>
 
-
-	<div class="card-title">
-		<h4>Edit Guests and Staff</h4>
-	</div>
-
 	<div class="guests-staff-selection">
+
 		<div class="card width-full">
 			<div class="card-body">
-				@if (isEventEditable && Model.AvailableStaff.Any())
+				@if (isEventEditable)
 				{
-					<form asp-page-handler="CreateStaffing" method="post">
-						<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-						<div class="form-group">
-							<label for="staffList" class="card-label">Add Staff</label>
-							<select id="staffList" name="staffId" class="form-select">
-								<option value="">Select Staff</option>
-								@foreach (var staff in Model.AvailableStaff)
-								{
-									<option value="@staff.StaffId">@staff.FirstName @staff.LastName</option>
-								}
-							</select>
-						</div>
-						<button type="submit" class="btn btn-success">Assign To Event</button>
-					</form>
+					@if (User.IsInRole("Team Leader") || User.IsInRole("Manager") || User.IsInRole("Super"))
+					{
+						<form asp-page-handler="CreateStaffing" method="post">
+							<input type="hidden" name="eventId" value="@Model.Event.EventId" />
+							<div class="form-group">
+								<label for="staffList" class="card-label">Add Staff</label>
+								<select id="staffList" name="staffId" class="form-select">
+									<option value="">Select Staff</option>
+									@foreach (var staff in Model.AvailableStaff)
+									{
+										<option value="@staff.StaffId">@staff.FirstName @staff.LastName</option>
+									}
+								</select>
+							</div>
+							<button type="submit" class="btn btn-success">Assign To Event</button>
+						</form>
+					}
 				}
-				
-				@if (Model.Event.Staffings.Any())
-				{
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Staff Name</th>
-								@* @if (!isEventEditable) *@
-								@* { *@
 
-								@* 	<th>Attended</th> *@
-								@* } *@
-								<th>Actions</th>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Staff Name</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var staff in Model.Event.Staffings)
+						{
+							<tr>
+								<td>@staff.Staff.FirstName @staff.Staff.LastName</td>
+								<td class="action-buttons">
+									<a class="btn btn-info" asp-page="../Staff/Details" asp-route-id="@staff.StaffId">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+											<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+											<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+										</svg>
+									</a>
+									@if (isEventEditable)
+									{
+										<form method="post" class="d-flex" asp-page-handler="RemoveStaffing">
+											<input type="hidden" name="eventId" value="@Model.Event.EventId" />
+											<input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
+
+											<button type="submit" class=" btn btn-danger">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+												</svg>
+											</button>
+										</form>
+									}
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							@foreach (var staff in Model.Event.Staffings)
-							{
-								<tr>
-									<td>@staff.Staff.FirstName @staff.Staff.LastName</td>
+						}
+					</tbody>
+				</table>
 
-									@* @if (!isEventEditable) *@
-									@* { *@
-									@* 	<td> *@
-									@* 		<form asp-page-handler="UpdateStaffAttendance" method="post" class="attendance-form"> *@
-									@* 			<input type="hidden" name="staffId" value="@staff.StaffId" /> *@
-									@* 			<input type="hidden" name="eventId" value="@Model.Event.EventId" /> *@
-									@* 			<input type="checkbox" name="didAttend" @(staff.DidAttend ? "checked" : "") onchange="this.form.submit()" /> *@
-									@* 		</form> *@
-									@* 	</td> *@
-									@* } *@
-									<td class="action-buttons">
-										<a class="btn btn-info" asp-page="../Staff/Details" asp-route-id="@staff.StaffId">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-												<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-												<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-											</svg>
-										</a>
-										@if (isEventEditable)
-										{
-											<form method="post" class="d-flex" asp-page-handler="RemoveStaffing">
-												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-												<input type="hidden" name="staffId" value="@staff.Staff.StaffId" />
-												
-
-												<button type="submit" class=" btn btn-danger">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-														<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-													</svg>
-												</button>
-											</form>
-										}
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				}
 			</div>
+
 		</div>
+
 		<div class="card width-full">
 			<div class="card-body">
-				@if (isEventEditable && Model.AvailableGuests.Any())
+				@if (isEventEditable)
 				{
-					<form asp-page-handler="CreateGuestBooking" method="post">
-						<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-						<div class="form-group">
-							<label for="guestList" class="card-label">Add Guest</label>
-							<select id="guestList" name="guestId" class="form-select">
-								<option value="">Select Guests</option>
-								@foreach (var guest in Model.AvailableGuests)
-								{
-									<option value="@guest.GuestId">@guest.FirstName @guest.LastName</option>
-								}
-							</select>
-						</div>
-						<button type="submit" class="btn btn-success">Assign To Event</button>
-					</form>
+					@if (User.IsInRole("Team Leader") || User.IsInRole("Manager") || User.IsInRole("Super"))
+					{
+						<form asp-page-handler="CreateGuestBooking" method="post">
+							<input type="hidden" name="eventId" value="@Model.Event.EventId" />
+							<div class="form-group">
+								<label for="guestList" class="card-label">Add Guest</label>
+								<select id="guestList" name="guestId" class="form-select">
+									<option value="">Select Guests</option>
+									@foreach (var guest in Model.AvailableGuests)
+									{
+										<option value="@guest.GuestId">@guest.FirstName @guest.LastName</option>
+									}
+								</select>
+							</div>
+							<button type="submit" class="btn btn-success">Assign To Event</button>
+						</form>
+					}
 				}
-				@if (Model.Event.GuestBookings.Any())
-				{
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Guest Name</th>
-								@if (!isEventEditable)
-								{
 
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Guest Name</th>
+							@if (Model.Event.Date < DateTime.Now.Date)
+							{
+								@if (User.IsInRole("Team Leader") || User.IsInRole("Manager") || User.IsInRole("Super"))
+								{
 									<th>Attended</th>
 								}
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var guestBooking in Model.Event.GuestBookings)
-							{
-								<tr>
-									<td>@guestBooking.Guest.FirstName @guestBooking.Guest.LastName</td>
-									@if (!isEventEditable)
+							}
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var guestBooking in Model.Event.GuestBookings)
+						{
+							<tr>
+								<td>@guestBooking.Guest.FirstName @guestBooking.Guest.LastName</td>
+								@if (Model.Event.Date < DateTime.Now.Date)
+								{
+									@if (User.IsInRole("Team Leader") || User.IsInRole("Manager") || User.IsInRole("Super"))
 									{
 										<td>
 											<form asp-page-handler="UpdateGuestAttendance" method="post" class="attendance-form" id="form-@guestBooking.GuestId">
 												<input type="hidden" name="guestId" value="@guestBooking.GuestId" />
 												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
 												<input type="checkbox"
-													   name="didAttend"
+												name="didAttend"
 												@(guestBooking.DidAttend ? "checked" : "")
-													   onchange="submitForm(this)" />
+												onchange="submitForm(this)" />
 											</form>
 										</td>
 									}
-									<td class="action-buttons">
-										<a class="btn btn-info" asp-page="../Guests/Details" asp-route-id="@guestBooking.GuestId">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-												<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-												<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-											</svg>
-										</a>
-										@if (isEventEditable)
-										{
-											<form method="post" class="d-flex" asp-page-handler="CancelGuestBooking">
-												<input type="hidden" name="eventId" value="@Model.Event.EventId" />
-												<input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
-												<button type="submit" class=" btn btn-danger">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-														<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-													</svg>
-												</button>
-											</form>
-										}
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				}
+								}
+								<td class="action-buttons">
+									<a class="btn btn-info" asp-page="../Guests/Details" asp-route-id="@guestBooking.GuestId">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+											<path stroke="#fff" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+											<path stroke="#fff" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+										</svg>
+									</a>
+									@if (isEventEditable)
+									{
+										<form method="post" class="d-flex" asp-page-handler="CancelGuestBooking">
+											<input type="hidden" name="eventId" value="@Model.Event.EventId" />
+											<input type="hidden" name="guestId" value="@guestBooking.Guest.GuestId" />
+											<button type="submit" class=" btn btn-danger">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+												</svg>
+											</button>
+										</form>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
 			</div>
 		</div>
+
 	</div>
 	@if (isEventEditable)
 	{
@@ -331,7 +321,8 @@
 		</div>
 	}
 
-	@if(User.IsInRole("Team Leader") || User.IsInRole("Manager")){
+	@if (User.IsInRole("Team Leader") || User.IsInRole("Manager"))
+	{
 
 		<div class="card">
 			<h4 class="card-title">Permanently delete event</h4>

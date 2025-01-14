@@ -28,6 +28,11 @@
                 </div>
 
                 <div class="mb-3">
+                    <label asp-for="Event.EventTypeId" class="form-label">Event Type</label>
+                    <input asp-for="Event.EventTypeId" readonly class="form-control" />
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="Event.Date" class="form-label">Date</label>
                     <input asp-for="Event.Date" type="date" readonly class="form-control" />
                 </div>
@@ -43,7 +48,6 @@
                     <input asp-for="Event.Location" class="form-control" required />
                     <span asp-validation-for="Event.Location" class="text-danger"></span>
                 </div>
-                <input asp-for="Event.EventTypeId" hidden  />
 
                 <div class="d-flex justify-content-between">
                     <a asp-page="Index" class="btn btn-secondary">Back to List</a>

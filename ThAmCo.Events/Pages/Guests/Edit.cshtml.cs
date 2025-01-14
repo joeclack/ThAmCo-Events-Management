@@ -14,7 +14,7 @@
 	/// <summary>
 	/// Defines the <see cref="EditModel" />
 	/// </summary>
-	[Authorize(Roles = "Manager")]
+	
 	public class EditModel : PageModel
 	{
 		/// <summary>
